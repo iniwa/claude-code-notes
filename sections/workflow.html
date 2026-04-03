@@ -20,12 +20,17 @@
     <div class="wf-line"></div>
     <div class="wf-left"><div class="wf-num improved">2</div></div>
     <div class="wf-body">
-      <div class="wf-title">CLAUDE.md と plan.md を Claude-startup で再編集する</div>
+      <div class="wf-title">CLAUDE.md と plan.md を CLI で再編集する</div>
       <div class="wf-current">
-        ステップ1で作成した <code>CLAUDE.md</code> と <code>plan.md</code> を、<strong>Claude-startup</strong>（専用プロジェクト）で再編集する。<br><br>
-        webチャットでの設計段階では含められない <strong>CLI実行環境固有の情報</strong>（PCスペック、Docker構成、OS設定、パス情報など）を、ベーステンプレート（<code>CLAUDEmd_docker</code> / <code>CLAUDEmd_windows</code>）から組み込む。<br>
-        これにより、Claude Code が実際の実行環境を正しく認識した状態でコーディングを開始できる。<br><br>
-        <strong>※</strong> このプロジェクトのリポジトリ構成は後日調整予定。
+        ステップ1で作成した草案を、<a href="templates/CLAUDE.md" target="_blank">CLAUDE.md テンプレート</a> と統合して完成させる。<br><br>
+        webチャットでの設計段階では含められない <strong>CLI実行環境固有の情報</strong>（PCスペック、Docker構成、OS設定、パス情報など）をテンプレートの各セクションに埋めていく。<br>
+        これにより、Claude Code が実際の実行環境を正しく認識した状態でコーディングを開始できる。
+        <pre># テンプレートのあるディレクトリで Claude Code を起動
+claude
+
+# 草案とテンプレートの統合を指示
+@templates/CLAUDE.md と以下の草案を統合して、新プロジェクト用の CLAUDE.md を生成してください。
+（草案をペースト）</pre>
       </div>
     </div>
   </div>
