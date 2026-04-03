@@ -1,0 +1,41 @@
+<div class="section-title">/config — フック</div>
+<div class="section-desc">ツール実行の前後に任意のシェルコマンドを差し込める仕組み。lint自動実行・通知・セキュリティチェック等に活用。</div>
+<div class="tip">
+  フックのトリガーイベントは <strong>PreToolUse・PostToolUse・Notification・UserPromptSubmit・SessionStart・SessionEnd・Stop・SubagentStop・PreCompact・PostCompact</strong> の10種類。
+</div>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">PostToolUse</span><span class="badge b-star">よく使う</span></div>
+    <div class="card-desc">ツール実行後に発火。ファイル保存後にlint・format・テストを自動実行するのに最適。
+      <pre>"hooks": {
+  "PostToolUse": [{
+    "matcher": "Write(*.py)",
+    "hooks": [{
+      "type": "command",
+      "command": "python -m black $CLAUDE_FILE_PATHS"
+    }]
+  }]
+}</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">PreToolUse</span></div>
+    <div class="card-desc">ツール実行前に発火。入力を検証したり、危険なコマンドをブロックしたりするのに使う。プロンプトインジェクションの検出にも活用可能。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">Notification</span></div>
+    <div class="card-desc">Claudeが処理を完了してユーザーの入力を待つ時に発火。長時間タスクの完了通知に使える（音・デスクトップ通知・Slack等）。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">Stop / SubagentStop</span></div>
+    <div class="card-desc">Claudeがタスクを終了したと判断した時に発火。「まだ終わっていない、次のステップを続けて」といった継続指示を自動で送るのに使う。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">PostCompact</span><span class="badge b-teal">新機能</span></div>
+    <div class="card-desc">コンパクション完了後に発火。重要な状態をファイルに保存したり、コンパクション後の追加指示を自動送信するのに使える。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">SessionStart / SessionEnd</span></div>
+    <div class="card-desc">セッション開始・終了時に発火。環境の初期化やログの記録・クリーンアップに使う。</div>
+  </div>
+</div>

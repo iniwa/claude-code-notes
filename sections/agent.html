@@ -1,0 +1,23 @@
+<div class="section-title">エージェント・権限</div>
+<div class="section-desc">サブエージェント・フック・権限のセッション中操作。</div>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">/agents</span><span class="badge b-auto">自動化</span></div>
+    <div class="card-desc">カスタムサブエージェントの管理。専門エージェント（コードレビュー・セキュリティ・ドキュメント等）を定義して使い回せる。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">/hooks</span></div>
+    <div class="card-desc">フック設定の管理。ツール実行前後に自動処理を挟む仕組み（例：ファイル保存時に自動でlintを実行）。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">/permissions</span></div>
+    <div class="card-desc">実行中のツール権限を変更。セッション中に許可するツールを追加・削除できる。<code>settings.json</code> の永続設定とは別のセッション限定変更。</div>
+  </div>
+</div>
+<h3>カスタムコマンド（スキル）の作り方</h3>
+<div class="tip">
+  <strong>推奨形式：</strong><code>.claude/skills/&lt;名前&gt;/SKILL.md</code><br>
+  スラッシュコマンドとして呼び出せる上に、Claudeが文脈を判断して自律的に使うこともできる。<br>
+  旧形式 <code>.claude/commands/</code> も引き続き動作するが、新規作成はスキル形式を推奨。<br>
+  個人用は <code>~/.claude/skills/</code> に置くと全プロジェクトで使える。
+</div>

@@ -1,0 +1,138 @@
+<div class="section-title">トラブルシューティング</div>
+<div class="section-desc">Claude Code でよくある問題とその対処法。MCP 以外の一般的なトラブルをカバー。</div>
+
+<h3>コンテキスト関連</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">コンテキスト溢れ</span><span class="badge b-warn">頻出</span></div>
+    <div class="card-desc">会話が長くなるとコンテキストウィンドウが不足し、古い情報が失われる。
+      <pre>対処法:
+1. /compact で圧縮（作業継続したい場合）
+2. /clear で完全リセット（別タスクに移る場合）
+3. .claudeignore で不要ファイルを除外
+4. 大きなタスクは分割して依頼</pre>
+      <strong>予防策：</strong> コンテキスト使用率 80% 前後で <code>/compact</code> を実行する習慣をつける。ステータスバーで使用率を常時確認できる。
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">Claude が以前の指示を忘れる</span></div>
+    <div class="card-desc">自動コンパクション後に重要な文脈が失われることがある。
+      <pre>対処法:
+1. 重要な指示は CLAUDE.md に書く（毎回読み込まれる）
+2. 「〜を覚えておいて」でメモリに保存
+3. /compact 時にカスタム指示で保持内容を指定
+   → /compact 認証機能の設計方針を保持して</pre>
+    </div>
+  </div>
+</div>
+
+<h3>権限・実行エラー</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">ツール実行が拒否される</span><span class="badge b-warn">頻出</span></div>
+    <div class="card-desc">Claude がツールを使おうとして権限エラーになる。
+      <pre>対処法:
+1. /permissions で現在の権限を確認
+2. .claude/settings.json の permissions.allow に追加
+   例: "Bash(npm test:*)", "Write(src/**)"
+3. セッション中に許可プロンプトで「常に許可」を選択</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">Bash コマンドがタイムアウト</span></div>
+    <div class="card-desc">デフォルトのタイムアウトは 120 秒（2分）。ビルドやテストが長い場合にタイムアウトする。
+      <pre>対処法:
+1. Claude に「タイムアウトを延長して」と伝える
+   （最大 600 秒 / 10 分まで設定可能）
+2. バックグラウンド実行を使う
+3. テスト対象を絞って実行時間を短縮</pre>
+    </div>
+  </div>
+</div>
+
+<h3>MCP 関連</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">MCP サーバーが接続できない</span><span class="badge b-warn">頻出</span></div>
+    <div class="card-desc">MCP サーバーの起動に失敗する。
+      <pre>対処法:
+1. claude mcp list で登録状況を確認
+2. npm パッケージが存在するか確認
+   → npm view @パッケージ名 version
+3. npx でパッケージを直接実行してエラーを確認
+4. 一度削除して再登録
+   → claude mcp remove サーバー名
+   → claude mcp add サーバー名 ...</pre>
+      <strong>よくある原因：</strong> npm パッケージ名の変更・廃止、ネットワークエラー、Node.js バージョン不一致。
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">MCP ツールが見つからない</span></div>
+    <div class="card-desc">MCP サーバーは接続済みだがツールが呼び出せない。
+      <pre>対処法:
+1. サーバーのステータスが "connected" か確認
+2. Claude Code を再起動（MCPの再接続が発生）
+3. permissions.allow に MCP ツールを追加
+   例: "mcp__serena__find_symbol"</pre>
+    </div>
+  </div>
+</div>
+
+<h3>ファイル・Git 関連</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">Claude が間違ったファイルを編集</span></div>
+    <div class="card-desc">意図しないファイルが変更されてしまった。
+      <pre>対処法:
+1. git diff で変更内容を確認
+2. git checkout -- ファイルパス で個別に戻す
+3. 大きな変更の前はブランチを切る習慣をつける
+4. @ファイル名 で対象を明示指定して依頼する</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">大きなファイルの読み込みが遅い</span></div>
+    <div class="card-desc">ログファイルやデータファイルが大きすぎてコンテキストを圧迫する。
+      <pre>対処法:
+1. .claudeignore に追加して除外
+2. Serena の symbolic tools で必要な部分だけ読む
+3. パイプで必要な部分だけ渡す
+   → ! tail -100 large.log</pre>
+    </div>
+  </div>
+</div>
+
+<h3>パフォーマンス</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">応答が遅い</span></div>
+    <div class="card-desc">Claude の応答速度が低下している。
+      <pre>対処法:
+1. /compact でコンテキストを圧縮
+2. Sonnet に切り替え（Opusより高速）
+3. /fast でfast modeを有効化（同じモデルで高速出力）
+4. 不要なMCPサーバーを削除して起動を軽量化</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">Claude が無限ループする</span></div>
+    <div class="card-desc">同じ操作を繰り返して進まない。
+      <pre>対処法:
+1. Esc で中断
+2. 問題の原因を説明して方針転換を指示
+3. /clear してアプローチを変えて再依頼
+4. 自動化時は --max-turns で制限をかける</pre>
+    </div>
+  </div>
+</div>
+
+<h3>環境・認証</h3>
+<div class="card">
+  <div class="card-header"><span class="cmd">認証エラー</span></div>
+  <div class="card-desc">Claude Code の認証が切れた、または API キーが無効。
+    <pre>対処法:
+1. claude login で再認証
+2. API キー使用の場合は ANTHROPIC_API_KEY を確認
+3. Pro/Max プランの場合は claude.ai でサブスク状態を確認</pre>
+  </div>
+</div>

@@ -1,0 +1,133 @@
+<div class="section-title">セットアップワークフロー</div>
+<div class="section-desc">新規プロジェクト開始から実装まで、この手順に沿って進める。</div>
+
+<div class="workflow">
+
+  <div class="wf-step">
+    <div class="wf-line"></div>
+    <div class="wf-left"><div class="wf-num improved">1</div></div>
+    <div class="wf-body">
+      <div class="wf-title">webチャットで設計書を作成する</div>
+      <div class="wf-current">
+        テンプレートを元にClaudeと相談しながら <code>plan.md</code> を作成する。<br>
+        同時に <code>CLAUDE.md</code> の草案も作る。設計時に決まった技術スタック・禁止事項・コーディング規約をここに書いておくと、CLIでの毎セッションの説明コストがゼロになる。<br><br>
+        <strong>成果物：</strong><code>plan.md</code> &nbsp;/&nbsp; <code>CLAUDE.md</code>（草案）
+      </div>
+    </div>
+  </div>
+
+  <div class="wf-step">
+    <div class="wf-line"></div>
+    <div class="wf-left"><div class="wf-num improved">2</div></div>
+    <div class="wf-body">
+      <div class="wf-title">CLAUDE.md と plan.md を Claude-startup で再編集する</div>
+      <div class="wf-current">
+        ステップ1で作成した <code>CLAUDE.md</code> と <code>plan.md</code> を、<strong>Claude-startup</strong>（専用プロジェクト）で再編集する。<br><br>
+        webチャットでの設計段階では含められない <strong>CLI実行環境固有の情報</strong>（PCスペック、Docker構成、OS設定、パス情報など）を、ベーステンプレート（<code>CLAUDEmd_docker</code> / <code>CLAUDEmd_windows</code>）から組み込む。<br>
+        これにより、Claude Code が実際の実行環境を正しく認識した状態でコーディングを開始できる。<br><br>
+        <strong>※</strong> このプロジェクトのリポジトリ構成は後日調整予定。
+      </div>
+    </div>
+  </div>
+
+  <div class="wf-step">
+    <div class="wf-line"></div>
+    <div class="wf-left"><div class="wf-num improved">3</div></div>
+    <div class="wf-body">
+      <div class="wf-title">リポジトリを用意する</div>
+      <div class="wf-current">
+        新規の場合はディレクトリを作成してgitを初期化。既存プロジェクトは <code>git clone</code>。
+        <pre>mkdir my-project && cd my-project
+git init && git commit --allow-empty -m "init"</pre>
+        git を最初に初期化しておくことで、Claude Code の変更を <code>git diff</code> で追跡・revert できるようになる。<br>
+        大きな変更を依頼する前は <strong>必ずブランチを切る</strong>こと。
+      </div>
+    </div>
+  </div>
+
+  <div class="wf-step">
+    <div class="wf-line"></div>
+    <div class="wf-left"><div class="wf-num improved">4</div></div>
+    <div class="wf-body">
+      <div class="wf-title">プロジェクトファイルを設置する</div>
+      <div class="wf-current">
+        以下のファイルをプロジェクトルートに配置する。テンプレートは「テンプレート集」を参照。
+      </div>
+      <div style="margin-top:10px;" class="file-tree">
+        <span class="dir">my-project/</span><br>
+        ├── <span class="important">CLAUDE.md</span> &nbsp;<span class="comment"># Claude への常設指示（技術スタック・規約等）</span><br>
+        ├── <span class="important">plan.md</span> &nbsp;<span class="comment"># 設計書・実装フェーズ</span><br>
+        ├── <span class="new">.claudeignore</span> &nbsp;<span class="comment"># node_modules/ 等を除外（必須）</span><br>
+        ├── <span class="new">.claude/</span><br>
+        │&nbsp;&nbsp; └── <span class="new">settings.json</span> &nbsp;<span class="comment"># 権限・フック設定</span><br>
+        └── <span class="dir">src/</span> &nbsp;<span class="comment">...</span>
+      </div>
+      <div style="margin-top:10px;" class="wf-current">
+        <strong>.claudeignore は必ず作成する。</strong><br>
+        <code>node_modules/</code>, <code>.git/</code>, <code>build/</code>, <code>dist/</code> 等を除外することで、Claude Code が読み込むコンテキストを減らしトークン消費を抑える。
+      </div>
+    </div>
+  </div>
+
+  <div class="wf-step">
+    <div class="wf-line"></div>
+    <div class="wf-left"><div class="wf-num">5</div></div>
+    <div class="wf-body">
+      <div class="wf-title">VS Code で開き、Claude Code を起動する</div>
+      <div class="wf-current">
+        VS Code でプロジェクトルートを開き、統合ターミナルで Claude Code を起動する。
+        <pre># モデルを明示指定して起動
+claude --model sonnet
+
+# または重いタスクなら
+claude --model opus</pre>
+        Claude Code for VS Code 拡張を使うと、ファイルの差分確認がエディタ上でできるようになる。
+      </div>
+    </div>
+  </div>
+
+  <div class="wf-step">
+    <div class="wf-line"></div>
+    <div class="wf-left"><div class="wf-num improved">6</div></div>
+    <div class="wf-body">
+      <div class="wf-title">実装を依頼する</div>
+      <div class="wf-current">
+        ファイルを明示参照して指示する。「見ながら」より <code>@ファイル名</code> で参照する方が確実。
+        <pre>@plan.md のPhase 1 を実装してください</pre>
+        <strong>大きなタスクの前は Shift+Tab でプランモードに切り替える。</strong><br>
+        何をするか計画を確認してから承認することで、意図しない変更を防ぐ。<br><br>
+        タスクは細かく分割して渡す。「全部実装して」より「まず認証部分だけ」の方が精度が上がる。
+      </div>
+    </div>
+  </div>
+
+  <div class="wf-step">
+    <div class="wf-line"></div>
+    <div class="wf-left"><div class="wf-num improved">7</div></div>
+    <div class="wf-body">
+      <div class="wf-title">デバッグ・修正を繰り返す</div>
+      <div class="wf-current">
+        エラーはコピペせず、<code>!</code> コマンドでターミナル出力をそのまま Claude に渡す。
+        <pre>! npm test 2>&1
+! npm run build 2>&1 | tail -30</pre>
+        <strong>コンテキスト管理のルール：</strong><br>
+        使用率 80% 前後 → <code>/compact</code> で圧縮（作業継続）<br>
+        別タスクへ切り替え → <code>/clear</code> で完全リセット<br><br>
+        フックを設定しておくと、ファイル保存のたびに lint が自動実行されエラーを早期検知できる（→ テンプレート集 参照）。
+      </div>
+    </div>
+  </div>
+
+  <div class="wf-step">
+    <div class="wf-left"><div class="wf-num">8</div></div>
+    <div class="wf-body">
+      <div class="wf-title">動作確認・コミット</div>
+      <div class="wf-current">
+        動作確認後、git commit してプッシュ。コミットメッセージの生成も Claude に任せられる。
+        <pre>git diff --staged | claude -p "コミットメッセージを日本語で生成して"</pre>
+        <code>Bash(git commit:*)</code> を <code>permissions.allow</code> に入れておくと、Claude がコミットまで自動化できる。
+      </div>
+    </div>
+  </div>
+
+</div>

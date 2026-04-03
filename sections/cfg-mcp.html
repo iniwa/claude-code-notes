@@ -1,0 +1,39 @@
+<div class="section-title">/config — MCP・拡張</div>
+<div class="section-desc">Model Context Protocolサーバーを使ってClaude Codeにツールを追加拡張する設定。</div>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">mcpServers</span><span class="badge b-both">両方</span></div>
+    <div class="card-desc">使用するMCPサーバーの定義。プロジェクト共有は <code>.mcp.json</code>、個人用は <code>settings.json</code> に記述。
+      <pre>"mcpServers": {
+  "github": {
+    "command": "npx",
+    "args": ["-y", "@anthropic-ai/mcp-server-github"],
+    "env": { "GITHUB_TOKEN": "ghp_..." }
+  },
+  "postgres": {
+    "command": "npx",
+    "args": ["-y", "@anthropic-ai/mcp-server-postgres",
+             "postgresql://localhost/mydb"]
+  }
+}</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">env（settings.json内）</span><span class="badge b-both">両方</span><span class="badge b-star">おすすめ</span></div>
+    <div class="card-desc">settings.jsonに環境変数を直接記述できる（v2.1.89以降）。ラッパースクリプトが不要になった。MCPサーバーのトークン等をまとめて管理するのに便利。
+      <pre>"env": {
+  "GITHUB_TOKEN": "ghp_...",
+  "NODE_ENV": "development",
+  "MY_API_KEY": "..."
+}</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">allowedMcpServers</span><span class="badge b-both">両方</span></div>
+    <div class="card-desc">使用を許可するMCPサーバーのホワイトリスト。チームでのセキュリティ管理用。未設定時は全サーバーが対象。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">channelsEnabled</span><span class="badge b-user">ユーザー</span><span class="badge b-teal">Team/Enterprise</span></div>
+    <div class="card-desc">チャンネル機能を有効化。<code>--channels</code> フラグと組み合わせることでツール承認プロンプトをスマホに転送するなどができる。</div>
+  </div>
+</div>

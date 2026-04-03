@@ -1,0 +1,74 @@
+<div class="section-title">ステータスバー設定</div>
+<div class="section-desc">Claude Code のステータスラインにモデル名・コンテキスト使用率・レート制限等を表示するカスタマイズ手順。</div>
+
+<h3>概要</h3>
+<div class="card">
+  <div class="card-desc">Claude Code はステータスバーのカスタマイズに対応しています。<code>~/.claude/statusline.py</code> にスクリプトを配置し、<code>settings.json</code> で指定するだけで、以下のような情報をリアルタイムに表示できます:
+    <pre>🤖 Sonnet 4.6 │ 📊 54% ctx │ 💰 $0.620 │ 🔀 main │ 🎯 1.2k↑ 5.7k↓
+⏱ 5h  ▰▰▰▱▱▱▱▱▱▱  30%  Resets 1pm (Asia/Tokyo)
+📅 7d  ▰▰▰▰▰▰▰▰▰▰  97%  Resets Mar 7 at 5pm (Asia/Tokyo)</pre>
+  </div>
+</div>
+
+<h3>セットアップ方法</h3>
+<div class="card">
+  <div class="card-desc">以下のプロンプトを Claude Code の CLI にそのまま貼り付けて実行してください。自動でファイル作成と設定が行われます。</div>
+</div>
+<div class="template">
+  <div class="template-header"><span class="filename">Claude Code に貼り付けるプロンプト</span></div>
+  <pre>ステータスバーをセットアップしてください。以下の仕様で実装してください。
+
+■ 構成
+- ~/.claude/statusline.py — メインスクリプト（Python）
+- ~/.claude/statusline-command.sh — 起動用シェルスクリプト
+- ~/.claude/settings.json に statusLine 設定を追記
+
+■ 表示内容（1行目）
+モデル名 | コンテキスト使用率 | セッションコスト | Git差分(+X/-Y) | Gitブランチ | トークン数(入力↑ 出力↓)
+
+■ 表示内容（2行目・3行目）レート制限
+- 5時間レート: プログレスバー(10段階) + パーセント + リセット時刻
+- 7日レート: プログレスバー(10段階) + パーセント + リセット日時
+- タイムゾーンは自分の環境に合わせること
+
+■ レート制限の取得方法
+- ~/.claude/.credentials.json から OAuth トークンを読み取り
+- claude-haiku-4-5-20251001 へ最小限のAPIコール(max_tokens:1)を送信
+- レスポンスヘッダの anthropic-ratelimit-unified-* を解析
+- 結果は6分間キャッシュ（$TMPDIR/claude-ratelimit-cache.json）
+
+■ 色分け
+- 0-49%: 緑 / 50-79%: 黄 / 80-100%: 赤
+
+■ 注意
+- Windows環境の場合、UTF-8出力とCRLF問題に対応すること
+- stdin から JSON を受け取り、stdout に表示行を出力する形式</pre>
+</div>
+
+<h3>トークン消費量</h3>
+<div class="card">
+  <div class="card-desc">レート制限の取得に <code>claude-haiku-4-5-20251001</code> への API コールが発生します。
+    <table>
+      <tr><td>1回あたり</td><td>入力 ~30 トークン / 出力 1 トークン（最小リクエスト）</td></tr>
+      <tr><td>キャッシュ間隔</td><td>6分（アクティブに使用中のみ）</td></tr>
+      <tr><td>1時間あたり</td><td>最大 ~10回 = 入力 ~300 トークン / 出力 ~10 トークン</td></tr>
+      <tr><td>コスト影響</td><td>Haiku の最小リクエストのため、金銭的コストはほぼゼロ</td></tr>
+      <tr><td>レート制限への影響</td><td>ごく僅か（Haiku のレートは Opus/Sonnet と統合上限に含まれるが、消費量は無視できるレベル）</td></tr>
+    </table>
+    <p>※ レート制限表示が不要であれば、該当部分を省略するよう指示することで API コールを完全になくすことも可能です。</p>
+  </div>
+</div>
+
+<h3>前提条件</h3>
+<div class="card-grid">
+  <div class="card"><div class="card-desc"><code>python</code> または <code>python3</code> がコマンドラインから実行可能であること</div></div>
+  <div class="card"><div class="card-desc">Claude Code に OAuth ログイン済みであること（レート制限表示に必要。<code>~/.claude/.credentials.json</code> が生成される）</div></div>
+  <div class="card"><div class="card-desc">レート制限表示は <strong>Pro / Max サブスクリプション</strong>の OAuth 認証が前提。API キー利用者はレート制限部分を省略してください</div></div>
+</div>
+
+<h3>カスタマイズのヒント</h3>
+<div class="card-grid">
+  <div class="card"><div class="card-desc">表示項目の追加・削除はプロンプトの「表示内容」を編集するだけ。例: コスト表示が不要なら該当行を削除</div></div>
+  <div class="card"><div class="card-desc">キャッシュ間隔を変更したい場合は「キャッシュ時間を X 分に変更」と追記</div></div>
+  <div class="card"><div class="card-desc">キャッシュが壊れた場合は <code>$TMPDIR/claude-ratelimit-cache.json</code> を削除すれば再取得される</div></div>
+</div>

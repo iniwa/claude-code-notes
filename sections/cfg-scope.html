@@ -1,0 +1,40 @@
+<div class="section-title">/config — スコープ構造</div>
+<div class="section-desc">設定ファイルの優先度階層。上位のスコープが下位を上書きする。チームと個人設定を適切に分離するために理解しておく。</div>
+<div class="scope-stack">
+  <div class="scope-item" style="border-color:rgba(248,113,113,0.3);">
+    <div>
+      <div class="scope-name" style="color:var(--red);">Managed（管理者）</div>
+      <div class="scope-path">/etc/claude-code/managed-settings.json</div>
+      <div class="scope-desc">組織のIT管理者が設定。ユーザー・プロジェクト設定で上書き不可。セキュリティポリシーの強制適用に使う。</div>
+    </div>
+    <span class="badge b-warn" style="align-self:flex-start;">最高優先度</span>
+  </div>
+  <div class="scope-item" style="border-color:rgba(96,165,250,0.3);">
+    <div>
+      <div class="scope-name" style="color:var(--blue);">Local（ローカル）</div>
+      <div class="scope-path">.claude/settings.local.json</div>
+      <div class="scope-desc">自分だけの作業設定。<code>.gitignore</code> に追加してチームと共有しない。個人的な権限調整等に。</div>
+    </div>
+    <span class="badge b-user" style="align-self:flex-start;">個人・非共有</span>
+  </div>
+  <div class="scope-item" style="border-color:rgba(74,222,128,0.3);">
+    <div>
+      <div class="scope-name" style="color:var(--green);">Project（プロジェクト）</div>
+      <div class="scope-path">.claude/settings.json</div>
+      <div class="scope-desc">gitにコミットしてチームで共有。権限ルール・フック・MCPサーバーを統一する場所。</div>
+    </div>
+    <span class="badge b-proj" style="align-self:flex-start;">チーム共有</span>
+  </div>
+  <div class="scope-item" style="border-color:rgba(155,155,155,0.2);">
+    <div>
+      <div class="scope-name" style="color:var(--text2);">User（ユーザー）</div>
+      <div class="scope-path">~/.claude/settings.json</div>
+      <div class="scope-desc">全プロジェクト共通の個人設定。モデル・言語・テーマなど個人の好みをここに書く。</div>
+    </div>
+    <span class="badge" style="background:var(--bg4);color:var(--text3);align-self:flex-start;">最低優先度</span>
+  </div>
+</div>
+<div class="tip" style="margin-top:16px;">
+  <strong>マージ挙動：</strong> 競合した場合は上位スコープが勝つ。配列はマージ（重複排除）、スカラー値は上書き。<br>
+  <strong>使い分けの基本：</strong> 個人好み → User、チーム共通ルール → Project、個人的な例外 → Local、組織ポリシー → Managed
+</div>

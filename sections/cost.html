@@ -1,0 +1,103 @@
+<div class="section-title">コスト・トークン最適化</div>
+<div class="section-desc">Claude Code の利用コストを抑えつつ、作業効率を最大化するためのテクニック集。</div>
+
+<h3>モデルの使い分け</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">Sonnet</span><span class="badge b-star">コスパ◎</span></div>
+    <div class="card-desc">日常的なコーディング作業の大半はこれで十分。起動時に <code>--model sonnet</code> で指定するか、セッション中に <code>/model sonnet</code> で切り替え。
+      <pre># 起動時
+claude --model sonnet
+
+# セッション中（Shift+Tab 2回で fast mode トグルも可）
+/model sonnet</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">Opus</span><span class="badge b-warn">高コスト</span></div>
+    <div class="card-desc">複雑な設計判断、大規模リファクタリング、難解なバグの調査など、高い推論力が必要な場面で使う。常用は避ける。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">Haiku</span><span class="badge b-teal">最安</span></div>
+    <div class="card-desc">サブエージェントの <code>model</code> パラメータで指定すると、単純なタスク（ファイル検索、パターンマッチ等）を低コストで実行できる。
+      <pre># サブエージェントで Haiku を使う例
+Agent(model: "haiku", prompt: "...")</pre>
+    </div>
+  </div>
+</div>
+
+<h3>コンテキスト管理</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">/compact</span><span class="badge b-star">よく使う</span></div>
+    <div class="card-desc">会話履歴を要約して圧縮する。コンテキスト使用率が <strong>80%前後</strong> になったら実行。自動コンパクションもあるが、手動の方がタイミングを制御できる。
+      <pre># カスタム指示付きコンパクション
+/compact 実装中の認証機能の詳細を保持して</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">/clear</span></div>
+    <div class="card-desc">コンテキストを完全リセット。別タスクに移る時に使う。<code>/compact</code> は作業継続用、<code>/clear</code> はタスク切り替え用と使い分ける。</div>
+  </div>
+</div>
+
+<h3>.claudeignore によるコンテキスト削減</h3>
+<div class="card">
+  <div class="card-desc">Claude Code が読み込むファイルを制限することで、トークン消費を大幅に削減できる。特に大きなファイルやディレクトリを除外する。
+    <pre># .claudeignore の例
+node_modules/
+dist/
+build/
+*.min.js
+*.min.css
+*.map
+*.lock
+package-lock.json
+*.bin
+*.safetensors
+*.gguf</pre>
+  </div>
+</div>
+<div class="tip">
+  <strong>効果が大きい除外対象：</strong><br>
+  <code>package-lock.json</code>（数万行）、<code>*.lock</code>、ビルド成果物、MLモデルファイル、ソースマップ。これらを除外するだけでコンテキスト消費が劇的に減る。
+</div>
+
+<h3>プロンプトの工夫</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">タスク分割</span><span class="badge b-star">重要</span></div>
+    <div class="card-desc">「全部実装して」より「まず認証部分だけ」の方がトークン効率が良い。大きなタスクは段階的に依頼する。1回の指示が明確なほど、やり直しが減りトータルコストが下がる。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">ファイル明示参照</span></div>
+    <div class="card-desc">Claude にファイルを探させるより、<code>@ファイル名</code> で直接参照する方がトークンを節約できる。
+      <pre>@src/auth.py の login 関数を修正して</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">ワンショット活用</span></div>
+    <div class="card-desc"><code>-p</code> フラグでワンショット実行すると、インタラクティブモードのオーバーヘッドを避けられる。簡単な質問やコード生成に有効。
+      <pre># パイプで入力してワンショット
+cat error.log | claude -p "このエラーの原因は？"
+git diff --staged | claude -p "コミットメッセージを生成"</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">プランモード</span></div>
+    <div class="card-desc">大きなタスクの前に <strong>Shift+Tab</strong> でプランモードに切り替え。計画を確認してから実装に移ることで、方向修正によるトークン浪費を防ぐ。</div>
+  </div>
+</div>
+
+<h3>サブエージェントのコスト制御</h3>
+<div class="card">
+  <div class="card-desc">
+    サブエージェントはメインの会話とは別にコンテキストを消費する。以下を意識する。
+    <ul style="margin:8px 0 0 0; padding-left:20px;">
+      <li>単純な検索タスクには <code>model: "haiku"</code> を指定して低コスト化</li>
+      <li>同じ調査をメインとサブエージェントで重複して行わない</li>
+      <li>サブエージェントは必要な時だけ使う — 3回以内の検索で済むなら直接 Grep/Glob を使う</li>
+      <li>独立したタスクは並列実行でウォールタイムを短縮（トークンは同じだが待ち時間削減）</li>
+    </ul>
+  </div>
+</div>

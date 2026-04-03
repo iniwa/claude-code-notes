@@ -1,0 +1,20 @@
+<div class="section-title">モデル・設定</div>
+<div class="section-desc">使用モデルや動作モードをセッション中に変更するコマンド。</div>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">/model</span><span class="badge b-star">よく使う</span></div>
+    <div class="card-desc">使用モデルを切り替え。Opus / Sonnet / Haiku を選択。重いタスクはOpus、コスト節約時はHaiku。<br>セッション起動時に <code>--model</code> フラグで固定することも可能。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">/fast</span><span class="badge b-star">よく使う</span></div>
+    <div class="card-desc">Fast Modeの切り替え。Opusを速度優先設定で動かす。ライブデバッグや素早い反復作業に最適。コスト重視の場合はオフに。<br><strong>注意：</strong>有効化するとそれ以前のコンテキストも Fast Modeレートで再課金される。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">/effort [low|medium|high]</span></div>
+    <div class="card-desc">モデルの思考努力レベルを設定。<code>/effort auto</code> でリセット。複雑な推論には high、単純タスクは low でコスト削減。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">/config</span></div>
+    <div class="card-desc">設定UIを開く。モデル・権限・テーマ・フックなどをGUIで確認・変更できる。<br>直接 <code>settings.json</code> を編集しても同じ効果がある。</div>
+  </div>
+</div>

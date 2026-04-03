@@ -1,0 +1,118 @@
+<div class="section-title">CI/CD レシピ集</div>
+<div class="section-desc">GitHub Actions で Claude Code を活用する実践的なレシピ。PR レビュー自動化、コード品質チェック、ドキュメント生成など。</div>
+
+<h3>前提条件</h3>
+<div class="card">
+  <div class="card-desc">
+    CI/CD で Claude Code を使うには以下が必要：
+    <ul style="margin:8px 0 0 0; padding-left:20px;">
+      <li><code>ANTHROPIC_API_KEY</code> を GitHub Secrets に登録</li>
+      <li>Claude Code を CI 環境にインストール（<code>npm install -g @anthropic-ai/claude-code</code>）</li>
+      <li>非インタラクティブモード（<code>-p</code> フラグ）で実行</li>
+      <li>コンテナ環境では <code>--dangerously-skip-permissions</code> を使用可能</li>
+    </ul>
+  </div>
+</div>
+
+<h3>PR レビュー自動化</h3>
+<div class="card">
+  <div class="card-header"><span class="cmd">pr-review.yml</span><span class="badge b-star">おすすめ</span></div>
+  <div class="card-desc">PR が作成されたら自動で Claude にコードレビューを依頼する。
+    <pre>name: Claude PR Review
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Review PR
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          git diff origin/main...HEAD | claude -p \
+            "このdiffをレビューしてください。
+             セキュリティ・パフォーマンス・可読性の観点で
+             問題点があれば指摘してください。" \
+            --allowedTools "Read,Grep,Glob" \
+            --output-format json | jq -r '.result' > review.md
+
+      - name: Post Review Comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const review = fs.readFileSync('review.md', 'utf8');
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '## 🤖 Claude Code Review\n\n' + review
+            });</pre>
+  </div>
+</div>
+
+<h3>コミットメッセージ生成</h3>
+<div class="card">
+  <div class="card-header"><span class="cmd">ワンショット</span></div>
+  <div class="card-desc">ステージ済みの変更からコミットメッセージを自動生成する。ローカルでも CI でも使える。
+    <pre># ローカルで使う場合
+git diff --staged | claude -p \
+  "このdiffに適切なコミットメッセージを日本語で生成してください。
+   Conventional Commits形式で。本文のみ出力。"
+
+# git alias に登録
+# ~/.gitconfig
+[alias]
+  ai-commit = "!git diff --staged | claude -p 'コミットメッセージを日本語で生成。Conventional Commits形式。本文のみ出力。' | git commit -F -"</pre>
+  </div>
+</div>
+
+<h3>コード品質チェック</h3>
+<div class="card">
+  <div class="card-header"><span class="cmd">quality-check.yml</span></div>
+  <div class="card-desc">PR の変更ファイルに対してセキュリティ・品質チェックを実行する。
+    <pre>- name: Security Check
+  env:
+    ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+  run: |
+    claude -p \
+      "このリポジトリの変更ファイルについて、
+       OWASP Top 10の観点でセキュリティチェックしてください。
+       問題がなければ'問題なし'とだけ返してください。" \
+      --allowedTools "Read,Grep,Glob" \
+      --max-turns 5</pre>
+  </div>
+</div>
+
+<h3>ドキュメント自動生成</h3>
+<div class="card">
+  <div class="card-header"><span class="cmd">doc-gen.yml</span></div>
+  <div class="card-desc">コード変更時に API ドキュメントや CHANGELOG を自動更新する。
+    <pre>- name: Update Docs
+  env:
+    ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+  run: |
+    claude -p \
+      "git diff origin/main...HEAD を確認し、
+       公開APIに変更があればCHANGELOG.mdを更新してください。
+       変更がなければ何もしないでください。" \
+      --allowedTools "Read,Write,Edit,Bash(git diff*),Grep,Glob" \
+      --max-turns 10</pre>
+  </div>
+</div>
+
+<h3>注意事項</h3>
+<div class="tip">
+  <strong>コスト管理：</strong><code>--max-turns</code> を必ず設定し、無限ループを防止する。PR レビューなら 3-5 ターン、コード修正を伴うタスクなら 10-20 ターンが目安。<br><br>
+  <strong>セキュリティ：</strong><code>--dangerously-skip-permissions</code> はコンテナ内でのみ使う。<code>--allowedTools</code> でツールを最小限に絞る。<br><br>
+  <strong>モデル選択：</strong>CI ではコスト重視で <code>--model sonnet</code> を推奨。複雑な分析が必要な場合のみ Opus を使う。
+</div>

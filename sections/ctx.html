@@ -1,0 +1,18 @@
+<div class="section-title">コンテキスト管理</div>
+<div class="section-desc">トークン消費を抑え、会話の質を維持するためのコマンド群。</div>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">/compact [hint]</span><span class="badge b-star">よく使う</span><span class="badge b-ctx">コンテキスト</span></div>
+    <div class="card-desc">会話履歴を要約して圧縮。引数で保持したい内容を指定可能。コンテキスト使用率が80%を超えたら使うのが目安。
+      <pre>/compact エラーハンドリングのパターンを保持</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">/clear</span><span class="badge b-star">よく使う</span><span class="badge b-ctx">コンテキスト</span></div>
+    <div class="card-desc">会話履歴を完全クリア。タスク切り替え時に使用。<code>/compact</code> は継続中タスクの圧縮、<code>/clear</code> は完全な切り替え時に使い分ける。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">/context</span><span class="badge b-ctx">コンテキスト</span></div>
+    <div class="card-desc">現在のコンテキスト使用量を可視化。コンパクションのタイミングを判断するのに使う。</div>
+  </div>
+</div>

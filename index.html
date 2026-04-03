@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>iniwa's Claude Code Notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="logo">CC</div>
+    <div>
+      <h1>iniwa's Claude Code Notes</h1>
+      <p>commands · flags · config · templates · manuals</p>
+    </div>
+  </div>
+  <div class="search-wrap">
+    <span class="search-icon">⌕</span>
+    <input id="search" type="text" placeholder="コマンドを検索..." autocomplete="off">
+  </div>
+</header>
+
+<div class="layout">
+  <nav>
+    <div class="nav-section">
+      <a onclick="show('top')" class="active"><span class="dot"></span>Top</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">作業フロー</div>
+      <a onclick="show('workflow')"><span class="dot"></span>セットアップワークフロー</a>
+      <a onclick="show('templates')"><span class="dot"></span>テンプレート集</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">マニュアル</div>
+      <a onclick="show('manual-setup')"><span class="dot"></span>プロジェクトセットアップ</a>
+      <a onclick="show('manual-mcp')"><span class="dot"></span>MCP セットアップ</a>
+      <a onclick="show('manual-statusbar')"><span class="dot"></span>ステータスバー設定</a>
+      <a onclick="show('manual-serena')"><span class="dot"></span>Serena マニュアル</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">スラッシュコマンド</div>
+      <a onclick="show('ctx')"><span class="dot"></span>コンテキスト管理</a>
+      <a onclick="show('model')"><span class="dot"></span>モデル・設定</a>
+      <a onclick="show('session')"><span class="dot"></span>セッション情報</a>
+      <a onclick="show('project')"><span class="dot"></span>プロジェクト・作業</a>
+      <a onclick="show('agent')"><span class="dot"></span>エージェント・権限</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">CLI フラグ</div>
+      <a onclick="show('cli-auto')"><span class="dot"></span>自動化モード</a>
+      <a onclick="show('cli-model')"><span class="dot"></span>モデル・動作</a>
+      <a onclick="show('cli-prompt')"><span class="dot"></span>システムプロンプト</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">キーボード</div>
+      <a onclick="show('keyboard')"><span class="dot"></span>ショートカット</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">/config 設定</div>
+      <a onclick="show('cfg-basic')"><span class="dot"></span>基本動作</a>
+      <a onclick="show('cfg-perm')"><span class="dot"></span>権限・セキュリティ</a>
+      <a onclick="show('cfg-hooks')"><span class="dot"></span>フック</a>
+      <a onclick="show('cfg-mcp')"><span class="dot"></span>MCP・拡張</a>
+      <a onclick="show('cfg-scope')"><span class="dot"></span>スコープ構造</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">ガイド</div>
+      <a onclick="show('memory')"><span class="dot"></span>メモリシステム</a>
+      <a onclick="show('cost')"><span class="dot"></span>コスト・トークン最適化</a>
+      <a onclick="show('ide')"><span class="dot"></span>IDE 連携</a>
+      <a onclick="show('subagent')"><span class="dot"></span>サブエージェント実践</a>
+      <a onclick="show('cicd')"><span class="dot"></span>CI/CD レシピ集</a>
+      <a onclick="show('troubleshoot')"><span class="dot"></span>トラブルシューティング</a>
+    </div>
+  </nav>
+
+  <main>
+    <div id="top" class="section active"><p class="loading-text">読み込み中...</p></div>
+    <div id="workflow" class="section"><p class="loading-text">読み込み中...</p></div>
+    <div id="templates" class="section"></div>
+    <div id="manual-setup" class="section"></div>
+    <div id="manual-mcp" class="section"></div>
+    <div id="manual-statusbar" class="section"></div>
+    <div id="manual-serena" class="section"></div>
+    <div id="memory" class="section"></div>
+    <div id="cost" class="section"></div>
+    <div id="ide" class="section"></div>
+    <div id="subagent" class="section"></div>
+    <div id="cicd" class="section"></div>
+    <div id="troubleshoot" class="section"></div>
+    <div id="ctx" class="section"></div>
+    <div id="model" class="section"></div>
+    <div id="session" class="section"></div>
+    <div id="project" class="section"></div>
+    <div id="agent" class="section"></div>
+    <div id="cli-auto" class="section"></div>
+    <div id="cli-model" class="section"></div>
+    <div id="cli-prompt" class="section"></div>
+    <div id="keyboard" class="section"></div>
+    <div id="cfg-basic" class="section"></div>
+    <div id="cfg-perm" class="section"></div>
+    <div id="cfg-hooks" class="section"></div>
+    <div id="cfg-mcp" class="section"></div>
+    <div id="cfg-scope" class="section"></div>
+  </main>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>

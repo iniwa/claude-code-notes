@@ -1,0 +1,46 @@
+<div class="section-title">Serena マニュアル</div>
+<div class="section-desc">Serena MCP の基本的な使い方。自然言語で指示するだけで、裏側で LSP ベースのツールが自動的に動く。</div>
+
+<h3>基本ワークフロー</h3>
+<div class="tip">
+  Serena の最大の特徴は、特別なコマンドを覚える必要がないこと。普段通り Claude Code に自然言語でお願いするだけで、Claude が裏側で Serena のツール（LSP）を自動操作する。
+</div>
+
+<h3>1. 構造的な検索</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">find_symbol</span></div>
+    <div class="card-desc">「〇〇の処理をしている関数の定義を見つけて」<br>
+    ファイル全体を読まずにピンポイントで関数定義を探す。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">find_referencing_symbols</span></div>
+    <div class="card-desc">「この変数がプロジェクト内のどこから呼び出されているか調べて」<br>
+    参照元を構造的に追跡する。</div>
+  </div>
+</div>
+
+<h3>2. 全体像を把握</h3>
+<div class="card">
+  <div class="card-header"><span class="cmd">get_symbols_overview</span></div>
+  <div class="card-desc">「このファイルの全体的なシンボル（クラスや関数）の概要を教えて」<br>
+  コードの目次だけを素早く取得する。</div>
+</div>
+
+<h3>3. 安全にコードを編集</h3>
+<div class="card">
+  <div class="card-header"><span class="cmd">replace_symbol_body</span></div>
+  <div class="card-desc">「〇〇という関数の内部だけを、この新しい処理に書き換えて」<br>
+  行数のズレを気にせず「関数というブロック単位」で安全にコードを差し替える。</div>
+</div>
+
+<h3>Web ダッシュボード</h3>
+<div class="card">
+  <div class="card-desc">
+    Serena の解析ログや記憶データを視覚的に確認できる。<br><br>
+    <strong>手順:</strong><br>
+    1. Claude Code を起動した状態にする（Serena サーバーも同時に起動）<br>
+    2. ブラウザで <code>http://localhost:8000</code> を開く<br><br>
+    ポート 8000 が他のアプリで使われている場合は表示されないことがある。
+  </div>
+</div>

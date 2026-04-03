@@ -1,0 +1,10 @@
+{
+  "model": "claude-sonnet-4-6",
+  "language": "japanese",
+  "theme": "dark",
+  "showTurnDuration": true,
+  "cleanupPeriodDays": 90,
+  "permissions": {
+    "defaultMode": "acceptEdits"
+  }
+}

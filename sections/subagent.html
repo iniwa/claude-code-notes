@@ -1,0 +1,116 @@
+<div class="section-title">サブエージェント実践パターン</div>
+<div class="section-desc">サブエージェントの基礎知識と、ユーザーが介入できるポイント。</div>
+
+<h3>サブエージェントとは</h3>
+<div class="card">
+  <div class="card-desc">
+    サブエージェントとは、Claude Code が内部で起動する<strong>「別プロセスの Claude」</strong>。<br>
+    通常は1つの会話でメインの Claude が作業するが、複雑なタスクでは別の Claude を立ち上げて作業を分担させることができる。
+  </div>
+</div>
+<div class="file-tree" style="margin-top:10px;">
+  <span class="important">メインの Claude（ユーザーと会話中）</span><br>
+  ├── サブエージェント A: フロントエンドのコードを調査<br>
+  ├── サブエージェント B: バックエンドの構造を調査<br>
+  └── 結果を受け取って統合 → ユーザーに回答
+</div>
+<div class="tip" style="margin-top:14px;">
+  <strong>基本的にユーザーが設定・操作する必要はない。</strong><br>
+  サブエージェントの起動タイミング・種類・モデル選択はすべて Claude が自律的に判断する。CLI フラグや設定ファイルでサブエージェントを直接制御する手段は存在しない。<br>
+  ユーザーは「サブエージェントが何をしているか」を知っておくだけで十分。
+</div>
+<div class="card-grid" style="margin-top:14px;">
+  <div class="card">
+    <div class="card-header"><span class="cmd">独立したコンテキスト</span></div>
+    <div class="card-desc">サブエージェントはメインの会話とは別のコンテキストで動く。メインの会話履歴を圧迫せず、大量の調査結果も要約して返してくれる。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">並列実行</span></div>
+    <div class="card-desc">複数のサブエージェントを同時に走らせて待ち時間を短縮できる。独立した調査タスクを並列化するのが典型的な使い方。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">自律的に使われる</span></div>
+    <div class="card-desc">ユーザーが直接操作するものではなく、Claude が必要と判断したときに内部で自動起動する。ユーザーから見ると「Claude が勝手にやってくれている」もの。</div>
+  </div>
+</div>
+
+<h3>サブエージェントの種類（参考）</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">Explore</span></div>
+    <div class="card-desc">コードベースの探索に特化した高速エージェント。ファイルパターン検索、キーワード検索、アーキテクチャ理解に使われる。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">Plan</span></div>
+    <div class="card-desc">設計・実装計画の策定に特化。重要ファイルの特定やアーキテクチャのトレードオフ検討を行う。コード編集はできない（読み取り専用）。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">general-purpose</span></div>
+    <div class="card-desc">汎用エージェント。複雑なマルチステップタスクを自律的に処理する。全ツールにアクセス可能。</div>
+  </div>
+</div>
+<div class="tip">
+  どの種類を使うかは Claude が判断する。ユーザーが指定する必要はない。
+</div>
+
+<h3>ユーザーが介入できるポイント</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">自然言語での指示</span><span class="badge b-star">唯一の方法</span></div>
+    <div class="card-desc">サブエージェントの挙動に影響を与える唯一の手段は、自然言語で Claude に伝えること。
+      <pre># 会話中に伝える
+「単純な検索にはコストの低いモデルを使って」
+「並列で調査して」
+「worktree を使って安全に実験して」</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">CLAUDE.md に方針を記載</span></div>
+    <div class="card-desc">毎回伝えるのが面倒なら、CLAUDE.md に方針を書いておく。すべてのセッションで自動的に読み込まれる。
+      <pre># CLAUDE.md に記載する例
+## Tooling
+- サブエージェントの単純な検索タスクには
+  コストの低いモデルを優先すること</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">SubagentStop フック</span></div>
+    <div class="card-desc">サブエージェントが完了した時に発火するフック。完了通知を送ったり、追加の処理を自動実行したりできる。<strong>唯一の設定ファイルベースの介入ポイント。</strong>
+      <pre>"hooks": {
+  "SubagentStop": [{
+    "hooks": [{
+      "type": "command",
+      "command": "echo 'サブエージェント完了'"
+    }]
+  }]
+}</pre>
+    </div>
+  </div>
+</div>
+
+<h3>知っておくと便利な動作</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">Worktree 分離</span></div>
+    <div class="card-desc">Claude がサブエージェントを一時的な git worktree で実行することがある。メインのリポジトリに影響なく安全に実験的な変更を試みる仕組み。変更がなければ自動クリーンアップされる。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">バックグラウンド実行</span></div>
+    <div class="card-desc">Claude がサブエージェントをバックグラウンドで走らせ、メインの作業と並行して処理することがある。完了すると結果が自動的にメインの会話に返される。</div>
+  </div>
+</div>
+
+<h3>カスタムスキル（旧カスタムコマンド）</h3>
+<div class="card">
+  <div class="card-desc">頻繁に使うエージェントパターンは <strong>スキル</strong> として定義しておくと、スラッシュコマンドで呼び出せる。
+    <pre># .claude/skills/review/SKILL.md に定義
+---
+description: コードレビューを実行する
+---
+以下のルールに基づいてコードレビューしてください:
+- セキュリティ: OWASP Top 10 をチェック
+- パフォーマンス: N+1 クエリ, 不要な再レンダリング
+- 可読性: 命名、関数の長さ</pre>
+    <code>/review</code> で呼び出せるようになる。個人用は <code>~/.claude/skills/</code> に置くと全プロジェクトで使える。
+  </div>
+</div>

@@ -1,0 +1,45 @@
+<div class="section-title">CLIフラグ — 自動化モード</div>
+<div class="section-desc">BOT・CI/CD・ラズパイ等のヘッドレス環境での利用に必須のフラグ群。</div>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">-p "プロンプト"</span><span class="badge b-auto">自動化</span><span class="badge b-star">よく使う</span></div>
+    <div class="card-desc">ノンインタラクティブモード（旧称 headless mode）。プロンプトを渡して応答を返したら終了。BOT・CI/CDの基本。
+      <pre>claude -p "auth.pyのバグを修正して" --allowedTools "Read,Edit,Bash"
+# パイプでも使える
+cat error.log | claude -p "このエラーの原因を診断して"</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">--output-format json</span><span class="badge b-auto">自動化</span></div>
+    <div class="card-desc">出力をJSON形式に。プログラムから処理しやすくなる。<code>stream-json</code> はリアルタイムストリーミング処理用。
+      <pre>claude -p "TODOを一覧化" --output-format json | jq '.result'</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">--allowedTools "..."</span><span class="badge b-auto">自動化</span><span class="badge b-star">よく使う</span></div>
+    <div class="card-desc">使用許可するツールを明示指定。非インタラクティブ時は必須。ワイルドカード対応。
+      <pre>--allowedTools "Read,Grep,Glob"          # 読み取り専用（安全）
+--allowedTools "Read,Write,Edit"         # 書き込みあり
+--allowedTools "Bash(git *),Read,Edit"   # git操作のみ許可</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">--max-turns N</span><span class="badge b-auto">自動化</span></div>
+    <div class="card-desc">最大ターン数を制限。無限ループ防止に重要。<code>--max-turns 1</code> で一問一答、<code>--max-turns 10</code> で複数ステップのタスク向け。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">--continue / --resume [ID]</span><span class="badge b-auto">自動化</span></div>
+    <div class="card-desc">会話を継続。<code>--continue</code> は直近のセッション、<code>--resume</code> はセッションIDで特定の過去セッションを再開。
+      <pre>claude -p "レビューして" --output-format json > review.json
+claude -p "データベースのクエリに絞って" --continue</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">--bare</span><span class="badge b-auto">自動化</span></div>
+    <div class="card-desc">起動時の自動検出（hooks・MCP・CLAUDE.md等）をスキップ。起動を高速化したい自動化環境向け。<code>ANTHROPIC_API_KEY</code> または <code>apiKeyHelper</code> が必要。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">--dangerously-skip-permissions</span><span class="badge b-warn">危険</span></div>
+    <div class="card-desc">全権限確認をスキップ。コンテナ・CI隔離環境専用。本番・手元マシンでは絶対に使わない。</div>
+  </div>
+</div>

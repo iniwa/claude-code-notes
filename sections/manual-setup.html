@@ -1,0 +1,139 @@
+<div class="section-title">プロジェクトセットアップ</div>
+<div class="section-desc">新規プロジェクトを Claude Code で作業開始する際のチェックリストと手順書。</div>
+
+<h3>1. .gitignore の設定</h3>
+<div class="card">
+  <div class="card-desc">プロジェクトルートに <code>.gitignore</code> を作成し、以下を含める。
+    <pre># ===== Claude Code =====
+.claude/
+
+# ===== Serena MCP =====
+.serena/
+
+# ===== Python =====
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+
+# ===== AI/ML モデルファイル（大容量のため必ず除外） =====
+*.bin
+*.safetensors
+*.gguf
+*.pt
+*.pth
+models/
+weights/
+
+# ===== ログ・一時ファイル =====
+*.log
+*.tmp
+*.temp
+logs/
+tmp/
+
+# ===== 機密情報 =====
+.env
+.env.*
+*.pem
+*.key
+secrets/
+
+# ===== OS / エディタ =====
+Thumbs.db
+.DS_Store
+*.swp
+.vscode/
+.idea/</pre>
+  </div>
+</div>
+<div class="tip">
+  <strong>注意:</strong> <code>.claude/</code> にはプロジェクト固有の Claude の記憶・タスク・許可設定が入る。<code>.serena/</code> には Serena が生成したコードインデックスが入る。どちらも個人環境依存のため、リポジトリには含めない。
+</div>
+
+<h3>2. CLAUDE.md の配置</h3>
+<div class="card">
+  <div class="card-desc"><code>CLAUDE.md</code> は Claude Code がプロジェクトを開いたとき<strong>自動的に読み込む指示書</strong>。プロジェクトルートに置く。</div>
+</div>
+<div class="template" style="margin-top:10px;">
+  <div class="template-header"><span class="filename">CLAUDE.md（最小構成）</span></div>
+  <pre># CLAUDE.md
+
+> 詳細（日本語）: CLAUDE_ja.md
+
+## Communication
+- User writes in Japanese; respond in English unless instructed otherwise.
+
+## Environment
+| Item | Detail |
+|------|--------|
+| OS   | Windows 11 |
+| GPU  | RTX 5060 Ti — 16GB VRAM (CUDA sm_89) |
+| RAM  | 64GB |
+
+## Development Policy
+- Purpose: [このプロジェクトの目的を記入]
+- Language: Python (default for ML tasks)
+- Env: `uv` or `venv`; avoid conda unless required
+
+## Tooling
+- Use Serena MCP tools for code navigation and editing
+
+## Code Style
+- Minimal, readable code over abstraction-heavy patterns
+- No CI/CD or packaging unless explicitly requested</pre>
+</div>
+<div class="tip" style="margin-top:10px;">
+  <code>CLAUDE.md</code> は AI が読む英語の簡潔版、<code>CLAUDE_ja.md</code> は人間が読む日本語の詳細版という運用が推奨。テンプレートは「CLAUDE.md Docker版」「CLAUDE.md Windows版」を参照。
+</div>
+
+<h3>3. .claudeignore の配置</h3>
+<div class="card">
+  <div class="card-desc">Claude Code がコンテキストに読み込む<strong>ファイルの除外設定</strong>。<code>.gitignore</code> と独立して動作する。特に ML プロジェクトでモデルファイルを誤って読み込まないために重要。テンプレートは「テンプレート集」を参照。</div>
+</div>
+
+<h3>4. MCP の登録・確認</h3>
+<div class="card">
+  <div class="card-desc">プロジェクトで使用する MCP サーバーが正しく登録・動作しているか確認する。
+    <ul style="margin:8px 0 0 0; padding-left:20px;">
+      <li><code>/config</code> → <code>mcpServers</code> に必要な MCP が登録されているか確認</li>
+      <li>各 MCP のツールが Claude Code から呼び出せるかテスト</li>
+      <li>新規 MCP の追加が必要な場合は「MCP セットアップ」を参照</li>
+    </ul>
+  </div>
+</div>
+
+<h3>5. Serena のプロジェクトインデックス作成</h3>
+<div class="card">
+  <div class="card-desc">Serena を使用するプロジェクトでは、Claude Code の CLI 上で自然言語でインデックス作成を指示する。
+    <pre>「Serena でこのプロジェクトをインデックスしてください」</pre>
+    Claude が Serena の <code>onboarding</code> ツールを呼び出し、自動でプロジェクトインデックスを作成する。
+  </div>
+</div>
+
+<h3>6. 新規プロジェクト チェックリスト</h3>
+<div class="card-grid">
+  <div class="card"><div class="card-desc"><code>.gitignore</code> 作成（<code>.claude/</code>, <code>.serena/</code> を含む）</div></div>
+  <div class="card"><div class="card-desc"><code>CLAUDE.md</code> をプロジェクトルートに配置</div></div>
+  <div class="card"><div class="card-desc"><code>CLAUDE_ja.md</code> を同ディレクトリに配置（任意だが推奨）</div></div>
+  <div class="card"><div class="card-desc"><code>.claudeignore</code> を配置（ML プロジェクトはモデルファイルの除外を確認）</div></div>
+  <div class="card"><div class="card-desc">MCP サーバーの登録・動作を確認</div></div>
+  <div class="card"><div class="card-desc">Serena のプロジェクトインデックスを作成（CLI で自然言語指示）</div></div>
+  <div class="card"><div class="card-desc">Python 環境は <code>uv</code> or <code>venv</code> でセットアップ（conda は原則使わない）</div></div>
+  <div class="card"><div class="card-desc">GPU 使用有無を決め、CUDA バージョンと PyTorch ビルドが一致しているか確認</div></div>
+</div>
+
+<h3>7. ディレクトリ構成の目安</h3>
+<div class="file-tree">
+  <span class="dir">project-name/</span><br>
+  ├── .gitignore<br>
+  ├── .claudeignore<br>
+  ├── <span class="important">CLAUDE.md</span><br>
+  ├── <span class="important">CLAUDE_ja.md</span> &nbsp;<span class="comment"># 任意（人間向け詳細版）</span><br>
+  ├── README.md<br>
+  ├── pyproject.toml &nbsp;<span class="comment"># または requirements.txt</span><br>
+  ├── main.py<br>
+  └── <span class="dir">src/</span>
+</div>

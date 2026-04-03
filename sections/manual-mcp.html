@@ -1,0 +1,83 @@
+<div class="section-title">MCP セットアップ</div>
+<div class="section-desc">Claude Code に MCP（Model Context Protocol）サーバーを追加する手順書。</div>
+
+<h3>MCP の管理コマンド</h3>
+<div class="card">
+  <div class="card-desc">
+    <pre>claude mcp list              # 登録済み MCP 一覧
+claude mcp add &lt;name&gt; ...    # MCP を追加
+claude mcp remove &lt;name&gt;     # MCP を削除</pre>
+    スコープ指定:<br>
+    <code>--scope user</code> : 全プロジェクトで有効（デフォルト）<br>
+    <code>--scope project</code> : そのプロジェクトのみで有効（<code>.claude/settings.json</code> に保存）
+  </div>
+</div>
+
+<h3>1. Serena（コードナビゲーション）</h3>
+<div class="card">
+  <div class="card-header"><span class="cmd">serena</span><span class="badge b-star">必須</span></div>
+  <div class="card-desc">コードの構造解析・シンボル検索・安全な編集を行う MCP。LSP ベースで動作。
+    <pre>claude mcp add serena -- uvx --from git+https://github.com/oraios/serena serena start-mcp-server --context ide-assistant</pre>
+    プロジェクトインデックス作成（CLI 上で自然言語で指示）:
+    <pre>「Serena でこのプロジェクトをインデックスしてください」</pre>
+    Claude が Serena の <code>onboarding</code> ツールを呼び出し、自動でインデックスを作成する。
+  </div>
+</div>
+<div class="tip">
+  CLAUDE.md への記載: <code>Use Serena MCP tools for code navigation and editing (find_symbol, find_referencing_symbols, get_symbols_overview, replace_symbol_body, etc.)</code>
+</div>
+
+<h3>2. Tavily（Web 検索）</h3>
+<div class="card">
+  <div class="card-header"><span class="cmd">tavily</span><span class="badge b-star">必須</span></div>
+  <div class="card-desc">Web 検索・ページ抽出・クロールを行う MCP。無料枠（月 1,000 クレジット）で利用。<br>
+    API キー取得: <a href="https://app.tavily.com/home" target="_blank">https://app.tavily.com/home</a>
+    <pre>claude mcp add tavily -e TAVILY_API_KEY=&lt;your-key&gt; -- npx -y tavily-mcp</pre>
+    使えるツール: <code>tavily_search</code>, <code>tavily_extract</code>, <code>tavily_crawl</code>, <code>tavily_research</code>
+  </div>
+</div>
+
+<h3>3. その他の推奨 MCP</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">playwright</span><span class="badge b-auto">推奨</span></div>
+    <div class="card-desc">ブラウザ操作（ページ遷移・クリック・スクリーンショット撮影・フォーム入力・要素検査）を Claude Code から実行。Web UI のテストやデバッグに有用。
+      <pre>claude mcp add playwright -- npx -y @playwright/mcp</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">git</span></div>
+    <div class="card-desc">リポジトリの履歴・diff・blame を MCP 経由で操作。
+      <pre>claude mcp add git -- uvx mcp-server-git</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">filesystem</span></div>
+    <div class="card-desc">特定ディレクトリへのファイル操作権限を明示的に付与。
+      <pre>claude mcp add filesystem -- npx -y @modelcontextprotocol/server-filesystem "/path/to/allowed-directory"</pre>
+    </div>
+  </div>
+</div>
+
+<h3>優先度ガイド</h3>
+<div class="card-grid">
+  <div class="card"><div class="card-header"><span class="badge b-star">必須</span><span class="cmd">Serena</span></div><div class="card-desc">コードナビ・編集の基本インフラ</div></div>
+  <div class="card"><div class="card-header"><span class="badge b-star">必須</span><span class="cmd">Tavily</span></div><div class="card-desc">Web 検索・最新情報取得</div></div>
+  <div class="card"><div class="card-header"><span class="badge b-auto">推奨</span><span class="cmd">Playwright</span></div><div class="card-desc">ブラウザ操作・Web UI テスト</div></div>
+</div>
+
+<h3>トラブルシューティング</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">MCP が認識されない</span></div>
+    <div class="card-desc"><code>claude mcp list</code> で登録確認。Claude Code を再起動して再試行。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">Serena のインデックスが古い</span></div>
+    <div class="card-desc">CLI 上で再インデックスを指示: <pre>「Serena でこのプロジェクトを再インデックスしてください」</pre></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">Tavily のクレジットが足りない</span></div>
+    <div class="card-desc">組み込みの <code>WebFetch</code> ツールを使う（クレジット消費なし）。<code>search_depth: "basic"</code> を使う。</div>
+  </div>
+</div>

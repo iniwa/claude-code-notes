@@ -1,0 +1,55 @@
+<div class="section-title">/config — 権限・セキュリティ</div>
+<div class="section-desc">ツール使用の許可・拒否ルール。プロジェクトの <code>.claude/settings.json</code> に書いてgit管理するのが基本。</div>
+<div class="tip">
+  <strong>評価順序：</strong> deny → ask → allow の順に評価され、最初にマッチしたルールが適用される。denyを先に書けば確実にブロックできる。
+</div>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">permissions.defaultMode</span><span class="badge b-both">両方</span><span class="badge b-star">おすすめ</span></div>
+    <div class="card-desc">デフォルトの権限モード。<code>"default"</code>（毎回確認）/ <code>"acceptEdits"</code>（編集自動承認）/ <code>"bypassPermissions"</code>（全スキップ・危険）
+      <pre>"permissions": { "defaultMode": "acceptEdits" }</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">permissions.allow</span><span class="badge b-both">両方</span><span class="badge b-star">おすすめ</span></div>
+    <div class="card-desc">確認なしで許可するツール・コマンドの一覧。ワイルドカード対応。
+      <pre>"allow": [
+  "Bash(npm run *)",
+  "Bash(git log *)",
+  "Bash(git diff *)",
+  "Bash(git status)"
+]</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">permissions.deny</span><span class="badge b-both">両方</span><span class="badge b-star">おすすめ</span></div>
+    <div class="card-desc">常に拒否するツール・コマンドの一覧。denyが最初に評価されるため確実にブロックできる。
+      <pre>"deny": [
+  "Bash(rm -rf *)",
+  "Bash(curl *)",
+  "Read(.env)",
+  "Read(.env.*)"
+]</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">filesystem.denyRead</span><span class="badge b-both">両方</span></div>
+    <div class="card-desc">読み取りを禁止するパスの一覧。秘密鍵や認証情報ファイルを保護する用途。
+      <pre>"filesystem": {
+  "denyRead": ["~/.ssh/*", "~/.aws/*", "~/.gnupg/*"]
+}</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">enableAllProjectMcpServers</span><span class="badge b-user">ユーザー</span></div>
+    <div class="card-desc">プロジェクトの <code>.mcp.json</code> を自動的に全て有効化。デフォルト <code>false</code>。gitリポジトリ経由の悪意あるMCPサーバー対策のため無闇に有効にしない。
+      <pre>"enableAllProjectMcpServers": false</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">attribution.coAuthoredBy</span><span class="badge b-both">両方</span></div>
+    <div class="card-desc">gitコミットメッセージに付加されるCo-authored-by表記の制御。空文字列で非表示にできる。
+      <pre>"attribution": { "coAuthoredBy": "" }</pre>
+    </div>
+  </div>
+</div>

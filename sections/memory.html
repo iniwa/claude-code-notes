@@ -1,0 +1,102 @@
+<div class="section-title">メモリシステム</div>
+<div class="section-desc">セッションをまたいで情報を永続化する仕組み。ユーザーの好み・プロジェクト文脈・フィードバックを記憶し、次回以降の会話品質を向上させる。</div>
+
+<h3>メモリの仕組み</h3>
+<div class="card">
+  <div class="card-desc">
+    Claude Code はプロジェクトごとに <code>~/.claude/projects/&lt;project-hash&gt;/memory/</code> ディレクトリにメモリファイルを保存する。<br>
+    各メモリは個別の <code>.md</code> ファイルで、<code>MEMORY.md</code> がインデックスとして機能する。
+  </div>
+</div>
+<div class="file-tree" style="margin-top:10px;">
+  <span class="dir">~/.claude/projects/&lt;project-hash&gt;/memory/</span><br>
+  ├── <span class="important">MEMORY.md</span> &nbsp;<span class="comment"># インデックス（毎セッション自動読み込み）</span><br>
+  ├── user_role.md &nbsp;<span class="comment"># ユーザー情報</span><br>
+  ├── feedback_testing.md &nbsp;<span class="comment"># フィードバック</span><br>
+  └── project_auth.md &nbsp;<span class="comment"># プロジェクト情報</span>
+</div>
+
+<h3>メモリの4つの型</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">user</span><span class="badge b-star">重要</span></div>
+    <div class="card-desc">ユーザーの役割・スキル・好みに関する情報。回答のレベル感やトーンを調整するために使われる。
+      <pre>例: 「Goは10年経験あるがReactは初めて」
+→ フロントエンドの説明をバックエンドの概念で例える</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">feedback</span><span class="badge b-star">重要</span></div>
+    <div class="card-desc">「こうして / こうしないで」というユーザーからの指示。修正だけでなく、うまくいったアプローチも記録される。
+      <pre>例: 「テストでDBをモックしないで」
+→ 理由: モックと本番の乖離でバグを見逃した経験</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">project</span></div>
+    <div class="card-desc">進行中の作業・目標・期限など、コードやgit履歴からは読み取れない文脈情報。
+      <pre>例: 「木曜以降は非クリティカルなマージ禁止」
+→ モバイルチームのリリースブランチカットのため</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">reference</span></div>
+    <div class="card-desc">外部システムの参照先。「どこを見ればいいか」を記録する。
+      <pre>例: 「パイプラインのバグは Linear の INGEST プロジェクトで管理」
+例: 「オンコール用ダッシュボードは grafana.internal/d/api-latency」</pre>
+    </div>
+  </div>
+</div>
+
+<h3>メモリファイルの書き方</h3>
+<div class="card">
+  <div class="card-desc">各メモリファイルは YAML フロントマター + 本文の形式で記述する。
+    <pre>---
+name: テスト方針
+description: 結合テストではDBをモックしない方針
+type: feedback
+---
+
+結合テストでは必ず実DBに接続する。モックは使わない。
+
+**Why:** 前四半期にモックテストがパスしたが、
+本番マイグレーションで失敗した事故があった。
+
+**How to apply:** テストファイルを書く際、
+DB接続部分にモックを使おうとしたら止める。</pre>
+  </div>
+</div>
+<div class="tip">
+  <code>MEMORY.md</code> はインデックスファイル。各エントリは1行150文字以内で、200行を超えると切り捨てられる。メモリ本文は書かず、ファイルへのリンクだけを記載する。
+</div>
+
+<h3>メモリの操作</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">記憶させる</span></div>
+    <div class="card-desc">「〜を覚えておいて」と自然言語で伝えるだけでよい。Claude が適切な型を判断してファイルを作成する。
+      <pre>「テストは必ず実DBで動かす方針を覚えておいて」
+「私はデータサイエンティストです、覚えておいて」</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">忘れさせる</span></div>
+    <div class="card-desc">「〜を忘れて」と伝えると、該当するメモリファイルを削除する。
+      <pre>「テスト方針のメモリを削除して」</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">自動記録</span></div>
+    <div class="card-desc">明示的に頼まなくても、Claude は会話中に重要な情報を検知して自動的にメモリに保存することがある（ユーザーの修正、アプローチの確認など）。</div>
+  </div>
+</div>
+
+<h3>メモリに保存しないもの</h3>
+<div class="tip">
+  以下はメモリに保存しない。コードやgitから取得できる情報は常にそちらが正となる。<br><br>
+  <strong>×</strong> コードパターン・アーキテクチャ・ファイル構造（コードから読める）<br>
+  <strong>×</strong> git 履歴・変更者情報（<code>git log</code> / <code>git blame</code> で取得）<br>
+  <strong>×</strong> デバッグの解決策（修正はコードに、文脈はコミットメッセージにある）<br>
+  <strong>×</strong> CLAUDE.md に既に書かれている情報<br>
+  <strong>×</strong> 現在の会話でしか使わない一時的な情報（タスクを使う）
+</div>

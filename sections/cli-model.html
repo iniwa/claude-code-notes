@@ -1,0 +1,21 @@
+<div class="section-title">CLIフラグ — モデル・動作設定</div>
+<div class="section-desc">起動時にモデルや権限モードを固定するフラグ。</div>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">--model &lt;model&gt;</span><span class="badge b-star">よく使う</span></div>
+    <div class="card-desc">起動時にモデルを指定。エイリアスまたは完全なモデル文字列が使える。
+      <pre>claude --model opus
+claude --model sonnet
+claude --model claude-opus-4-6
+claude --model claude-sonnet-4-6</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">--permission-mode acceptEdits</span></div>
+    <div class="card-desc">ファイル編集を自動承認。確認プロンプトを省略。CI環境や自動化タスクで使用する。<code>bypassPermissions</code> は全スキップ（危険）。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">--verbose / --debug</span></div>
+    <div class="card-desc">詳細ログを出力。動作デバッグ時に使用。本番・自動化スクリプトでは無効にする。</div>
+  </div>
+</div>

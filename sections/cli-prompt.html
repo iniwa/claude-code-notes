@@ -1,0 +1,16 @@
+<div class="section-title">CLIフラグ — システムプロンプト</div>
+<div class="section-desc">Claudeの動作指示を起動時に渡すフラグ。通常は追記系を使う。</div>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">--append-system-prompt "..."</span><span class="badge b-star">推奨</span></div>
+    <div class="card-desc">デフォルトのシステムプロンプトに追記。デフォルト動作を維持しながらカスタム指示を加える。ほぼこちらを使う。
+      <pre>gh pr diff "$1" | claude -p \
+  --append-system-prompt "セキュリティエンジニアとしてレビュー" \
+  --output-format json</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">--system-prompt "..."</span></div>
+    <div class="card-desc">デフォルトプロンプトを完全置換。デフォルト動作が不要な場合のみ使用。ファイルから読み込む場合は <code>--system-prompt-file</code>。</div>
+  </div>
+</div>

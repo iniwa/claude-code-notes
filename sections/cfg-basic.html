@@ -1,0 +1,61 @@
+<div class="section-title">/config — 基本動作</div>
+<div class="section-desc">モデル・言語・表示など、個人の作業環境に関わる設定。主に <code>~/.claude/settings.json</code> に記述。</div>
+<div class="legend">
+  <span><span class="badge b-user">ユーザー</span> ~/.claude/settings.json</span>
+  <span><span class="badge b-proj">プロジェクト</span> .claude/settings.json</span>
+  <span><span class="badge b-both">両方</span> どちらでも有効</span>
+</div>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">model</span><span class="badge b-both">両方</span><span class="badge b-star">おすすめ</span></div>
+    <div class="card-desc">デフォルトで使用するモデルを固定。毎回 <code>/model</code> で切り替える手間が省ける。
+      <pre>"model": "claude-opus-4-6"</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">language</span><span class="badge b-both">両方</span><span class="badge b-star">おすすめ</span></div>
+    <div class="card-desc">Claudeの応答言語を固定。日本語環境では必ず設定する。
+      <pre>"language": "japanese"</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">alwaysThinkingEnabled</span><span class="badge b-user">ユーザー</span></div>
+    <div class="card-desc">拡張思考（extended thinking）をセッション間で維持。複雑な推論タスクに有効だが遅くなる。<code>Option+T</code> でセッション中にトグルも可。
+      <pre>"alwaysThinkingEnabled": true</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">showThinkingSummaries</span><span class="badge b-user">ユーザー</span></div>
+    <div class="card-desc">v2.1.89以降デフォルト非表示になった思考サマリーを表示に戻す。
+      <pre>"showThinkingSummaries": true</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">showTurnDuration</span><span class="badge b-user">ユーザー</span></div>
+    <div class="card-desc">各応答にかかった時間を表示。モデル切り替えの判断材料になる。
+      <pre>"showTurnDuration": true</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">cleanupPeriodDays</span><span class="badge b-user">ユーザー</span></div>
+    <div class="card-desc">チャット履歴の保持日数。デフォルト30日。<code>0</code> で無効化（書き込みなし）、<code>365</code> で1年保持。
+      <pre>"cleanupPeriodDays": 90</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">CLAUDE_AUTOCOMPACT_PCT_OVERRIDE</span><span class="badge b-user">環境変数</span><span class="badge b-star">おすすめ</span></div>
+    <div class="card-desc">自動コンパクションが発動するコンテキスト使用率（%）。デフォルト95%。深いコンテキストが必要なタスクなら85%程度に下げると安定する。
+      <pre>export CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=85</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">theme</span><span class="badge b-user">ユーザー</span></div>
+    <div class="card-desc">テーマ設定。<code>"dark"</code> / <code>"light"</code> / <code>"auto"</code>。
+      <pre>"theme": "dark"</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">outputStyle</span><span class="badge b-user">ユーザー</span></div>
+    <div class="card-desc">応答フォーマットのスタイル設定。<code>~/.claude/output-styles/</code> にカスタムスタイルを追加して用途別（コードレビュー・ドキュメント等）に切り替えられる。</div>
+  </div>
+</div>
