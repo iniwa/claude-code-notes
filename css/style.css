@@ -246,6 +246,12 @@ h3:first-of-type { margin-top: 0; }
   padding: 1px 5px;
   border-radius: 4px;
 }
+.card-desc table { border-collapse: collapse; margin: 10px 0; width: 100%; }
+.card-desc th, .card-desc td { border: 1px solid var(--border2); padding: 6px 10px; font-size: 13px; text-align: left; }
+.card-desc th { background: var(--bg3); color: var(--text); }
+.card-desc td { color: var(--text2); }
+.card-desc ul { padding-left: 1.4em; margin: 8px 0; }
+.card-desc li { margin-bottom: 4px; }
 
 pre {
   margin-top: 8px;
