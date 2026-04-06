@@ -17,6 +17,7 @@ const SECTIONS = {
   'cost':             'sections/cost.html',
   'ide':              'sections/ide.html',
   'subagent':         'sections/subagent.html',
+  'agent-team':       'sections/agent-team.html',
   'cicd':             'sections/cicd.html',
   'troubleshoot':     'sections/troubleshoot.html',
   'ctx':              'sections/ctx.html',

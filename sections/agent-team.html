@@ -1,0 +1,383 @@
+<div class="section-title">エージェントチーム</div>
+<div class="section-desc">カスタムサブエージェントの定義と、複数エージェントによるチーム協調作業。</div>
+
+<!-- ==================== カスタムサブエージェント定義 ==================== -->
+<h3>カスタムサブエージェント定義</h3>
+<div class="card">
+  <div class="card-desc">
+    <code>.claude/agents/</code> にMarkdownファイルを置くことで、専門的な役割を持つサブエージェントを定義できる。<br>
+    YAML frontmatter で設定を記述し、本文がそのエージェントのシステムプロンプトになる。
+  </div>
+</div>
+<div class="file-tree" style="margin-top:10px;">
+  <span class="important">ファイル配置</span><br>
+  .claude/agents/reviewer.md &nbsp;&nbsp;&nbsp;&larr; プロジェクト単位<br>
+  ~/.claude/agents/reviewer.md &larr; 全プロジェクト共通
+</div>
+
+<div class="card" style="margin-top:14px;">
+  <div class="card-header"><span class="cmd">基本的な定義ファイル</span></div>
+  <div class="card-desc">
+    <pre>---
+name: code-reviewer
+description: コードレビューを実行する。コード変更後に proactively 使用する。
+tools: [Read, Glob, Grep, Bash]
+model: sonnet
+---
+
+あなたはコードレビュアーです。
+コード品質・セキュリティ・ベストプラクティスの観点で
+具体的かつ実用的なフィードバックを提供してください。</pre>
+  </div>
+</div>
+
+<h3>frontmatter フィールド一覧</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">name</span><span class="badge b-flag">必須</span></div>
+    <div class="card-desc">一意な識別子。小文字とハイフンのみ使用可能。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">description</span><span class="badge b-flag">必須</span></div>
+    <div class="card-desc">Claude がどんなタスクでこのエージェントに委譲すべきか判断する際の説明文。<code>use proactively</code> を含めると自動委譲が促進される。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">tools</span></div>
+    <div class="card-desc">使用可能なツールの許可リスト。省略時は全ツール継承。<code>Agent(worker, researcher)</code> のようにサブエージェント制限も可能。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">disallowedTools</span></div>
+    <div class="card-desc">拒否するツールのリスト。<code>tools</code> より先に適用される。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">model</span></div>
+    <div class="card-desc"><code>sonnet</code> / <code>opus</code> / <code>haiku</code> / フルモデルID / <code>inherit</code>（デフォルト）</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">permissionMode</span></div>
+    <div class="card-desc"><code>default</code> / <code>acceptEdits</code> / <code>auto</code> / <code>dontAsk</code> / <code>bypassPermissions</code> / <code>plan</code></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">maxTurns</span></div>
+    <div class="card-desc">エージェントが停止するまでの最大ターン数。暴走防止に有効。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">memory</span></div>
+    <div class="card-desc">永続メモリのスコープ。<code>user</code>（全プロジェクト）/ <code>project</code>（VCS共有）/ <code>local</code>（ローカルのみ）</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">mcpServers</span></div>
+    <div class="card-desc">このエージェントが利用する MCP サーバー。既存サーバー名の参照またはインライン定義が可能。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">hooks</span></div>
+    <div class="card-desc">このエージェントにスコープされたライフサイクルフック。<code>PreToolUse</code> / <code>PostToolUse</code> / <code>Stop</code></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">skills</span></div>
+    <div class="card-desc">起動時にコンテキストに読み込むスキル。利用可能にするだけでなく全文が注入される。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">isolation</span></div>
+    <div class="card-desc"><code>worktree</code> を設定すると、独立した git worktree で実行。変更がなければ自動クリーンアップ。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">background</span></div>
+    <div class="card-desc"><code>true</code> で常にバックグラウンドタスクとして実行。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">effort</span></div>
+    <div class="card-desc"><code>low</code> / <code>medium</code> / <code>high</code> / <code>max</code>（Opus のみ）</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">color</span></div>
+    <div class="card-desc">表示色。<code>red</code> / <code>blue</code> / <code>green</code> / <code>yellow</code> / <code>purple</code> / <code>orange</code> / <code>pink</code> / <code>cyan</code></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">initialPrompt</span></div>
+    <div class="card-desc"><code>--agent</code> でセッション起動時に自動送信される最初のプロンプト。</div>
+  </div>
+</div>
+
+<h3>エージェントの呼び出し方法</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">自動委譲</span></div>
+    <div class="card-desc">Claude が <code>description</code> を読み、タスクに合致するエージェントに自動で委譲する。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">自然言語で指示</span></div>
+    <div class="card-desc">
+      <pre>「code-reviewer エージェントで最近の変更をレビューして」</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">@メンション</span><span class="badge b-star">確実</span></div>
+    <div class="card-desc">
+      <pre>@"code-reviewer (agent)" auth モジュールを確認して</pre>
+      確実にそのエージェントが実行される。
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">セッション全体で使用</span></div>
+    <div class="card-desc">
+      <pre>claude --agent code-reviewer</pre>
+      セッション全体がそのエージェントとして動作する。
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">/agents コマンド</span></div>
+    <div class="card-desc">対話的にエージェントの管理・作成・編集ができる。</div>
+  </div>
+</div>
+
+<h3>定義の優先順位</h3>
+<div class="file-tree">
+  <span class="important">同名エージェントが複数ある場合、上位が優先</span><br>
+  1. Managed settings（組織配布）<br>
+  2. --agents CLI フラグ（セッション限定）<br>
+  3. .claude/agents/（プロジェクト）<br>
+  4. ~/.claude/agents/（ユーザー全体）<br>
+  5. プラグインの agents/
+</div>
+
+<h3>実践例: カスタムサブエージェント</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">テストランナー</span></div>
+    <div class="card-desc">
+      <pre>---
+name: test-runner
+description: テストスイートを実行して失敗を報告する
+tools: [Bash, Read]
+model: haiku
+maxTurns: 20
+---
+
+npm test を実行し、失敗があれば
+ファイルパスと行番号を含めて報告してください。</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">DB クエリ（フック付き）</span></div>
+    <div class="card-desc">
+      <pre>---
+name: db-reader
+description: 読み取り専用のデータベースクエリを実行する
+tools: [Bash]
+hooks:
+  PreToolUse:
+    - matcher: "Bash"
+      hooks:
+        - type: command
+          command: "./scripts/validate-readonly.sh"
+---
+
+読み取り専用クエリのみ実行してください。
+書き込み操作は絶対に行わないこと。</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">ブラウザテスター</span></div>
+    <div class="card-desc">
+      <pre>---
+name: browser-tester
+description: Playwright でブラウザテストを実行する
+mcpServers:
+  - playwright:
+      type: stdio
+      command: npx
+      args: ["-y", "@playwright/mcp@latest"]
+---
+
+Playwright ツールでページの操作・スクショ・
+検証を行ってください。</pre>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== エージェントチーム ==================== -->
+<h3 style="margin-top:32px;">エージェントチーム（実験的機能）</h3>
+<div class="card">
+  <div class="card-desc">
+    エージェントチームは、<strong>複数の独立した Claude Code セッション</strong>が共有タスクリストとメッセージングで協調作業する仕組み。<br>
+    サブエージェントとは異なり、チームメイト同士が直接コミュニケーションできる。
+  </div>
+</div>
+
+<div class="tip" style="margin-top:10px;">
+  <strong>実験的機能</strong> &mdash; デフォルトでは無効。有効化が必要。
+  <pre>// settings.json
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  }
+}</pre>
+</div>
+
+<h3>サブエージェント vs エージェントチーム</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">サブエージェント</span></div>
+    <div class="card-desc">
+      <strong>結果を返すだけ</strong>の一方通行。<br>
+      &bull; 親エージェントにのみ報告<br>
+      &bull; 個別のコンテキストウィンドウ<br>
+      &bull; 結果は要約されて返る<br>
+      &bull; トークンコストが低い<br>
+      &bull; <strong>向いている:</strong> 結果だけが必要な集中タスク
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">エージェントチーム</span></div>
+    <div class="card-desc">
+      チームメイト同士が<strong>議論・協調</strong>できる。<br>
+      &bull; メンバー間で直接メッセージ送受信<br>
+      &bull; 共有タスクリストで自己調整<br>
+      &bull; 完全に独立したセッション<br>
+      &bull; トークンコストが高い<br>
+      &bull; <strong>向いている:</strong> 議論・協調が必要な複雑な作業
+    </div>
+  </div>
+</div>
+
+<h3>チームの構成</h3>
+<div class="file-tree">
+  <span class="important">チームアーキテクチャ</span><br>
+  Team Lead（メインセッション）<br>
+  ├── Teammate A: UX 設計を担当<br>
+  ├── Teammate B: 技術アーキテクチャを担当<br>
+  ├── Teammate C: セキュリティレビューを担当<br>
+  ├── 共有タスクリスト（pending &rarr; in progress &rarr; completed）<br>
+  └── メッセージング（個別送信 / ブロードキャスト）
+</div>
+
+<div class="card-grid" style="margin-top:14px;">
+  <div class="card">
+    <div class="card-header"><span class="cmd">Team Lead</span></div>
+    <div class="card-desc">メインの Claude Code セッション。チームの作成・メンバー召喚・全体調整を行う。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">Teammate</span></div>
+    <div class="card-desc">独立した Claude Code インスタンス。割り当てられたタスクを実行し、他メンバーとメッセージで連携する。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">共有タスクリスト</span></div>
+    <div class="card-desc">チーム全体で共有。3つのステータス: pending / in progress / completed。タスク間の依存関係も設定可能。<code>Ctrl+T</code> で表示切替。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">メッセージング</span></div>
+    <div class="card-desc"><strong>message</strong>: 特定メンバーに送信。<strong>broadcast</strong>: 全メンバーに送信（コスト注意）。リードへのアイドル通知は自動。</div>
+  </div>
+</div>
+
+<h3>チームの起動方法</h3>
+<div class="card">
+  <div class="card-desc">
+    自然言語でタスクとチーム構成を伝えるだけで、Claude がチームを構成・起動する。
+    <pre># 例: 並列コードレビュー
+PR #142 のレビューチームを作って。3人のレビュアーを召喚:
+- セキュリティの観点で確認する人
+- パフォーマンスへの影響を確認する人
+- テストカバレッジを検証する人
+それぞれレビューして結果を報告させて。</pre>
+    <pre># 例: 競合仮説によるデバッグ
+アプリが1メッセージ後に終了するバグがある。
+5人のチームメイトを召喚して異なる仮説を調査させて。
+お互いの理論を反証し合う科学的議論の形式で進めて。</pre>
+  </div>
+</div>
+
+<h3>サブエージェント定義をチームメイトとして使用</h3>
+<div class="card">
+  <div class="card-desc">
+    <code>.claude/agents/</code> で定義したエージェントをチームメイトとして召喚できる。<br>
+    <code>tools</code> と <code>model</code> が継承され、本文はシステムプロンプトに追記される。
+    <pre># 自然言語で指示
+security-reviewer エージェントタイプを使って
+チームメイトを召喚し、auth モジュールを監査して。</pre>
+  </div>
+</div>
+<div class="tip" style="margin-top:10px;">
+  <strong>制限:</strong> チームメイトとして使用する場合、<code>skills</code> と <code>mcpServers</code> フィールドは適用されない。MCP サーバーはプロジェクト/ユーザー設定から読み込まれる。
+</div>
+
+<h3>表示モード</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">in-process</span><span class="badge b-star">デフォルト</span></div>
+    <div class="card-desc">全メンバーがメインターミナル内で実行。<code>Shift+Down</code> でメンバーを切り替え。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">tmux / iTerm2</span></div>
+    <div class="card-desc">各メンバーが独立したペインで実行。tmux または iTerm2 が必要。
+      <pre># ~/.claude.json で設定
+{ "teammateMode": "tmux" }
+
+# またはセッション単位
+claude --teammate-mode tmux</pre>
+    </div>
+  </div>
+</div>
+
+<h3>チーム用フック</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">TeammateIdle</span></div>
+    <div class="card-desc">チームメイトがアイドルになろうとした時に発火。終了コード 2 でフィードバックを送り作業を継続させる。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">TaskCreated</span></div>
+    <div class="card-desc">タスク作成時に発火。終了コード 2 で作成を阻止。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">TaskCompleted</span></div>
+    <div class="card-desc">タスク完了時に発火。終了コード 2 で完了を阻止。</div>
+  </div>
+</div>
+
+<h3>ベストプラクティス</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">チームサイズ</span></div>
+    <div class="card-desc">3〜5人で開始。1人あたり5〜6タスクが目安。大きすぎるチームはコスト増とコミュニケーション負荷が増す。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">十分なコンテキスト</span></div>
+    <div class="card-desc">チームメイトはリードの会話履歴を継承しない。タスク固有の詳細を召喚プロンプトに含めること。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">ファイル競合の回避</span></div>
+    <div class="card-desc">2人が同じファイルを編集すると上書きが発生する。各メンバーが異なるファイルを担当するように設計する。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">まずは読み取りから</span></div>
+    <div class="card-desc">初めて使う場合は、コード変更ではなくレビュー・調査タスクから始めるのが安全。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">リードの待機</span></div>
+    <div class="card-desc">リードが自分で実装を始めてしまう場合は「チームメイトの完了を待って」と指示する。</div>
+  </div>
+</div>
+
+<h3>現在の制限事項</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-desc">&bull; <code>/resume</code> / <code>/rewind</code> でチームメイトは復元されない</div>
+  </div>
+  <div class="card">
+    <div class="card-desc">&bull; タスクステータスの更新が遅延することがある</div>
+  </div>
+  <div class="card">
+    <div class="card-desc">&bull; シャットダウンに時間がかかる場合がある（現在のリクエスト完了待ち）</div>
+  </div>
+  <div class="card">
+    <div class="card-desc">&bull; 1セッションにつき1チームのみ</div>
+  </div>
+  <div class="card">
+    <div class="card-desc">&bull; チームのネストは不可（チームメイトが独自チームを作れない）</div>
+  </div>
+  <div class="card">
+    <div class="card-desc">&bull; 分割ペインは tmux / iTerm2 が必要（VS Code / Windows Terminal 非対応）</div>
+  </div>
+</div>
