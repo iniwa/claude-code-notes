@@ -40,9 +40,110 @@
 }</pre>
     </div>
   </div>
+
+  <!-- パターン構文・MCP 一括許可 -->
   <div class="card">
-    <div class="card-header"><span class="cmd">enableAllProjectMcpServers</span><span class="badge b-user">ユーザー</span></div>
-    <div class="card-desc">プロジェクトの <code>.mcp.json</code> を自動的に全て有効化。デフォルト <code>false</code>。gitリポジトリ経由の悪意あるMCPサーバー対策のため無闇に有効にしない。
+    <div class="card-header"><span class="cmd">allow パターン構文</span><span class="badge b-both">両方</span><span class="badge b-star">おすすめ</span></div>
+    <div class="card-desc"><code>*</code> ワイルドカードでツール名とパラメータの両方をパターンマッチできる。
+      <pre>"allow": [
+  "Bash(git:*)",          // git で始まる全コマンド
+  "Bash(npm test:*)",     // npm test 系を許可
+  "Bash(dir:*)",          // dir コマンド全般
+  "Read(/path/to/**)",    // 特定パス配下の読み取り
+  "WebFetch(domain:docs.anthropic.com)"  // 特定ドメイン限定
+]</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">MCP ツール一括許可</span><span class="badge b-both">両方</span><span class="badge b-star">おすすめ</span></div>
+    <div class="card-desc">MCP ツールの命名規則は <code>mcp__&lt;サーバー名&gt;__&lt;ツール名&gt;</code>。<code>*</code> でサーバー単位の一括許可が可能。
+      <pre>"allow": [
+  "mcp__serena__*",       // Serena 全ツール
+  "mcp__tavily__*",       // Tavily 全ツール
+  "mcp__playwright__*",   // Playwright 全ツール
+  "mcp__git__*",          // Git MCP 全ツール
+  "mcp__*"                // 全MCP の全ツール（注意）
+]</pre>
+      <strong>個別指定も可：</strong><code>"mcp__serena__find_symbol"</code> のように1つずつ指定できる。セッション中に手動許可した操作は <code>settings.local.json</code> に自動追加される。
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">allow + deny 組み合わせ</span><span class="badge b-both">両方</span></div>
+    <div class="card-desc"><code>deny</code> は <code>allow</code> より常に優先される。「広く許可して一部をブロック」のパターンが実用的。
+      <pre>"permissions": {
+  "allow": [
+    "Bash(git:*)",
+    "mcp__serena__*"
+  ],
+  "deny": [
+    "Bash(git push --force:*)",
+    "Bash(git reset --hard:*)"
+  ]
+}</pre>
+    </div>
+  </div>
+
+  <!-- スコープ別の実用例 -->
+  <div class="card">
+    <div class="card-header"><span class="cmd">プロジェクト設定の例</span><span class="badge b-proj">プロジェクト</span></div>
+    <div class="card-desc"><code>.claude/settings.json</code> — チームで共有。git にコミットして統一ルールを適用する。
+      <pre>// .claude/settings.json（チーム共有）
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Read(.env)",
+      "Read(.env.*)"
+    ]
+  }
+}</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">ユーザー設定の例</span><span class="badge b-user">ユーザー</span></div>
+    <div class="card-desc"><code>~/.claude/settings.json</code> — 全プロジェクト共通の個人設定。よく使う MCP やコマンドをここで許可しておくと効率的。
+      <pre>// ~/.claude/settings.json（個人・全プロジェクト共通）
+{
+  "permissions": {
+    "allow": [
+      "mcp__serena__*",
+      "mcp__tavily__*",
+      "Bash(git:*)",
+      "Bash(dir:*)"
+    ],
+    "deny": [
+      "Bash(git push --force:*)",
+      "Bash(git reset --hard:*)"
+    ]
+  }
+}</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">ローカル設定の例</span><span class="badge b-user">ローカル</span></div>
+    <div class="card-desc"><code>.claude/settings.local.json</code> — 個人のプロジェクト固有設定。<code>.gitignore</code> に入れてチームと共有しない。セッション中の手動許可はここに自動蓄積される。
+      <pre>// .claude/settings.local.json（個人・非共有）
+{
+  "permissions": {
+    "allow": [
+      "mcp__serena__activate_project",
+      "mcp__serena__onboarding",
+      "Bash(git push)"
+    ]
+  }
+}</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="cmd">enableAllProjectMcpServers</span><span class="badge b-both">両方</span></div>
+    <div class="card-desc">プロジェクトの <code>.mcp.json</code> を自動的に全て有効化。デフォルト <code>false</code>。gitリポジトリ経由の悪意あるMCPサーバー対策のため無闘に有効にしない。
       <pre>"enableAllProjectMcpServers": false</pre>
     </div>
   </div>
@@ -52,4 +153,7 @@
       <pre>"attribution": { "coAuthoredBy": "" }</pre>
     </div>
   </div>
+</div>
+<div class="tip" style="margin-top:16px;">
+  <strong>設定マージの仕組み：</strong> 全スコープ（User / Project / Local / Managed）の <code>allow</code> と <code>deny</code> はマージされる。いずれかのスコープで <code>allow</code> されていれば許可。<code>deny</code> はどのスコープで書いても最優先でブロック。詳細は「スコープ構造」セクションを参照。
 </div>
