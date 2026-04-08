@@ -142,6 +142,9 @@ async function show(id) {
     await loadSection(id);
   }
 
+  // スクロール位置をリセット
+  document.querySelector('main').scrollTop = 0;
+
   navLinks.forEach(a => {
     if (a.getAttribute('onclick') && a.getAttribute('onclick').includes("'" + id + "'")) {
       a.classList.add('active');
