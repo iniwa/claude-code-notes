@@ -49,10 +49,11 @@ Hand off to Claude Code when:
 ## Handoff Workflow
 1. Codex reads project context, `AGENTS.md`, `CLAUDE.md`, and relevant files.
 2. Codex decides whether the task is ready for handoff.
-3. Codex writes a concrete handoff.
-4. The user pastes the handoff into Claude Code.
-5. Claude Code implements and reports back.
-6. Codex reviews the report and/or diff.
+3. Codex writes a concrete handoff file under `docs/handoffs/`.
+4. Codex reports the handoff file path to the user.
+5. The user gives that file path to Claude Code.
+6. Claude Code reads the handoff file, implements, and reports back.
+7. Codex reviews the report and/or diff.
 
 ## Decision Log
 
@@ -78,7 +79,7 @@ Do Not Change Casually:
 
 ## Claude Code Handoff Template
 
-Use this template when Claude Code is the better execution environment. If the task is still ambiguous or design-heavy, keep it in Codex until the constraints are clear.
+Use this template when Claude Code is the better execution environment. Save it as `docs/handoffs/YYYY-MM-DD-<short-task>.md`. If the task is still ambiguous or design-heavy, keep it in Codex until the constraints are clear.
 
 ### Goal
 Describe the implementation goal.
