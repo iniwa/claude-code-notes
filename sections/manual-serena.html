@@ -3,7 +3,16 @@
 
 <h3>基本ワークフロー</h3>
 <div class="tip">
-  Serena の最大の特徴は、特別なコマンドを覚える必要がないこと。普段通り Claude Code に自然言語でお願いするだけで、Claude が裏側で Serena のツール（LSP）を自動操作する。
+  Serena の最大の特徴は、特別なコマンドを覚える必要がないこと。普段通り Codex / Claude Code に自然言語でお願いするだけで、エージェントが裏側で Serena のツール（LSP）を自動操作する。
+</div>
+
+<h3>Codex で使い始める</h3>
+<div class="card">
+  <div class="card-desc">
+    Codex の <code>~/.codex/config.toml</code> に <code>mcp_servers.serena</code> を登録したら、新しい Codex セッションを開く。作業開始時に必要なら次のように指示する。
+    <pre>Serena で現在のディレクトリをプロジェクトとして有効化してください</pre>
+    このリポジトリのように <code>.serena/project.yml</code> がある場合、<code>--project-from-cwd</code> により現在の作業ディレクトリからプロジェクトを自動検出できる。
+  </div>
 </div>
 
 <h3>1. 構造的な検索</h3>
@@ -39,8 +48,8 @@
   <div class="card-desc">
     Serena の解析ログや記憶データを視覚的に確認できる。<br><br>
     <strong>手順:</strong><br>
-    1. Claude Code を起動した状態にする（Serena サーバーも同時に起動）<br>
-    2. ブラウザで <code>http://localhost:8000</code> を開く<br><br>
-    ポート 8000 が他のアプリで使われている場合は表示されないことがある。
+    1. Codex / Claude Code を起動した状態にする（Serena サーバーも同時に起動）<br>
+    2. ブラウザで <code>http://localhost:24282/dashboard/index.html</code> または <code>http://localhost:8000</code> を開く<br><br>
+    クライアントや起動方法によってポートが変わる。表示されない場合は Serena のログや Codex の <code>codex mcp list</code> を確認する。
   </div>
 </div>

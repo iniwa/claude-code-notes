@@ -1,12 +1,32 @@
 <div class="section-title">ステータスバー設定</div>
-<div class="section-desc">Claude Code のステータスラインにモデル名・コンテキスト使用率・レート制限等を表示するカスタマイズ手順。</div>
+<div class="section-desc">Codex / Claude Code のステータスラインにモデル名・コンテキスト使用率・Git情報等を表示するカスタマイズ手順。</div>
 
 <h3>概要</h3>
 <div class="card">
-  <div class="card-desc">Claude Code はステータスバーのカスタマイズに対応しています。<code>~/.claude/statusline.py</code> にスクリプトを配置し、<code>settings.json</code> で指定するだけで、モデル名・コンテキスト使用率・レート制限等をリアルタイムに表示できます。</div>
+  <div class="card-desc">Claude Code は任意スクリプト方式、Codex は組み込み項目の選択方式でステータスラインを設定できる。Claude Code は <code>~/.claude/statusline.py</code> を呼び出せるため自由度が高く、Codex は <code>~/.codex/config.toml</code> の <code>status_line</code> に表示項目を並べる。</div>
 </div>
 
-<h3>セットアップ方法</h3>
+<h3>Codex のステータスライン</h3>
+<div class="card">
+  <div class="card-desc">
+    Codex CLI では <code>~/.codex/config.toml</code> に次のように追加する。設定後は新しい Codex セッションから反映される。
+    <pre>status_line = ["model-with-reasoning", "fast-mode", "git-branch", "current-dir", "context-remaining"]</pre>
+    表示例:
+    <pre>gpt-5.5 medium · fast · main · D:\Git\ai-coding-notes · Context 42% left</pre>
+    TUI 内では <code>/statusline</code> から表示項目を切り替えられる。Claude Code のように任意スクリプトを実行する方式ではないため、レート制限・セッションコスト・入出力トークンの独自集計は標準の status line だけでは扱わない。
+  </div>
+</div>
+
+<h3>Codex で使う主な項目</h3>
+<div class="card-grid">
+  <div class="card"><div class="card-header"><span class="cmd">model-with-reasoning</span></div><div class="card-desc">モデル名と reasoning effort を表示する。</div></div>
+  <div class="card"><div class="card-header"><span class="cmd">fast-mode</span></div><div class="card-desc">Fast mode が有効なときに表示する。</div></div>
+  <div class="card"><div class="card-header"><span class="cmd">git-branch</span></div><div class="card-desc">現在の Git ブランチを表示する。</div></div>
+  <div class="card"><div class="card-header"><span class="cmd">current-dir</span></div><div class="card-desc">現在の作業ディレクトリを表示する。</div></div>
+  <div class="card"><div class="card-header"><span class="cmd">context-remaining</span></div><div class="card-desc">残りコンテキスト割合を表示する。</div></div>
+</div>
+
+<h3>Claude Code のセットアップ方法</h3>
 <div class="card">
   <div class="card-desc">以下のプロンプトを Claude Code の CLI にそのまま貼り付けて実行してください。自動でファイル作成と設定が行われます。</div>
 </div>

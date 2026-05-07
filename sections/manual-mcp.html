@@ -1,7 +1,38 @@
 <div class="section-title">MCP セットアップ</div>
-<div class="section-desc">Claude Code に MCP（Model Context Protocol）サーバーを追加する手順書。</div>
+<div class="section-desc">Codex / Claude Code に MCP（Model Context Protocol）サーバーを追加する手順書。</div>
 
-<h3>MCP の管理コマンド</h3>
+<h3>Codex の MCP 設定</h3>
+<div class="card">
+  <div class="card-desc">
+    Codex は MCP サーバーをグローバル設定（<code>~/.codex/config.toml</code>）で管理する。CLI で追加する場合は次の形。
+    <pre>codex mcp add playwright -- npx -y @playwright/mcp@latest
+codex mcp add git -- uvx mcp-server-git
+codex mcp add tavily -- npx -y tavily-mcp</pre>
+    実体は TOML に保存される。
+    <pre>[mcp_servers.serena]
+startup_timeout_sec = 15
+command = "uvx"
+args = ["--from", "git+https://github.com/oraios/serena", "serena", "start-mcp-server", "--project-from-cwd", "--context=codex"]
+
+[mcp_servers.playwright]
+command = "npx"
+args = ["-y", "@playwright/mcp@latest"]
+
+[mcp_servers.git]
+command = "uvx"
+args = ["mcp-server-git"]
+
+[mcp_servers.tavily]
+command = "npx"
+args = ["-y", "tavily-mcp"]</pre>
+    登録確認:
+    <pre>codex mcp list</pre>
+    Codex セッション開始後、必要に応じて次のように指示する。
+    <pre>Serena で現在のディレクトリをプロジェクトとして有効化してください</pre>
+  </div>
+</div>
+
+<h3>Claude Code の MCP 管理コマンド</h3>
 <div class="card">
   <div class="card-desc">
     <pre>claude mcp list              # 登録済み MCP 一覧
@@ -13,11 +44,31 @@ claude mcp remove &lt;name&gt;     # MCP を削除</pre>
   </div>
 </div>
 
+<h3>共通グローバル登録セット</h3>
+<div class="card">
+  <div class="card-desc">
+    Codex と Claude Code の両方に入れておく基本セット。Claude Code 側は <code>--scope user</code> を付けると全プロジェクト共通になる。
+    <pre>claude mcp add --scope user playwright -- npx -y @playwright/mcp@latest
+claude mcp add --scope user git -- uvx mcp-server-git
+claude mcp add --scope user tavily -- npx -y tavily-mcp</pre>
+  </div>
+</div>
+
+<h3>Tavily API キー</h3>
+<div class="card">
+  <div class="card-desc">
+    API キーは設定ファイルに直書きせず、OS のユーザー環境変数 <code>TAVILY_API_KEY</code> に保存する。Windows では次のコマンドで永続化できる。
+    <pre>[Environment]::SetEnvironmentVariable("TAVILY_API_KEY", "tvly-...", "User")</pre>
+    設定後は Codex / Claude Code / ターミナルを開き直す。現在のセッションだけで試す場合は次の形。
+    <pre>$env:TAVILY_API_KEY = "tvly-..."</pre>
+  </div>
+</div>
+
 <h3>1. Serena（コードナビゲーション）</h3>
 <div class="card">
   <div class="card-header"><span class="cmd">serena</span><span class="badge b-star">必須</span></div>
   <div class="card-desc">コードの構造解析・シンボル検索・安全な編集を行う MCP。LSP ベースで動作。
-    <pre>claude mcp add serena -- uvx --from git+https://github.com/oraios/serena serena start-mcp-server --context ide-assistant</pre>
+    <pre>claude mcp add --scope user serena -- uvx --from git+https://github.com/oraios/serena serena start-mcp-server --context=claude-code --project-from-cwd</pre>
     プロジェクトインデックス作成（CLI 上で自然言語で指示）:
     <pre>「Serena でこのプロジェクトをインデックスしてください」</pre>
     Claude が Serena の <code>onboarding</code> ツールを呼び出し、自動でインデックスを作成する。
@@ -32,7 +83,7 @@ claude mcp remove &lt;name&gt;     # MCP を削除</pre>
   <div class="card-header"><span class="cmd">tavily</span><span class="badge b-star">必須</span></div>
   <div class="card-desc">Web 検索・ページ抽出・クロールを行う MCP。無料枠（月 1,000 クレジット）で利用。<br>
     API キー取得: <a href="https://app.tavily.com/home" target="_blank">https://app.tavily.com/home</a>
-    <pre>claude mcp add tavily -e TAVILY_API_KEY=&lt;your-key&gt; -- npx -y tavily-mcp</pre>
+    <pre>claude mcp add --scope user tavily -- npx -y tavily-mcp</pre>
     使えるツール: <code>tavily_search</code>, <code>tavily_extract</code>, <code>tavily_crawl</code>, <code>tavily_research</code>
   </div>
 </div>
@@ -42,13 +93,13 @@ claude mcp remove &lt;name&gt;     # MCP を削除</pre>
   <div class="card">
     <div class="card-header"><span class="cmd">playwright</span><span class="badge b-auto">推奨</span></div>
     <div class="card-desc">ブラウザ操作（ページ遷移・クリック・スクリーンショット撮影・フォーム入力・要素検査）を Claude Code から実行。Web UI のテストやデバッグに有用。
-      <pre>claude mcp add playwright -- npx -y @playwright/mcp</pre>
+      <pre>claude mcp add --scope user playwright -- npx -y @playwright/mcp@latest</pre>
     </div>
   </div>
   <div class="card">
     <div class="card-header"><span class="cmd">git</span></div>
     <div class="card-desc">リポジトリの履歴・diff・blame を MCP 経由で操作。
-      <pre>claude mcp add git -- uvx mcp-server-git</pre>
+      <pre>claude mcp add --scope user git -- uvx mcp-server-git</pre>
     </div>
   </div>
   <div class="card">
