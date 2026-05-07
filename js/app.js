@@ -9,6 +9,10 @@ const SECTIONS = {
   'top':              'sections/top.html',
   'workflow':         'sections/workflow.html',
   'templates':        'sections/templates.html',
+  'codex-overview':   'sections/codex-overview.html',
+  'codex-design':     'sections/codex-design.html',
+  'codex-handoff':    'sections/codex-handoff.html',
+  'codex-review':     'sections/codex-review.html',
   'manual-setup':     'sections/manual-setup.html',
   'manual-mcp':       'sections/manual-mcp.html',
   'manual-statusbar': 'sections/manual-statusbar.html',
@@ -39,6 +43,15 @@ const SECTIONS = {
 
 const loadedSections = new Set();
 const navLinks = document.querySelectorAll('nav a');
+
+document.querySelectorAll('[data-nav-toggle]').forEach(button => {
+  button.addEventListener('click', () => {
+    const group = button.closest('.nav-group');
+    if (!group) return;
+    const isOpen = group.classList.toggle('open');
+    button.setAttribute('aria-expanded', String(isOpen));
+  });
+});
 
 function escapeHtml(str) {
   const div = document.createElement('div');

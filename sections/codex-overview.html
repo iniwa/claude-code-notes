@@ -1,0 +1,41 @@
+<div class="section-title">Codex 基本運用</div>
+<div class="section-desc">Codex は設計を練り、設計思想の継続性を守り、Claude Code への実装ハンドオフを作る。</div>
+
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header">設計担当</div>
+    <div class="card-desc">要件を整理し、既存設計との関係、責務境界、採用案・不採用案を明確にする。</div>
+  </div>
+  <div class="card">
+    <div class="card-header">思想の記録</div>
+    <div class="card-desc"><code>AGENTS.md</code> や <code>docs/</code> に、今後も守るべき判断を残す。</div>
+  </div>
+  <div class="card">
+    <div class="card-header">実装ハンドオフ</div>
+    <div class="card-desc">Claude Code が迷わず実装できるよう、目的、編集対象、制約、非目標、検証方法を整理する。</div>
+  </div>
+  <div class="card">
+    <div class="card-header">設計レビュー</div>
+    <div class="card-desc">実装後の差分を見て、設計思想から剥離していないか確認する。</div>
+  </div>
+</div>
+
+<h3>基本ループ</h3>
+<div class="card">
+  <div class="card-desc">
+    <pre>Codex: 設計する
+Codex: AGENTS.md に設計判断を残す
+Codex: Claude Code 用 handoff を作る
+Claude Code: CLAUDE.md と handoff に従って実装する
+Codex: 差分を設計思想と照合する
+Codex: 必要なら AGENTS.md を更新する</pre>
+  </div>
+</div>
+
+<h3>Codex に最初に聞くこと</h3>
+<div class="template">
+  <div class="template-header"><span class="filename">prompt</span></div>
+  <pre>これは AGENTS.md に残すべき設計判断を含む変更ですか？
+含むなら、実装前に handoff と decision log を作ってください。
+含まないなら、Claude Code に渡す最小の実装指示だけ作ってください。</pre>
+</div>

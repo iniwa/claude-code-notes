@@ -57,6 +57,9 @@ Thumbs.db
 <div class="card">
   <div class="card-desc"><code>CLAUDE.md</code> は Claude Code がプロジェクトを開いたとき<strong>自動的に読み込む指示書</strong>。プロジェクトルートに置く。</div>
 </div>
+<div class="card" style="margin-top:10px;">
+  <div class="card-desc"><code>AGENTS.md</code> は Codex が設計思想や判断理由を引き継ぐための文書。Claude Code に実装を渡す前に、守るべき設計制約や handoff をここに整理しておく。</div>
+</div>
 <div class="template" style="margin-top:10px;">
   <div class="template-header"><span class="filename">CLAUDE.md（最小構成）</span></div>
   <pre># CLAUDE.md
@@ -86,7 +89,7 @@ Thumbs.db
 - No CI/CD or packaging unless explicitly requested</pre>
 </div>
 <div class="tip" style="margin-top:10px;">
-  <code>CLAUDE.md</code> は AI が読む英語の簡潔版、<code>CLAUDE_ja.md</code> は人間が読む日本語の詳細版という運用が推奨。テンプレートは「CLAUDE.md Docker版」「CLAUDE.md Windows版」を参照。
+  <code>AGENTS.md</code> は Codex の設計継続用、<code>CLAUDE.md</code> は Claude Code の実装実行用として分ける。<code>CLAUDE_ja.md</code> は人間が読む日本語の詳細版として任意で置く。
 </div>
 
 <h3>3. .claudeignore の配置</h3>
@@ -116,7 +119,8 @@ Thumbs.db
 <h3>6. 新規プロジェクト チェックリスト</h3>
 <div class="card-grid">
   <div class="card"><div class="card-desc"><code>.gitignore</code> 作成（<code>.claude/</code>, <code>.serena/</code> を含む）</div></div>
-  <div class="card"><div class="card-desc"><code>CLAUDE.md</code> をプロジェクトルートに配置</div></div>
+  <div class="card"><div class="card-desc"><code>AGENTS.md</code> をプロジェクトルートに配置（Codex 設計継続用）</div></div>
+  <div class="card"><div class="card-desc"><code>CLAUDE.md</code> をプロジェクトルートに配置（Claude Code 実装用）</div></div>
   <div class="card"><div class="card-desc"><code>CLAUDE_ja.md</code> を同ディレクトリに配置（任意だが推奨）</div></div>
   <div class="card"><div class="card-desc"><code>.claudeignore</code> を配置（ML プロジェクトはモデルファイルの除外を確認）</div></div>
   <div class="card"><div class="card-desc">MCP サーバーの登録・動作を確認</div></div>
@@ -130,6 +134,7 @@ Thumbs.db
   <span class="dir">project-name/</span><br>
   ├── .gitignore<br>
   ├── .claudeignore<br>
+  ├── <span class="important">AGENTS.md</span> &nbsp;<span class="comment"># Codex で設計思想を継続する</span><br>
   ├── <span class="important">CLAUDE.md</span><br>
   ├── <span class="important">CLAUDE_ja.md</span> &nbsp;<span class="comment"># 任意（人間向け詳細版）</span><br>
   ├── README.md<br>

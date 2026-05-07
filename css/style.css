@@ -119,6 +119,33 @@ nav {
 }
 
 .nav-section { margin-bottom: 24px; }
+.nav-group { margin-bottom: 16px; }
+.nav-group-body { display: none; padding-top: 8px; }
+.nav-group.open .nav-group-body { display: block; }
+
+.nav-group-toggle {
+  width: 100%;
+  border: 1px solid var(--border);
+  background: var(--bg2);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.nav-group-toggle:hover { background: var(--bg3); border-color: var(--border2); }
+.nav-group-toggle .chevron {
+  color: var(--text3);
+  font-size: 11px;
+  transition: transform 0.15s;
+}
+.nav-group:not(.open) .nav-group-toggle .chevron { transform: rotate(-90deg); }
 
 .nav-label {
   font-size: 10px;

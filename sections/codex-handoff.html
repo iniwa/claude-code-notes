@@ -1,0 +1,72 @@
+<div class="section-title">実装ハンドオフ</div>
+<div class="section-desc">Codex で設計した内容を、Claude Code が実装できる粒度に変換する。</div>
+
+<h3>新規機能</h3>
+<div class="card">
+  <div class="card-desc">
+    新規機能では、まず設計に新しい概念を追加してよいかを確認する。既存アーキテクチャに自然に入るか、新しい責務や制約が必要かを Codex で整理してから Claude Code に渡す。
+  </div>
+</div>
+<div class="template">
+  <div class="template-header"><span class="filename">new-feature-handoff.md</span></div>
+  <pre>## Goal
+○○機能を追加する。
+
+## Design Intent
+この機能は既存の XXX の延長として扱い、新しい独立モジュールにはしない。
+
+## Files To Inspect
+- src/xxx/
+- src/shared/
+
+## Files To Edit
+- src/xxx/service.ts
+- src/xxx/ui.tsx
+
+## Constraints
+- 既存の XXX API を維持する
+- UI 層にビジネスロジックを置かない
+- 今回は DB スキーマを変更しない
+
+## Non Goals
+- 認証方式は変更しない
+- デプロイ設定は変更しない
+
+## Verification
+- npm test
+- npm run build</pre>
+</div>
+
+<h3>既存機能の調整</h3>
+<div class="card">
+  <div class="card-desc">
+    既存機能では、これは実装の修正なのか、設計変更なのかを先に切り分ける。局所修正で済む場合は、Claude Code に変更範囲を強く限定して渡す。
+  </div>
+</div>
+<div class="template">
+  <div class="template-header"><span class="filename">existing-feature-handoff.md</span></div>
+  <pre>## Goal
+既存の○○機能で、△△の場合の挙動を修正する。
+
+## Change Type
+Bug fix / behavior adjustment. This is not an architecture rewrite.
+
+## Preserve
+- 既存 API
+- 既存 UI フロー
+- 既存データ構造
+
+## Allowed Changes
+- 条件分岐の修正
+- テストケース追加
+- エラーメッセージ調整
+
+## Not Allowed
+- モジュール分割の変更
+- 状態管理方式の変更
+- DB スキーマ変更
+
+## Verification
+- 対象テスト
+- 関連する回帰テスト</pre>
+</div>

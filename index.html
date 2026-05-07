@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>iniwa's Claude Code Notes</title>
+<title>iniwa's AI Coding Notes</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
@@ -15,15 +15,15 @@
 
 <header>
   <div class="header-left">
-    <div class="logo">CC</div>
+    <div class="logo">AI</div>
     <div>
-      <h1>iniwa's Claude Code Notes</h1>
-      <p>commands · flags · config · templates · manuals</p>
+      <h1>iniwa's AI Coding Notes</h1>
+      <p>workflow · Codex design · Claude Code implementation · templates</p>
     </div>
   </div>
   <div class="search-wrap">
     <span class="search-icon">⌕</span>
-    <input id="search" type="text" placeholder="コマンドを検索..." autocomplete="off">
+    <input id="search" type="text" placeholder="リファレンスを検索..." autocomplete="off">
   </div>
 </header>
 
@@ -33,53 +33,75 @@
       <a onclick="show('top')" class="active"><span class="dot"></span>Top</a>
     </div>
     <div class="nav-section">
-      <div class="nav-label">作業フロー</div>
-      <a onclick="show('workflow')"><span class="dot"></span>セットアップワークフロー</a>
+      <div class="nav-label">全体ワークフロー</div>
+      <a onclick="show('workflow')"><span class="dot"></span>併用ワークフロー</a>
       <a onclick="show('templates')"><span class="dot"></span>テンプレート集</a>
     </div>
-    <div class="nav-section">
-      <div class="nav-label">マニュアル</div>
-      <a onclick="show('manual-setup')"><span class="dot"></span>プロジェクトセットアップ</a>
-      <a onclick="show('manual-mcp')"><span class="dot"></span>MCP セットアップ</a>
-      <a onclick="show('manual-statusbar')"><span class="dot"></span>ステータスバー設定</a>
-      <a onclick="show('manual-serena')"><span class="dot"></span>Serena マニュアル</a>
+    <div class="nav-group open">
+      <button class="nav-group-toggle" type="button" data-nav-toggle aria-expanded="true">
+        <span>Codex</span><span class="chevron">▾</span>
+      </button>
+      <div class="nav-group-body">
+        <div class="nav-section">
+          <div class="nav-label">設計・レビュー</div>
+          <a onclick="show('codex-overview')"><span class="dot"></span>Codex 基本運用</a>
+          <a onclick="show('codex-design')"><span class="dot"></span>設計思想の蓄積</a>
+          <a onclick="show('codex-handoff')"><span class="dot"></span>実装ハンドオフ</a>
+          <a onclick="show('codex-review')"><span class="dot"></span>設計整合性レビュー</a>
+        </div>
+      </div>
     </div>
-    <div class="nav-section">
-      <div class="nav-label">スラッシュコマンド</div>
-      <a onclick="show('ctx')"><span class="dot"></span>コンテキスト管理</a>
-      <a onclick="show('model')"><span class="dot"></span>モデル・設定</a>
-      <a onclick="show('session')"><span class="dot"></span>セッション情報</a>
-      <a onclick="show('project')"><span class="dot"></span>プロジェクト・作業</a>
-      <a onclick="show('agent')"><span class="dot"></span>エージェント・権限</a>
-    </div>
-    <div class="nav-section">
-      <div class="nav-label">CLI フラグ</div>
-      <a onclick="show('cli-auto')"><span class="dot"></span>自動化モード</a>
-      <a onclick="show('cli-model')"><span class="dot"></span>モデル・動作</a>
-      <a onclick="show('cli-prompt')"><span class="dot"></span>システムプロンプト</a>
-    </div>
-    <div class="nav-section">
-      <div class="nav-label">キーボード</div>
-      <a onclick="show('keyboard')"><span class="dot"></span>ショートカット</a>
-    </div>
-    <div class="nav-section">
-      <div class="nav-label">/config 設定</div>
-      <a onclick="show('cfg-basic')"><span class="dot"></span>基本動作</a>
-      <a onclick="show('cfg-perm')"><span class="dot"></span>権限・セキュリティ</a>
-      <a onclick="show('cfg-hooks')"><span class="dot"></span>フック</a>
-      <a onclick="show('cfg-mcp')"><span class="dot"></span>MCP・拡張</a>
-      <a onclick="show('cfg-scope')"><span class="dot"></span>スコープ構造</a>
-    </div>
-    <div class="nav-section">
-      <div class="nav-label">ガイド</div>
-      <a onclick="show('memory')"><span class="dot"></span>メモリシステム</a>
-      <a onclick="show('cost')"><span class="dot"></span>コスト・トークン最適化</a>
-      <a onclick="show('ide')"><span class="dot"></span>IDE 連携</a>
-      <a onclick="show('subagent')"><span class="dot"></span>サブエージェント実践</a>
-      <a onclick="show('custom-agent')"><span class="dot"></span>カスタムエージェント定義</a>
-      <a onclick="show('agent-team')"><span class="dot"></span>エージェントチーム</a>
-      <a onclick="show('cicd')"><span class="dot"></span>CI/CD レシピ集</a>
-      <a onclick="show('troubleshoot')"><span class="dot"></span>トラブルシューティング</a>
+
+    <div class="nav-group open">
+      <button class="nav-group-toggle" type="button" data-nav-toggle aria-expanded="true">
+        <span>Claude Code</span><span class="chevron">▾</span>
+      </button>
+      <div class="nav-group-body">
+        <div class="nav-section">
+          <div class="nav-label">マニュアル</div>
+          <a onclick="show('manual-setup')"><span class="dot"></span>プロジェクトセットアップ</a>
+          <a onclick="show('manual-mcp')"><span class="dot"></span>MCP セットアップ</a>
+          <a onclick="show('manual-statusbar')"><span class="dot"></span>ステータスバー設定</a>
+          <a onclick="show('manual-serena')"><span class="dot"></span>Serena マニュアル</a>
+        </div>
+        <div class="nav-section">
+          <div class="nav-label">スラッシュコマンド</div>
+          <a onclick="show('ctx')"><span class="dot"></span>コンテキスト管理</a>
+          <a onclick="show('model')"><span class="dot"></span>モデル・設定</a>
+          <a onclick="show('session')"><span class="dot"></span>セッション情報</a>
+          <a onclick="show('project')"><span class="dot"></span>プロジェクト・作業</a>
+          <a onclick="show('agent')"><span class="dot"></span>エージェント・権限</a>
+        </div>
+        <div class="nav-section">
+          <div class="nav-label">CLI フラグ</div>
+          <a onclick="show('cli-auto')"><span class="dot"></span>自動化モード</a>
+          <a onclick="show('cli-model')"><span class="dot"></span>モデル・動作</a>
+          <a onclick="show('cli-prompt')"><span class="dot"></span>システムプロンプト</a>
+        </div>
+        <div class="nav-section">
+          <div class="nav-label">キーボード</div>
+          <a onclick="show('keyboard')"><span class="dot"></span>ショートカット</a>
+        </div>
+        <div class="nav-section">
+          <div class="nav-label">/config 設定</div>
+          <a onclick="show('cfg-basic')"><span class="dot"></span>基本動作</a>
+          <a onclick="show('cfg-perm')"><span class="dot"></span>権限・セキュリティ</a>
+          <a onclick="show('cfg-hooks')"><span class="dot"></span>フック</a>
+          <a onclick="show('cfg-mcp')"><span class="dot"></span>MCP・拡張</a>
+          <a onclick="show('cfg-scope')"><span class="dot"></span>スコープ構造</a>
+        </div>
+        <div class="nav-section">
+          <div class="nav-label">ガイド</div>
+          <a onclick="show('memory')"><span class="dot"></span>メモリシステム</a>
+          <a onclick="show('cost')"><span class="dot"></span>コスト・トークン最適化</a>
+          <a onclick="show('ide')"><span class="dot"></span>IDE 連携</a>
+          <a onclick="show('subagent')"><span class="dot"></span>サブエージェント実践</a>
+          <a onclick="show('custom-agent')"><span class="dot"></span>カスタムエージェント定義</a>
+          <a onclick="show('agent-team')"><span class="dot"></span>エージェントチーム</a>
+          <a onclick="show('cicd')"><span class="dot"></span>CI/CD レシピ集</a>
+          <a onclick="show('troubleshoot')"><span class="dot"></span>トラブルシューティング</a>
+        </div>
+      </div>
     </div>
   </nav>
 
@@ -87,6 +109,10 @@
     <div id="top" class="section active"><p class="loading-text">読み込み中...</p></div>
     <div id="workflow" class="section"><p class="loading-text">読み込み中...</p></div>
     <div id="templates" class="section"></div>
+    <div id="codex-overview" class="section"></div>
+    <div id="codex-design" class="section"></div>
+    <div id="codex-handoff" class="section"></div>
+    <div id="codex-review" class="section"></div>
     <div id="manual-setup" class="section"></div>
     <div id="manual-mcp" class="section"></div>
     <div id="manual-statusbar" class="section"></div>

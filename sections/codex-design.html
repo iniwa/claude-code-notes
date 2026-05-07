@@ -1,0 +1,63 @@
+<div class="section-title">設計思想の蓄積</div>
+<div class="section-desc">途中で設計思想の剥離が起きないよう、判断理由と守るべき制約を記録する。</div>
+
+<h3>AGENTS.md に残すもの</h3>
+<div class="card-grid">
+  <div class="card"><div class="card-desc">なぜその設計にしたか</div></div>
+  <div class="card"><div class="card-desc">何を捨てたか、なぜ捨てたか</div></div>
+  <div class="card"><div class="card-desc">将来変えてよい部分と、変えてはいけない部分</div></div>
+  <div class="card"><div class="card-desc">Claude Code が実装時に守るべき責務境界</div></div>
+  <div class="card"><div class="card-desc">実装後に Codex が確認すべき観点</div></div>
+</div>
+
+<h3>更新するべきケース</h3>
+<div class="card">
+  <div class="card-desc">
+    <ul>
+      <li>新しい責務境界を決めた</li>
+      <li>既存設計を変更した</li>
+      <li>今後も守るべき制約が増えた</li>
+      <li>採用しなかった案に重要な理由がある</li>
+      <li>Claude Code が迷いやすい判断が発生した</li>
+    </ul>
+  </div>
+</div>
+
+<h3>更新しなくてよいケース</h3>
+<div class="card">
+  <div class="card-desc">
+    <ul>
+      <li>単純なバグ修正</li>
+      <li>文言修正</li>
+      <li>CSS 微調整</li>
+      <li>テスト追加だけ</li>
+      <li>既存方針に完全に沿った小変更</li>
+    </ul>
+  </div>
+</div>
+
+<h3>Decision Log</h3>
+<div class="template">
+  <div class="template-header"><span class="filename">AGENTS.md</span></div>
+  <pre>## Decision Log
+
+### YYYY-MM-DD: Decision Title
+
+Context:
+- What problem or requirement caused this decision?
+
+Decision:
+- What did we decide?
+
+Alternatives Considered:
+- What did we reject?
+
+Reason:
+- Why is this the right tradeoff for now?
+
+Constraints Introduced:
+- What should future implementation preserve?
+
+Do Not Change Casually:
+- What would cause design drift if changed without review?</pre>
+</div>

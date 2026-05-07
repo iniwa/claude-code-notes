@@ -1,0 +1,40 @@
+<div class="section-title">設計整合性レビュー</div>
+<div class="section-desc">Claude Code の実装差分を、AGENTS.md の設計思想と照合する。</div>
+
+<h3>レビュー依頼</h3>
+<div class="template">
+  <div class="template-header"><span class="filename">prompt</span></div>
+  <pre>以下の実装差分を、AGENTS.md の設計思想と照らしてレビューしてください。
+特に、途中で設計思想の剥離が起きていないか確認してください。</pre>
+</div>
+
+<h3>確認観点</h3>
+<div class="card-grid">
+  <div class="card"><div class="card-desc">実装が当初の設計目的を満たしているか</div></div>
+  <div class="card"><div class="card-desc">余計な責務移動がないか</div></div>
+  <div class="card"><div class="card-desc">一時対応が恒久設計に混ざっていないか</div></div>
+  <div class="card"><div class="card-desc">命名や抽象化が既存思想と合っているか</div></div>
+  <div class="card"><div class="card-desc">Claude Code が独自判断で設計を変えていないか</div></div>
+  <div class="card"><div class="card-desc">AGENTS.md に追記すべき新しい判断があるか</div></div>
+</div>
+
+<h3>Claude Code に返してほしい報告</h3>
+<div class="template">
+  <div class="template-header"><span class="filename">implementation-report.md</span></div>
+  <pre>## Changed Files
+- path/to/file
+
+## Summary
+- What changed?
+
+## Design Constraints
+- Which constraints were preserved?
+- Were any constraints difficult to preserve?
+
+## Verification
+- Commands run
+- Results
+
+## Open Questions
+- Anything Codex should review or record?</pre>
+</div>
