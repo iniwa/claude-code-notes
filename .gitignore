@@ -37,7 +37,8 @@ tmp/
 *.key
 secrets/
 
-# ===== 個人環境用 CLAUDE.md（公開不可） =====
+# ===== 個人環境用 AI 指示ファイル（公開不可） =====
+/AGENTS.md
 /CLAUDE.md
 CLAUDEmd_docker/
 CLAUDEmd_windows/

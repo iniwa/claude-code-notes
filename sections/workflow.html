@@ -1,5 +1,17 @@
 <div class="section-title">併用ワークフロー</div>
-<div class="section-desc">Codex で設計を練り、Claude Code で実装し、Codex で設計整合性を確認する。</div>
+<div class="section-desc">Codex と Claude Code を、曖昧さ・設計リスク・実行量に応じて切り替える。</div>
+
+<div class="card" style="margin-bottom: 20px;">
+  <div class="card-header">判断基準</div>
+  <div class="card-body">
+    <p>このプロジェクトでは「Codex で設計して Claude Code で実装」と固定しない。Codex は実装まで進められるため、役割ではなく作業の性質で切り替える。</p>
+    <ul>
+      <li><strong>Codex 優先:</strong> 要求が曖昧、設計判断が絡む、差分の意味をレビューしたい、記録まで一気通貫で閉じたい。</li>
+      <li><strong>Claude Code 優先:</strong> handoff が明確、編集量が多い、CLI/Hooks/サブエージェント/CI など Claude Code 固有の実行環境を使いたい。</li>
+      <li><strong>併用:</strong> Codex が方針と制約を整理し、Claude Code が実装し、Codex が差分と設計記録を確認する。</li>
+    </ul>
+  </div>
+</div>
 
 <div class="workflow">
 
@@ -7,13 +19,14 @@
     <div class="wf-line"></div>
     <div class="wf-left"><div class="wf-num improved">1</div></div>
     <div class="wf-body">
-      <div class="wf-title">Codex で要件と変更種別を整理する</div>
+      <div class="wf-title">Codex で変更の性質を判定する</div>
       <div class="wf-current">
-        まず、今回の作業が新規機能なのか、既存機能の調整なのか、単純な修正なのかを切り分ける。<br>
-        新規機能では「設計に新しい概念を追加してよいか」、既存機能では「設計変更が必要か、実装だけ直せばよいか」を確認する。
-        <pre>これは AGENTS.md に残すべき設計判断を含む変更ですか？
-含むなら、実装前に handoff と decision log を作ってください。
-含まないなら、Claude Code に渡す最小の実装指示だけ作ってください。</pre>
+        まず、今回の作業が新規機能、既存機能の調整、単純な修正、ドキュメント更新、自動化作業のどれかを切り分ける。<br>
+        同時に、設計判断が必要か、実装範囲が明確か、どちらの実行環境が向いているかを決める。
+        <pre>この変更は設計判断を含みますか？
+実装範囲は明確ですか？
+Codex がこのまま実装まで進めるべきですか？
+それとも Claude Code に handoff した方が速いですか？</pre>
       </div>
     </div>
   </div>
@@ -22,10 +35,10 @@
     <div class="wf-line"></div>
     <div class="wf-left"><div class="wf-num improved">2</div></div>
     <div class="wf-body">
-      <div class="wf-title">AGENTS.md に設計思想を残す</div>
+      <div class="wf-title">設計リスクがある場合は Codex で整理する</div>
       <div class="wf-current">
-        Codex 側では、なぜその設計にしたのか、何を変えてはいけないのか、将来どこを見直してよいのかを記録する。<br>
-        毎回更新する必要はない。責務境界、採用しなかった案、今後も守るべき制約が増えたときに更新する。
+        責務境界、データ構造、公開 API、永続化、認証、デプロイ、将来の拡張に影響する場合は、先に Codex で設計意図を固める。<br>
+        この時点では、毎回 <code>AGENTS.md</code> を更新しない。今後も守るべき判断が増えたときだけ記録する。
         <pre>Context:
 - 何が問題だったか
 
@@ -45,7 +58,28 @@ Do Not Change Casually:
     <div class="wf-line"></div>
     <div class="wf-left"><div class="wf-num improved">3</div></div>
     <div class="wf-body">
-      <div class="wf-title">Claude Code 用 handoff を作る</div>
+      <div class="wf-title">Codex で進めるか Claude Code に渡すか決める</div>
+      <div class="wf-current">
+        小さく閉じる変更、レビューと実装を同じ文脈で進めたい変更、設計記録まで一気通貫で扱う変更は Codex がそのまま実装する。<br>
+        一方、明確な編集指示に落ちた大きな変更、反復的な修正、Claude Code の Hooks やサブエージェントを使う作業は Claude Code に渡す。
+        <pre>Codex で続行:
+- 曖昧さが残っている
+- 設計レビューしながら編集したい
+- 変更範囲が小さく、検証までこの場で閉じられる
+
+Claude Code に handoff:
+- 目的、編集対象、制約、検証方法が明確
+- 編集量が多い
+- Claude Code の自動化や並列作業が効く</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="wf-step">
+    <div class="wf-line"></div>
+    <div class="wf-left"><div class="wf-num improved">4</div></div>
+    <div class="wf-body">
+      <div class="wf-title">Claude Code に渡す場合は handoff を作る</div>
       <div class="wf-current">
         Claude Code には「良い感じに実装して」ではなく、目的、編集対象、制約、非目標、検証方法を渡す。<br>
         とくに既存機能の調整では、許可する変更と許可しない変更を明確にする。
@@ -74,26 +108,12 @@ Do Not Change Casually:
 
   <div class="wf-step">
     <div class="wf-line"></div>
-    <div class="wf-left"><div class="wf-num improved">4</div></div>
-    <div class="wf-body">
-      <div class="wf-title">Claude Code で実装する</div>
-      <div class="wf-current">
-        Claude Code は <code>CLAUDE.md</code> と handoff に従って実装する。<br>
-        <code>CLAUDE.md</code> には、<code>AGENTS.md</code> と <code>docs/</code> の設計判断を制約として扱うように書いておく。
-        <pre>AGENTS.md の設計方針と以下の handoff に従って実装してください。
-設計制約から外れる変更が必要な場合は、実装前に止まって確認してください。</pre>
-      </div>
-    </div>
-  </div>
-
-  <div class="wf-step">
-    <div class="wf-line"></div>
     <div class="wf-left"><div class="wf-num improved">5</div></div>
     <div class="wf-body">
       <div class="wf-title">実装結果を構造化して受け取る</div>
       <div class="wf-current">
-        Claude Code には、変更内容だけでなく、設計制約をどう守ったか、検証結果、未確認事項を返してもらう。<br>
-        この形式にしておくと、Codex での設計整合性レビューがしやすい。
+        Codex で実装した場合も Claude Code に渡した場合も、最後は変更内容、検証結果、設計制約との関係を残す。<br>
+        実装者名よりも、差分がどの判断に基づいているかを確認しやすくする。
         <pre>## Changed Files
 - path/to/file
 
@@ -108,7 +128,7 @@ Do Not Change Casually:
 - Results
 
 ## Open Questions
-- Anything Codex should review or record?</pre>
+- Anything to record in AGENTS.md or docs?</pre>
       </div>
     </div>
   </div>
@@ -120,7 +140,7 @@ Do Not Change Casually:
       <div class="wf-title">Codex で設計整合性レビューを行う</div>
       <div class="wf-current">
         実装差分を <code>AGENTS.md</code> の設計思想と照合する。<br>
-        余計な責務移動、一時対応の恒久化、Claude Code の独自判断による設計変更がないかを確認する。
+        余計な責務移動、一時対応の恒久化、handoff 外の設計変更がないかを確認する。
         <pre>以下の実装差分を、AGENTS.md の設計思想と照らしてレビューしてください。
 特に、途中で設計思想の剥離が起きていないか確認してください。</pre>
       </div>

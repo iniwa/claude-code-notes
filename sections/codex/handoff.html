@@ -1,10 +1,10 @@
 <div class="section-title">実装ハンドオフ</div>
-<div class="section-desc">Codex で設計した内容を、Claude Code が実装できる粒度に変換する。</div>
+<div class="section-desc">Codex で整理した内容を、Claude Code が実装できる粒度に変換する。</div>
 
 <h3>新規機能</h3>
 <div class="card">
   <div class="card-desc">
-    新規機能では、まず設計に新しい概念を追加してよいかを確認する。既存アーキテクチャに自然に入るか、新しい責務や制約が必要かを Codex で整理してから Claude Code に渡す。
+    新規機能では、まず設計に新しい概念を追加してよいかを確認する。既存アーキテクチャに自然に入るか、新しい責務や制約が必要かを Codex で整理する。変更範囲が小さく、検証までこの場で閉じられるなら Codex がそのまま実装してよい。編集量が多い場合や Claude Code の自動化が効く場合は handoff にして渡す。
   </div>
 </div>
 <div class="template">
@@ -40,7 +40,7 @@
 <h3>既存機能の調整</h3>
 <div class="card">
   <div class="card-desc">
-    既存機能では、これは実装の修正なのか、設計変更なのかを先に切り分ける。局所修正で済む場合は、Claude Code に変更範囲を強く限定して渡す。
+    既存機能では、これは実装の修正なのか、設計変更なのかを先に切り分ける。局所修正で済む場合は Codex で直接直してもよい。Claude Code に渡す場合は、変更範囲を強く限定する。
   </div>
 </div>
 <div class="template">

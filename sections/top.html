@@ -1,5 +1,5 @@
 <div class="section-title">iniwa's AI Coding Notes</div>
-<div class="section-desc">Codex で設計を練り、Claude Code で実装するための公開用リファレンスサイト</div>
+<div class="section-desc">Codex と Claude Code を、設計・実装・レビューの場面ごとに使い分けるための公開用リファレンスサイト</div>
 
 <div class="card" style="border-left: 3px solid var(--yellow); margin-top: 24px;">
   <div class="card-header" style="color: var(--yellow);">&#9888; ご注意</div>
@@ -19,20 +19,21 @@
 <div class="card" style="margin-top: 16px;">
   <div class="card-header">このサイトについて</div>
   <div class="card-body">
-    <p>Codex と Claude Code を併用するためのワークフロー、設計思想の蓄積方法、実装ハンドオフ、Claude Code の詳細設定を一つの SPA にまとめています。</p>
+    <p>Codex と Claude Code を併用するための判断基準、設計思想の蓄積方法、実装ハンドオフ、Claude Code の詳細設定を一つの SPA にまとめています。</p>
     <ul>
-      <li><strong>全体ワークフロー</strong> — Codex で設計し、Claude Code で実装し、Codex で設計整合性を確認する流れ</li>
-      <li><strong>Codex 詳細</strong> — 設計思想、意思決定ログ、実装ハンドオフ、レビュー観点の蓄積</li>
-      <li><strong>Claude Code 詳細</strong> — CLI、設定、MCP、Hooks、IDE、サブエージェントなどの実装リファレンス</li>
-      <li><strong>テンプレート</strong> — AGENTS.md、CLAUDE.md、plan.md、設定ファイルの公開用サンプル</li>
+      <li><strong>全体ワークフロー</strong> - 変更の曖昧さ、設計リスク、実行量に応じて担当を切り替える流れ</li>
+      <li><strong>Codex 詳細</strong> - 要件整理、設計判断、実装、レビュー、記録更新を一つの流れで扱うための運用</li>
+      <li><strong>Claude Code 詳細</strong> - CLI、設定、MCP、Hooks、IDE、サブエージェントなどの実装実行リファレンス</li>
+      <li><strong>テンプレート</strong> - AGENTS.md、CLAUDE.md、plan.md、設定ファイルの公開用サンプル</li>
     </ul>
   </div>
 </div>
 
 <div class="card" style="margin-top: 16px;">
-  <div class="card-header">基本方針</div>
+  <div class="card-header">現在の基本方針</div>
   <div class="card-body">
-    <p><strong>Codex</strong> は設計判断の継続性を守る場所として使う。なぜその設計にしたのか、何を変えてはいけないのか、実装後にどこを確認すべきかを整理する。</p>
-    <p><strong>Claude Code</strong> は実装実行環境として使う。Codex が整理したハンドオフと <code>CLAUDE.md</code> の作業規約に従って、編集・検証・差分整理を進める。</p>
+    <p><strong>Codex</strong> は、曖昧な要求を整理し、設計判断を記録し、必要ならそのまま実装・検証・レビューまで進める作業場として使う。単なる設計係ではなく、設計リスクを見ながら差分を閉じるための主担当にする。</p>
+    <p><strong>Claude Code</strong> は、実装方針が決まった後の実行力、CLI 連携、Hooks、サブエージェント、自動化を活かす場面で使う。明確な handoff と <code>CLAUDE.md</code> の作業規約に従って、編集・検証・差分整理を進める。</p>
+    <p>つまり「Codex = 設計、Claude Code = 実装」と固定しない。<strong>曖昧さが高いほど Codex、実装タスクが明確で量が多いほど Claude Code</strong> を優先する。</p>
   </div>
 </div>

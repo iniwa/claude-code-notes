@@ -7,11 +7,12 @@ Codex is responsible for:
 - clarifying requirements
 - preserving existing design intent
 - recording architectural decisions
-- preparing implementation handoffs for Claude Code
+- implementing scoped changes when keeping design, edits, verification, and review in one context is safer
+- preparing implementation handoffs for Claude Code when the task is clear and execution-heavy
 - reviewing implementation diffs against documented design constraints
 
 Claude Code is responsible for:
-- implementing the current handoff
+- implementing the current handoff when the scope, constraints, and verification are clear
 - following `CLAUDE.md`
 - reporting any implementation pressure that may require a design update
 
@@ -45,6 +46,8 @@ Do Not Change Casually:
 - What would cause design drift if changed without review?
 
 ## Claude Code Handoff Template
+
+Use this template when Claude Code is the better execution environment. If the task is still ambiguous or design-heavy, keep it in Codex until the constraints are clear.
 
 ### Goal
 Describe the implementation goal.

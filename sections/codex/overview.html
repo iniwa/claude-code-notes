@@ -1,41 +1,50 @@
 <div class="section-title">Codex 基本運用</div>
-<div class="section-desc">Codex は設計を練り、設計思想の継続性を守り、Claude Code への実装ハンドオフを作る。</div>
+<div class="section-desc">Codex は設計判断を整理し、必要なら実装・検証・レビューまで一気通貫で進める。</div>
 
 <div class="card-grid">
   <div class="card">
-    <div class="card-header">設計担当</div>
-    <div class="card-desc">要件を整理し、既存設計との関係、責務境界、採用案・不採用案を明確にする。</div>
+    <div class="card-header">要求整理</div>
+    <div class="card-desc">曖昧な依頼を、変更種別、影響範囲、成功条件、検証方法に分解する。</div>
   </div>
   <div class="card">
-    <div class="card-header">思想の記録</div>
-    <div class="card-desc"><code>AGENTS.md</code> や <code>docs/</code> に、今後も守るべき判断を残す。</div>
+    <div class="card-header">設計判断</div>
+    <div class="card-desc">既存設計との関係、責務境界、採用案・不採用案、守るべき制約を明確にする。</div>
+  </div>
+  <div class="card">
+    <div class="card-header">実装実行</div>
+    <div class="card-desc">変更範囲が適切に見えている場合は、Codex がそのまま編集・検証・差分整理まで進める。</div>
   </div>
   <div class="card">
     <div class="card-header">実装ハンドオフ</div>
-    <div class="card-desc">Claude Code が迷わず実装できるよう、目的、編集対象、制約、非目標、検証方法を整理する。</div>
+    <div class="card-desc">Claude Code に渡す方が速い作業では、目的、編集対象、制約、非目標、検証方法を整理する。</div>
   </div>
   <div class="card">
     <div class="card-header">設計レビュー</div>
     <div class="card-desc">実装後の差分を見て、設計思想から剥離していないか確認する。</div>
+  </div>
+  <div class="card">
+    <div class="card-header">記録更新</div>
+    <div class="card-desc"><code>AGENTS.md</code> や <code>docs/</code> に、今後も守るべき判断だけを残す。</div>
   </div>
 </div>
 
 <h3>基本ループ</h3>
 <div class="card">
   <div class="card-desc">
-    <pre>Codex: 設計する
-Codex: AGENTS.md に設計判断を残す
-Codex: Claude Code 用 handoff を作る
-Claude Code: CLAUDE.md と handoff に従って実装する
+    <pre>Codex: 要求と変更種別を整理する
+Codex: 設計リスクを判定する
+Codex: このまま実装するか、Claude Code に渡すか決める
+Codex または Claude Code: 実装・検証する
 Codex: 差分を設計思想と照合する
-Codex: 必要なら AGENTS.md を更新する</pre>
+Codex: 必要なら AGENTS.md や docs を更新する</pre>
   </div>
 </div>
 
 <h3>Codex に最初に聞くこと</h3>
 <div class="template">
   <div class="template-header"><span class="filename">prompt</span></div>
-  <pre>これは AGENTS.md に残すべき設計判断を含む変更ですか？
-含むなら、実装前に handoff と decision log を作ってください。
-含まないなら、Claude Code に渡す最小の実装指示だけ作ってください。</pre>
+  <pre>この変更は設計判断を含みますか？
+Codex がこのまま実装・検証まで進めるべきですか？
+それとも Claude Code に渡すための handoff を作るべきですか？
+判断理由も含めて整理してください。</pre>
 </div>

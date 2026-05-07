@@ -8,9 +8,10 @@
 - No CI/CD, installers, or packaging unless explicitly requested.
 
 ## Role
-- Claude Code is the implementation executor.
+- Claude Code is the implementation executor for clear, scoped handoffs.
 - Follow the current handoff, this `CLAUDE.md`, and project-local instructions.
 - Treat design decisions documented in `AGENTS.md` and `docs/` as constraints.
+- If the task is still ambiguous or requires changing documented design intent, stop and ask for a Codex-side design update before editing.
 
 ## Project Overview
 <!-- Brief description of this project -->
