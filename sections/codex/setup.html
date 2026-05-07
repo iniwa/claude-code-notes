@@ -1,0 +1,78 @@
+<div class="section-title">Codex プロジェクトセットアップ</div>
+<div class="section-desc">新しいプロジェクトで Codex と Claude Code を併用するための初期配置と役割分担。</div>
+
+<h3>最初に置くファイル</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header">AGENTS.md</div>
+    <div class="card-desc">Codex 側の設計意図、handoff ルール、レビュー観点を記録する。作業の判断基準を残す場所。</div>
+  </div>
+  <div class="card">
+    <div class="card-header">CLAUDE.md</div>
+    <div class="card-desc">Claude Code 側の実行規約を記録する。編集範囲、検証、停止条件、報告形式を書く。</div>
+  </div>
+  <div class="card">
+    <div class="card-header">.claudeignore</div>
+    <div class="card-desc">Claude Code に読ませないファイルを除外する。機密情報、大容量ファイル、生成物は必ず外す。</div>
+  </div>
+  <div class="card">
+    <div class="card-header">docs/</div>
+    <div class="card-desc">再利用できる設計判断、運用手順、調査結果を残す。会話リセット後も引き継ぐ知識置き場。</div>
+  </div>
+</div>
+
+<h3>CLAUDEmdStrage から作る</h3>
+<div class="card">
+  <div class="card-desc">
+    新規プロジェクトでは、まず <code>D:\Git\CLAUDEmdStrage\_base</code> のベースを参照する。<br>
+    Windows / ローカルツールでは <code>CLAUDE_windows.md</code>、Raspberry Pi Docker ツールでは <code>CLAUDE_docker.md</code> を使い、Codex 側の基準として <code>AGENTS.md</code> を合わせて作る。
+  </div>
+</div>
+
+<div class="template">
+  <div class="template-header"><span class="filename">setup-prompt</span></div>
+  <pre>D:\Git\CLAUDEmdStrage\_base にある AGENTS.md と対象環境の CLAUDE_*.md を参考に、
+このプロジェクト用の AGENTS.md と CLAUDE.md を作成してください。
+
+以下を必ず整理してください。
+- このプロジェクトの目的
+- 実行環境
+- Codex が判断すること
+- Claude Code に渡す作業の条件
+- 触ってよいファイルと触ってはいけないファイル
+- 検証方法
+- 知見を AGENTS.md / docs に残す条件</pre>
+</div>
+
+<h3>AGENTS.md と CLAUDE.md の分担</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header">AGENTS.md に書く</div>
+    <div class="card-desc">なぜその設計か、何を守るか、どの作業を Claude Code に渡すか、実装後に何を見るか。</div>
+  </div>
+  <div class="card">
+    <div class="card-header">CLAUDE.md に書く</div>
+    <div class="card-desc">Claude Code がどう編集するか、いつ止まるか、何を検証するか、最後に何を報告するか。</div>
+  </div>
+  <div class="card">
+    <div class="card-header">docs/ に書く</div>
+    <div class="card-desc">長い設計説明、調査メモ、運用手順、将来また参照する技術情報。</div>
+  </div>
+  <div class="card">
+    <div class="card-header">書かない</div>
+    <div class="card-desc">一回限りの作業ログ、単純な文言修正、既存方針に沿った小さな差分。</div>
+  </div>
+</div>
+
+<h3>最初のチェックリスト</h3>
+<div class="card">
+  <div class="card-desc">
+    <ul>
+      <li>プロジェクトの目的と利用者が <code>AGENTS.md</code> にある</li>
+      <li>実行環境とデプロイ先が明確になっている</li>
+      <li>Claude Code に渡す条件と停止条件が分かれている</li>
+      <li>機密情報や大容量ファイルが <code>.claudeignore</code> で除外されている</li>
+      <li>自動コミットするかどうかが明記されている</li>
+    </ul>
+  </div>
+</div>

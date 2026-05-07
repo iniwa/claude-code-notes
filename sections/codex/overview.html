@@ -7,6 +7,10 @@
     <div class="card-desc">曖昧な依頼を、変更種別、影響範囲、成功条件、検証方法に分解する。</div>
   </div>
   <div class="card">
+    <div class="card-header">初期設定</div>
+    <div class="card-desc"><code>AGENTS.md</code> と <code>CLAUDE.md</code> の分担を決め、Codex と Claude Code の往復を始められる状態にする。</div>
+  </div>
+  <div class="card">
     <div class="card-header">設計判断</div>
     <div class="card-desc">既存設計との関係、責務境界、採用案・不採用案、守るべき制約を明確にする。</div>
   </div>
@@ -31,7 +35,8 @@
 <h3>基本ループ</h3>
 <div class="card">
   <div class="card-desc">
-    <pre>Codex: 要求と変更種別を整理する
+    <pre>Codex: AGENTS.md と CLAUDE.md を整える
+Codex: 要求と変更種別を整理する
 Codex: 設計リスクを判定する
 Codex: このまま実装するか、Claude Code に渡すか決める
 Codex または Claude Code: 実装・検証する

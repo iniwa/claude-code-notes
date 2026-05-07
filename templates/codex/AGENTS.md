@@ -3,8 +3,11 @@
 ## Purpose
 This file preserves design continuity for Codex-assisted planning and review.
 
+When creating a new project, use the base files in `D:\Git\CLAUDEmdStrage\_base` as the starting point, then adapt this file to the project.
+
 Codex is responsible for:
 - clarifying requirements
+- deciding whether work should stay in Codex or be handed off to Claude Code
 - preserving existing design intent
 - recording architectural decisions
 - implementing scoped changes when keeping design, edits, verification, and review in one context is safer
@@ -16,12 +19,40 @@ Claude Code is responsible for:
 - following `CLAUDE.md`
 - reporting any implementation pressure that may require a design update
 
+## Project Summary
+- Project name:
+- Purpose:
+- Runtime target:
+- Repository path:
+- Deployment target:
+
+## Decision Rule
+Keep the task in Codex when:
+- requirements are ambiguous
+- design intent is still being negotiated
+- responsibility boundaries may change
+- the change is small enough to implement and verify in one context
+
+Hand off to Claude Code when:
+- goal, files, constraints, non-goals, and verification are clear
+- the task is mostly implementation or mechanical editing
+- the allowed edit scope can be stated explicitly
+- Claude Code-specific workflow, hooks, or subagents would be useful
+
 ## Design Principles
 - Preserve documented design decisions unless the user explicitly approves a change.
 - Prefer small, scoped changes over broad rewrites.
 - Keep responsibility boundaries stable.
 - Do not introduce new abstractions unless they remove real complexity or match an existing project pattern.
 - Separate temporary workarounds from long-term design.
+
+## Handoff Workflow
+1. Codex reads project context, `AGENTS.md`, `CLAUDE.md`, and relevant files.
+2. Codex decides whether the task is ready for handoff.
+3. Codex writes a concrete handoff.
+4. The user pastes the handoff into Claude Code.
+5. Claude Code implements and reports back.
+6. Codex reviews the report and/or diff.
 
 ## Decision Log
 
@@ -86,5 +117,7 @@ Claude Code should report:
 - Does the diff match the stated design intent?
 - Did implementation introduce a new responsibility boundary?
 - Did a local shortcut become an implicit architecture rule?
-- Did Claude Code change behavior outside the handoff?
+- Did implementation change behavior outside the handoff?
+- Did any file outside `Files To Edit` change, and was it necessary?
+- Were verification results reported clearly?
 - Should `AGENTS.md` or `docs/` be updated with a new decision?

@@ -1,0 +1,81 @@
+<div class="section-title">作業判定と分岐</div>
+<div class="section-desc">Codex が最初に行う、変更種別・設計リスク・handoff 可否の判定。</div>
+
+<h3>最初に分類する</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header">単純修正</div>
+    <div class="card-desc">文言、CSS 微調整、小さなバグ修正。設計記録は基本不要。Codex で直接直してよい。</div>
+  </div>
+  <div class="card">
+    <div class="card-header">既存機能の調整</div>
+    <div class="card-desc">既存 API、UI フロー、データ構造を維持する変更。許可する変更と非目標を明確にする。</div>
+  </div>
+  <div class="card">
+    <div class="card-header">新規機能</div>
+    <div class="card-desc">新しい責務や概念が増える可能性がある。実装前に設計判断を整理する。</div>
+  </div>
+  <div class="card">
+    <div class="card-header">設計変更</div>
+    <div class="card-desc">責務境界、永続化、認証、デプロイ、公開 API に影響する変更。Codex 側で判断を記録する。</div>
+  </div>
+</div>
+
+<h3>Codex に残すか Claude Code に渡すか</h3>
+<div class="card">
+  <div class="card-desc">
+    <pre>Codex で続行:
+- 要求が曖昧
+- 設計意図がまだ決まっていない
+- 責務境界が動く可能性がある
+- 変更範囲が小さく、レビューしながら閉じられる
+
+Claude Code に渡す:
+- Goal / Files / Constraints / Verification が明確
+- 実装や機械的編集が中心
+- ファイル数が多い
+- Hooks / サブエージェント / CLI 実行が効く</pre>
+  </div>
+</div>
+
+<h3>設計リスクの見方</h3>
+<div class="card-grid">
+  <div class="card"><div class="card-desc">新しい責務が増えるか</div></div>
+  <div class="card"><div class="card-desc">既存 API やデータ構造を変えるか</div></div>
+  <div class="card"><div class="card-desc">UI 層とドメイン層の境界を動かすか</div></div>
+  <div class="card"><div class="card-desc">永続化、認証、デプロイに触れるか</div></div>
+  <div class="card"><div class="card-desc">一時対応が今後の標準になりそうか</div></div>
+  <div class="card"><div class="card-desc">他の実装者が同じ判断を再利用しそうか</div></div>
+</div>
+
+<h3>判定プロンプト</h3>
+<div class="template">
+  <div class="template-header"><span class="filename">classification-prompt</span></div>
+  <pre>この依頼を以下の観点で分類してください。
+
+## Change Type
+- 単純修正 / 既存機能調整 / 新規機能 / 設計変更 / ドキュメント更新
+
+## Design Risk
+- 低 / 中 / 高
+- 理由
+
+## Execution Mode
+- Codex で続行 / Claude Code に handoff
+- 理由
+
+## Required Context
+- 読むべきファイル
+- 確認すべき既存方針
+
+## Record Needed?
+- AGENTS.md または docs に残すべき判断があるか</pre>
+</div>
+
+<h3>handoff できる状態</h3>
+<div class="card">
+  <div class="card-desc">
+    Claude Code に渡せるのは、実装者が迷わず編集できる状態になってから。<br>
+    少なくとも目的、背景、見るファイル、編集するファイル、制約、非目標、検証、報告形式がそろっている必要がある。
+  </div>
+</div>
