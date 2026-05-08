@@ -1,7 +1,20 @@
 <div class="section-title">Codex 実作業ループ</div>
-<div class="section-desc">Codex で指示を作り、Claude Code で実作業し、Codex でレビューして記録する流れ。</div>
+<div class="section-desc">実際の会話の往復。何が誰の手元から誰に渡るかを把握する。</div>
 
-<h3>全体の流れ</h3>
+<h3>成果物の流れ</h3>
+<div class="card">
+  <div class="card-desc">
+    <pre>user request
+  -> Codex: 分類・設計判断・handoff 生成
+       (artifact: docs/handoffs/YYYY-MM-DD-task.md)
+  -> Claude Code: 実装・検証・報告
+       (artifact: changed files + report)
+  -> Codex: 差分レビュー
+  -> Codex: 必要なら AGENTS.md に判断を追記</pre>
+  </div>
+</div>
+
+<h3>ステップごとの中身</h3>
 <div class="workflow">
   <div class="wf-step">
     <div class="wf-line"></div>
@@ -16,7 +29,7 @@
     <div class="wf-left"><div class="wf-num improved">2</div></div>
     <div class="wf-body">
       <div class="wf-title">Codex が handoff を作る</div>
-      <div class="wf-current">目的、背景、編集範囲、制約、非目標、検証、報告形式を明確にして Claude Code に渡せる形にする。</div>
+      <div class="wf-current">Goal / Background / Files / Constraints / Non Goals / Verification / Expected Report を埋め切ってからファイルに保存する。</div>
     </div>
   </div>
   <div class="wf-step">
@@ -24,7 +37,7 @@
     <div class="wf-left"><div class="wf-num improved">3</div></div>
     <div class="wf-body">
       <div class="wf-title">Claude Code が実装する</div>
-      <div class="wf-current">Claude Code は handoff と <code>CLAUDE.md</code> に従い、範囲外の変更が必要なら止まって確認する。</div>
+      <div class="wf-current">Claude Code は handoff と <code>CLAUDE.md</code> に従い、<code>Files To Edit</code> の外が必要になったら止まって質問する。</div>
     </div>
   </div>
   <div class="wf-step">
@@ -32,74 +45,63 @@
     <div class="wf-left"><div class="wf-num improved">4</div></div>
     <div class="wf-body">
       <div class="wf-title">Claude Code が報告する</div>
-      <div class="wf-current">変更ファイル、概要、検証結果、未実行の検証、Codex に戻すべき質問を返す。</div>
+      <div class="wf-current">変更ファイル、サマリ、検証結果、blocked checks、Codex に戻すべき設計質問を返す。</div>
     </div>
   </div>
   <div class="wf-step">
     <div class="wf-left"><div class="wf-num improved">5</div></div>
     <div class="wf-body">
-      <div class="wf-title">Codex がレビューして記録する</div>
-      <div class="wf-current">差分が handoff と設計意図に合うか確認し、必要な判断だけ <code>AGENTS.md</code> や <code>docs/</code> に残す。</div>
+      <div class="wf-title">Codex がレビューして必要なら記録する</div>
+      <div class="wf-current">差分が handoff と設計意図に合うか確認し、今後も守るべき判断だけを <code>AGENTS.md</code> に追記する。</div>
     </div>
   </div>
 </div>
 
-<h3>Claude Code に渡す handoff ファイル</h3>
+<h3>Claude Code に渡す依頼</h3>
 <div class="template">
-  <div class="template-header"><span class="filename">docs/handoffs/YYYY-MM-DD-short-task.md</span></div>
-  <pre>AGENTS.md、CLAUDE.md、この handoff ファイルを読んだうえで実装してください。
-設計制約から外れる必要がある場合、または編集範囲が handoff と合わない場合は、実装前に止まって確認してください。
+  <div class="template-header"><span class="filename">prompt</span></div>
+  <pre>@docs/handoffs/YYYY-MM-DD-&lt;task&gt;.md を確認し、
+このプロジェクトの調整を行ってください。</pre>
+</div>
 
-## Goal
-...
+<h3>Claude Code が返す報告 (例)</h3>
+<div class="template">
+  <div class="template-header"><span class="filename">report.md</span></div>
+  <pre>## Changed Files
+- sections/codex/decision.html
+- sections/codex/handoff.html
 
-## Background
-...
-
-## Files To Inspect
-- ...
-
-## Files To Edit
-- ...
-
-## Constraints
-- ...
-
-## Non Goals
-- ...
+## Summary
+- 判定マトリクスに「ドキュメント更新」行を追加。
+- handoff ページにテンプレート更新の例を追加。
 
 ## Verification
-- ...
+- git diff --check: clean
+- python -m http.server 8787 --bind 127.0.0.1 でローカル配信し、
+  / が HTTP 200 を返すことを確認。
 
-## Expected Report
-- Changed files
-- Summary
-- Verification results
-- Blocked checks
-- Design questions for Codex</pre>
+## Blocked Checks
+- ブラウザでの目視確認はこの環境ではできなかった。
+
+## Files Edited Outside Files To Edit
+- なし
+
+## Design Questions For Codex
+- 判定マトリクスに「設定ファイル変更」行も追加すべきか。</pre>
 </div>
 
-<h3>戻ってきた結果を見る</h3>
-<div class="card-grid">
-  <div class="card"><div class="card-desc">差分は handoff の範囲内か</div></div>
-  <div class="card"><div class="card-desc">編集対象外のファイル変更に理由があるか</div></div>
-  <div class="card"><div class="card-desc">制約と非目標が守られているか</div></div>
-  <div class="card"><div class="card-desc">新しい依存・ビルド・デプロイ変更が混ざっていないか</div></div>
-  <div class="card"><div class="card-desc">検証結果が具体的に報告されているか</div></div>
-  <div class="card"><div class="card-desc">新しい設計判断を記録すべきか</div></div>
-</div>
-
-<h3>Codex レビュー依頼</h3>
+<h3>Codex 側のレビュー依頼</h3>
 <div class="template">
   <div class="template-header"><span class="filename">review-prompt</span></div>
   <pre>以下は Claude Code の実装報告と差分です。
-AGENTS.md の設計意図と handoff に照らしてレビューしてください。
+AGENTS.md と handoff に照らしてレビューしてください。
 
 確認したいこと:
 - handoff 外の変更がないか
-- 制約と非目標を守っているか
-- 一時対応が恒久設計に混ざっていないか
-- AGENTS.md または docs に残すべき新しい判断があるか
+- 制約と非目標が守られているか
+- 公開不可情報が混ざっていないか
+- 検証が十分か
+- AGENTS.md に残すべき新しい判断があるか
 
 ## Handoff
 ...

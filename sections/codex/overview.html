@@ -1,55 +1,56 @@
 <div class="section-title">Codex 基本運用</div>
-<div class="section-desc">Codex は設計判断を整理し、必要なら実装・検証・レビューまで一気通貫で進める。</div>
+<div class="section-desc">Codex は依頼を受けた時点での意思決定の場。分類、リスク判定、handoff 生成、報告レビュー、durable rule 化を一カ所で扱う。</div>
 
+<h3>Codex のアクション</h3>
 <div class="card-grid">
   <div class="card">
-    <div class="card-header">要求整理</div>
-    <div class="card-desc">曖昧な依頼を、変更種別、影響範囲、成功条件、検証方法に分解する。</div>
+    <div class="card-header"><strong>依頼分類</strong></div>
+    <div class="card-desc">変更種別（文言 / 既存調整 / 新規 / 設計変更 / ドキュメント）、影響範囲、成功条件、検証方法に分解する。</div>
   </div>
   <div class="card">
-    <div class="card-header">初期設定</div>
-    <div class="card-desc"><code>AGENTS.md</code> と <code>CLAUDE.md</code> の分担を決め、Codex と Claude Code の往復を始められる状態にする。</div>
+    <div class="card-header"><strong>設計リスク判定</strong></div>
+    <div class="card-desc">責務境界、公開 API、永続化、認証、デプロイに触れるかを判定し、高リスクなら先に <code>AGENTS.md</code> を更新する。</div>
   </div>
   <div class="card">
-    <div class="card-header">設計判断</div>
-    <div class="card-desc">既存設計との関係、責務境界、採用案・不採用案、守るべき制約を明確にする。</div>
+    <div class="card-header"><strong>handoff 作成</strong></div>
+    <div class="card-desc"><code>docs/handoffs/YYYY-MM-DD-&lt;task&gt;.md</code> に Goal / Files / Constraints / Non Goals / Verification / Expected Report を書き切る。</div>
   </div>
   <div class="card">
-    <div class="card-header">実装実行</div>
-    <div class="card-desc">変更範囲が適切に見えている場合は、Codex がそのまま編集・検証・差分整理まで進める。</div>
+    <div class="card-header"><strong>Claude Code 報告のレビュー</strong></div>
+    <div class="card-desc">handoff 外の変更、不要なパターン追加、検証不足、公開不可情報の混入を差分から確認する。</div>
   </div>
   <div class="card">
-    <div class="card-header">実装ハンドオフ</div>
-    <div class="card-desc">Claude Code に渡す方が速い作業では、目的、編集対象、制約、非目標、検証方法を整理する。</div>
-  </div>
-  <div class="card">
-    <div class="card-header">設計レビュー</div>
-    <div class="card-desc">実装後の差分を見て、設計思想から剥離していないか確認する。</div>
-  </div>
-  <div class="card">
-    <div class="card-header">記録更新</div>
-    <div class="card-desc"><code>AGENTS.md</code> や <code>docs/</code> に、今後も守るべき判断だけを残す。</div>
+    <div class="card-header"><strong>durable rule 化の判断</strong></div>
+    <div class="card-desc">今後も守るべき判断が出たときだけ <code>AGENTS.md</code> の Decision Log に追記する。単発の修正は記録しない。</div>
   </div>
 </div>
 
 <h3>基本ループ</h3>
 <div class="card">
   <div class="card-desc">
-    <pre>Codex: AGENTS.md と CLAUDE.md を整える
-Codex: 要求と変更種別を整理する
+    <pre>Codex: 依頼を分類する
 Codex: 設計リスクを判定する
-Codex: このまま実装するか、Claude Code に渡すか決める
+Codex: そのまま実装するか handoff に落とすか決める
 Codex または Claude Code: 実装・検証する
-Codex: 差分を設計思想と照合する
-Codex: 必要なら AGENTS.md や docs を更新する</pre>
+Codex: 差分を AGENTS.md と handoff に照らしてレビューする
+Codex: 必要な判断だけ AGENTS.md に残す</pre>
   </div>
 </div>
 
-<h3>Codex に最初に聞くこと</h3>
+<h3>Codex に最初に渡す依頼</h3>
 <div class="template">
   <div class="template-header"><span class="filename">prompt</span></div>
-  <pre>この変更は設計判断を含みますか？
-Codex がこのまま実装・検証まで進めるべきですか？
-それとも Claude Code に渡すための handoff を作るべきですか？
-判断理由も含めて整理してください。</pre>
+  <pre>次の依頼を以下の観点で整理してください。
+
+1. 変更種別（文言 / 既存調整 / 新規 / 設計変更 / ドキュメント）
+2. 影響範囲（編集すべきファイル候補）
+3. 設計リスク（低 / 中 / 高 と理由）
+4. 進め方
+   - Codex でそのまま実装する
+   - Claude Code に handoff する
+   - どちらかを選び、理由を書く
+5. AGENTS.md に残すべき判断があるか
+
+依頼:
+{ここに依頼内容}</pre>
 </div>

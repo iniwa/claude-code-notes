@@ -1,59 +1,117 @@
 # AGENTS.md
 
 ## Purpose
-This file preserves design continuity for Codex-assisted planning and review.
+This file preserves the working agreement for using Codex to define intent and Claude Code to execute scoped implementation tasks.
 
-When creating a new project, use the base files in `D:\Git\CLAUDEmdStrage\_base` as the starting point, then adapt this file to the project.
+## Project Shape
+- Describe the entry point, runtime, languages, and deployment target.
+- List the directories Codex and Claude Code should know about.
 
+## Role Split
 Codex is responsible for:
-- clarifying requirements
-- deciding whether work should stay in Codex or be handed off to Claude Code
-- preserving existing design intent
-- recording architectural decisions
-- implementing scoped changes when keeping design, edits, verification, and review in one context is safer
-- preparing implementation handoffs for Claude Code when the task is clear and execution-heavy
-- reviewing implementation diffs against documented design constraints
+- clarifying the user's goal and change type
+- deciding whether the task should remain in Codex or be handed off to Claude Code
+- preserving design intent across edits
+- preparing Claude Code handoffs with clear scope, constraints, and verification
+- reviewing implementation diffs against this file and the handoff
+- updating this file when a reusable design decision or workflow rule is introduced
 
 Claude Code is responsible for:
-- implementing the current handoff when the scope, constraints, and verification are clear
+- implementing clear, scoped handoffs
 - following `CLAUDE.md`
-- reporting any implementation pressure that may require a design update
+- keeping changes inside the allowed files and constraints
+- running the requested verification where possible
+- reporting changed files, verification results, and any design pressure that requires Codex review
 
-## Project Summary
-- Project name:
-- Purpose:
-- Runtime target:
-- Repository path:
-- Deployment target:
+Do not treat this as "Codex only designs, Claude Code only implements." Codex may implement small or design-sensitive changes directly. Use Claude Code when the implementation is clear, execution-heavy, repetitive, or benefits from Claude Code-specific tooling.
 
 ## Decision Rule
 Keep the task in Codex when:
-- requirements are ambiguous
-- design intent is still being negotiated
+- the requirement is ambiguous
+- the design intent is still being negotiated
 - responsibility boundaries may change
-- the change is small enough to implement and verify in one context
+- the change is small enough to implement and verify in the same context
+- the main value is review, synthesis, or documentation consistency
 
 Hand off to Claude Code when:
-- goal, files, constraints, non-goals, and verification are clear
-- the task is mostly implementation or mechanical editing
-- the allowed edit scope can be stated explicitly
-- Claude Code-specific workflow, hooks, or subagents would be useful
+- the goal, files, constraints, and verification are clear
+- the task is mostly editing work
+- multiple files need mechanical updates
+- Claude Code's CLI workflow, hooks, or subagents are useful
+- Codex has already reduced the task to execution instructions
 
 ## Design Principles
 - Preserve documented design decisions unless the user explicitly approves a change.
 - Prefer small, scoped changes over broad rewrites.
 - Keep responsibility boundaries stable.
-- Do not introduce new abstractions unless they remove real complexity or match an existing project pattern.
+- Do not introduce new abstractions unless they remove real complexity.
 - Separate temporary workarounds from long-term design.
+- Keep public content generic. Do not add secrets or private operational details.
+- Do not commit changes automatically.
+
+## Codex Workflow
+1. Classify the request: new feature / existing adjustment / bug fix / docs / workflow rule.
+2. Decide whether the change includes durable design intent.
+3. If design-heavy, write or update the relevant decision in this file before implementation.
+4. If execution-heavy, prepare a Claude Code handoff.
+5. After implementation, review the diff for scope, consistency, and design drift.
+6. Update `AGENTS.md` only when a rule should guide future sessions.
 
 ## Handoff Workflow
 1. Codex reads project context, `AGENTS.md`, `CLAUDE.md`, and relevant files.
-2. Codex decides whether the task is ready for handoff.
-3. Codex writes a concrete handoff file under `docs/handoffs/`.
-4. Codex reports the handoff file path to the user.
-5. The user gives that file path to Claude Code.
-6. Claude Code reads the handoff file, implements, and reports back.
-7. Codex reviews the report and/or diff.
+2. Codex writes a handoff file under `docs/handoffs/` using the template below.
+3. Codex reports the handoff file path to the user.
+4. The user gives that file path to Claude Code.
+5. Claude Code reads the handoff file, implements, and returns its report.
+6. Codex reviews the report and/or diff against the handoff and this file.
+
+Codex should not hand off vague requests. Reduce the work to a concrete implementation task with known files, constraints, non-goals, and verification before handing off.
+
+## Codex Output Format For Claude Code
+Save the handoff as `docs/handoffs/YYYY-MM-DD-<short-task>.md`. Create the directory if it does not exist. Use exactly this block.
+
+```md
+Read AGENTS.md, CLAUDE.md, and this handoff file before implementation.
+If implementation would violate constraints or require files outside this handoff, stop and ask before editing.
+
+## Goal
+...
+
+## Background
+...
+
+## Files To Inspect
+- ...
+
+## Files To Edit
+- ...
+
+## Constraints
+- ...
+
+## Non Goals
+- ...
+
+## Verification
+- ...
+
+## Expected Report
+- Changed files
+- Summary
+- Verification results
+- Blocked checks
+- Design questions for Codex
+```
+
+## Codex Review Checklist
+After Claude Code returns, review:
+- Did the diff stay inside the handoff?
+- Did any file outside `Files To Edit` change? If yes, was it necessary?
+- Did the implementation preserve the stated constraints and non-goals?
+- Did it introduce new UI classes or patterns without need?
+- Did it keep the project static and dependency-free (if applicable)?
+- Did verification run, and are blocked checks clearly explained?
+- Does any discovery need to become a new `AGENTS.md` decision?
 
 ## Decision Log
 
@@ -65,9 +123,6 @@ Context:
 Decision:
 - What did we decide?
 
-Alternatives Considered:
-- What did we reject?
-
 Reason:
 - Why is this the right tradeoff for now?
 
@@ -76,49 +131,3 @@ Constraints Introduced:
 
 Do Not Change Casually:
 - What would cause design drift if changed without review?
-
-## Claude Code Handoff Template
-
-Use this template when Claude Code is the better execution environment. Save it as `docs/handoffs/YYYY-MM-DD-<short-task>.md`. If the task is still ambiguous or design-heavy, keep it in Codex until the constraints are clear.
-
-### Goal
-Describe the implementation goal.
-
-### Change Type
-New feature / behavior adjustment / bug fix / refactor / documentation.
-
-### Design Intent
-Describe why the change should be implemented this way.
-
-### Files To Inspect
-- path/to/file
-
-### Files To Edit
-- path/to/file
-
-### Constraints
-- Preserve existing public APIs unless explicitly approved.
-- Keep business logic out of UI components unless the project already follows that pattern.
-- Do not change persistence, authentication, or deployment behavior unless listed in the handoff.
-
-### Non Goals
-- List changes that should not be made during this task.
-
-### Verification
-- List build, lint, test, or manual checks.
-
-### Expected Report
-Claude Code should report:
-- changed files
-- implementation summary
-- verification results
-- any design constraints that could not be preserved
-
-## Codex Review Checklist
-- Does the diff match the stated design intent?
-- Did implementation introduce a new responsibility boundary?
-- Did a local shortcut become an implicit architecture rule?
-- Did implementation change behavior outside the handoff?
-- Did any file outside `Files To Edit` change, and was it necessary?
-- Were verification results reported clearly?
-- Should `AGENTS.md` or `docs/` be updated with a new decision?

@@ -1,39 +1,57 @@
-<div class="section-title">iniwa's AI Coding Notes</div>
-<div class="section-desc">Codex と Claude Code を、設計・実装・レビューの場面ごとに使い分けるための公開用リファレンスサイト</div>
+<div class="section-title">作業前に見るページ</div>
+<div class="section-desc">Codex で意図を作り、Claude Code で実装を回す。最初にここで方針を確認するための作業ダッシュボード。</div>
 
-<div class="card" style="border-left: 3px solid var(--yellow); margin-top: 24px;">
-  <div class="card-header" style="color: var(--yellow);">&#9888; ご注意</div>
-  <div class="card-body">
-    <p>
-      このサイトは <strong>いにわ（iniwa）</strong> 本人が AI コーディングを進めるための考え方、手順、テンプレート例をまとめた公開用リファレンスです。
-    </p>
-    <p>
-      個人環境に強く依存する詳細テンプレートや認証情報は含めず、公開しても差し支えない汎用的な内容に整理しています。<strong>実運用では各自の環境に合わせて読み替えてください。</strong>
-    </p>
-    <p>
-      個人用の詳細テンプレートは別リポジトリ・別ディレクトリで管理する前提です。
-    </p>
+<h3>今日の使い方</h3>
+<div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+  <div class="card">
+    <div class="card-header"><strong>Codex に頼む</strong></div>
+    <div class="card-body">
+      <ul>
+        <li>目的整理</li>
+        <li>設計判断</li>
+        <li>handoff 作成</li>
+        <li>差分レビュー</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><strong>Claude Code に頼む</strong></div>
+    <div class="card-body">
+      <ul>
+        <li>handoff 実装</li>
+        <li>検証</li>
+        <li>変更報告</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><strong>Claude Code が戻すもの</strong></div>
+    <div class="card-body">
+      <ul>
+        <li>changed files</li>
+        <li>summary</li>
+        <li>verification</li>
+        <li>blocked checks</li>
+        <li>design questions</li>
+      </ul>
+    </div>
   </div>
 </div>
 
-<div class="card" style="margin-top: 16px;">
-  <div class="card-header">このサイトについて</div>
+<h3>迷ったら</h3>
+<div class="card">
   <div class="card-body">
-    <p>Codex と Claude Code を併用するための判断基準、設計思想の蓄積方法、実装ハンドオフ、Claude Code の詳細設定を一つの SPA にまとめています。</p>
     <ul>
-      <li><strong>全体ワークフロー</strong> - 変更の曖昧さ、設計リスク、実行量に応じて担当を切り替える流れ</li>
-      <li><strong>Codex 詳細</strong> - プロジェクト初期設定、作業判定、設計判断、handoff、レビュー、記録更新を扱う運用</li>
-      <li><strong>Claude Code 詳細</strong> - CLI、設定、MCP、Hooks、IDE、サブエージェントなどの実装実行リファレンス</li>
-      <li><strong>テンプレート</strong> - AGENTS.md、CLAUDE.md、plan.md、設定ファイルの公開用サンプル</li>
+      <li><strong>曖昧なら Codex</strong>。要求整理と設計判断は Codex で閉じる。</li>
+      <li><strong>明確で編集量が多いなら Claude Code</strong>。Goal / Files / Constraints / Verification がそろってから渡す。</li>
+      <li><strong>実装後は Codex で設計整合性レビュー</strong>。差分を <code>AGENTS.md</code> と照合する。</li>
     </ul>
   </div>
 </div>
 
-<div class="card" style="margin-top: 16px;">
-  <div class="card-header">現在の基本方針</div>
+<div class="card" style="border-left: 3px solid var(--amber); margin-top: 24px;">
+  <div class="card-header" style="color: var(--amber);">&#9888; ご注意</div>
   <div class="card-body">
-    <p><strong>Codex</strong> は、曖昧な要求を整理し、設計判断を記録し、必要ならそのまま実装・検証・レビューまで進める作業場として使う。単なる設計係ではなく、設計リスクを見ながら差分を閉じるための主担当にする。</p>
-    <p><strong>Claude Code</strong> は、実装方針が決まった後の実行力、CLI 連携、Hooks、サブエージェント、自動化を活かす場面で使う。明確な handoff と <code>CLAUDE.md</code> の作業規約に従って、編集・検証・差分整理を進める。</p>
-    <p>つまり「Codex = 設計、Claude Code = 実装」と固定しない。<strong>曖昧さが高いほど Codex、実装タスクが明確で量が多いほど Claude Code</strong> を優先する。</p>
+    <p>このサイトは <strong>いにわ（iniwa）</strong> 個人の AI コーディング作業ノートを公開用に整理したリファレンスです。個人環境に依存するテンプレートや認証情報は含みません。<strong>各自の環境に合わせて読み替えてください。</strong></p>
   </div>
 </div>

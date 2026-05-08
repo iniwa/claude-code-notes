@@ -1,72 +1,180 @@
 <div class="section-title">実装ハンドオフ</div>
-<div class="section-desc">Codex で整理した内容を、Claude Code が実装できる粒度に変換する。</div>
+<div class="section-desc">Codex から Claude Code に渡す唯一の入り口。<code>docs/handoffs/YYYY-MM-DD-&lt;task&gt;.md</code> をここで作る。</div>
 
-<h3>新規機能</h3>
+<h3>handoff の書き方</h3>
 <div class="card">
   <div class="card-desc">
-    新規機能では、まず設計に新しい概念を追加してよいかを確認する。既存アーキテクチャに自然に入るか、新しい責務や制約が必要かを Codex で整理する。変更範囲が小さく、検証までこの場で閉じられるなら Codex がそのまま実装してよい。編集量が多い場合や Claude Code の自動化が効く場合は handoff にして渡す。
+    <ul>
+      <li>本リポジトリの <code>AGENTS.md</code> と完全に同じブロック構造で書く。</li>
+      <li>冒頭に「<code>AGENTS.md</code>、<code>CLAUDE.md</code>、この handoff を読むこと」「範囲外が必要なら止まって確認すること」の 2 行を入れる。</li>
+      <li><code>Files To Edit</code> を絞る。書きすぎると Claude Code が範囲を広げる。</li>
+      <li><code>Verification</code> はこのリポジトリで実行できるコマンドだけを書く。</li>
+      <li><code>Expected Report</code> を毎回入れる。報告フォーマットを固定する効果がある。</li>
+    </ul>
   </div>
 </div>
-<div class="template">
-  <div class="template-header"><span class="filename">new-feature-handoff.md</span></div>
-  <pre>## Goal
-○○機能を追加する。
 
-## Design Intent
-この機能は既存の XXX の延長として扱い、新しい独立モジュールにはしない。
+<h3>ベースとなる handoff</h3>
+<div class="template">
+  <div class="template-header"><span class="filename">docs/handoffs/YYYY-MM-DD-&lt;task&gt;.md</span></div>
+  <pre>Read AGENTS.md, CLAUDE.md, and this handoff file before implementation.
+If implementation would violate constraints or require files outside this handoff, stop and ask before editing.
+
+## Goal
+...
+
+## Background
+...
 
 ## Files To Inspect
-- src/xxx/
-- src/shared/
+- ...
 
 ## Files To Edit
-- src/xxx/service.ts
-- src/xxx/ui.tsx
+- ...
 
 ## Constraints
-- 既存の XXX API を維持する
-- UI 層にビジネスロジックを置かない
-- 今回は DB スキーマを変更しない
+- ...
 
 ## Non Goals
-- 認証方式は変更しない
-- デプロイ設定は変更しない
+- ...
 
 ## Verification
-- npm test
-- npm run build</pre>
+- ...
+
+## Expected Report
+- Changed files
+- Summary
+- Verification results
+- Blocked checks
+- Design questions for Codex</pre>
 </div>
 
-<h3>既存機能の調整</h3>
+<h3>例: コンテンツ更新</h3>
+<div class="template">
+  <div class="template-header"><span class="filename">content-update.md</span></div>
+  <pre>## Goal
+sections/codex/decision.html の判定マトリクスに「ドキュメント更新」行を追加する。
+
+## Background
+判定マトリクスにドキュメント更新の扱いが書かれておらず、毎回判断がぶれている。
+
+## Files To Inspect
+- AGENTS.md
+- sections/codex/decision.html
+
+## Files To Edit
+- sections/codex/decision.html
+
+## Constraints
+- 既存のテーブル構造と CSS クラスを変更しない。
+- 表の他の行と同じ語調で書く。
+
+## Non Goals
+- 他のセクションは変更しない。
+- 新しい CSS を追加しない。
+
+## Verification
+- git diff --check
+
+## Expected Report
+- Changed files
+- Summary
+- Verification results
+- Blocked checks
+- Design questions for Codex</pre>
+</div>
+
+<h3>例: 新規セクション追加</h3>
+<div class="template">
+  <div class="template-header"><span class="filename">new-section.md</span></div>
+  <pre>## Goal
+Claude Code 用の「権限スコープ」リファレンスセクションを追加する。
+
+## Background
+~/.claude/settings.json と .claude/settings.json の優先度が頻繁に質問されるため、
+独立セクションにまとめたい。
+
+## Files To Inspect
+- index.html
+- js/app.js
+- sections/claude/cfg-scope.html
+
+## Files To Edit
+- sections/claude/cfg-perm-scope.html  (新規)
+- index.html
+- js/app.js
+
+## Constraints
+- 静的 SPA を維持する。ビルドツールや依存を追加しない。
+- 既存 UI パターン（.card / .card-grid / .template）だけを使う。
+- nav・SECTIONS・index.html プレースホルダの 3 点更新を必ず行う。
+- 公開不可情報を含めない。
+
+## Non Goals
+- 既存セクションの文言は触らない。
+- CSS を追加しない。
+
+## Verification
+- git diff --check
+- python -m http.server 8787 --bind 127.0.0.1
+- ブラウザまたは fetch でセクションが表示されることを確認
+
+## Expected Report
+- Changed files
+- Summary
+- Verification results
+- Blocked checks
+- Design questions for Codex</pre>
+</div>
+
+<h3>例: テンプレート更新</h3>
+<div class="template">
+  <div class="template-header"><span class="filename">template-update.md</span></div>
+  <pre>## Goal
+templates/claude/CLAUDE.md を本リポジトリの handoff 運用に合わせて書き直す。
+
+## Background
+公開テンプレートが古く、handoff・AGENTS.md・CLAUDE.md の三点読み込みと
+報告フォーマットが反映されていない。
+
+## Files To Inspect
+- AGENTS.md
+- CLAUDE.md
+- templates/claude/CLAUDE.md
+
+## Files To Edit
+- templates/claude/CLAUDE.md
+
+## Constraints
+- 公開テンプレートとして汎用に保つ。個人環境固有の値は入れない。
+- 「handoff、AGENTS.md、CLAUDE.md を読むこと」「allowed files の中だけで作業すること」
+  「changed files / summary / verification / blocked checks / design questions を返すこと」
+  の三点を必ず含める。
+
+## Non Goals
+- 他のテンプレートは変更しない。
+- 新しいテンプレートは追加しない。
+
+## Verification
+- git diff --check
+- テンプレート集ページで .template-loader 経由の表示が崩れていないことを確認
+
+## Expected Report
+- Changed files
+- Summary
+- Verification results
+- Blocked checks
+- Design questions for Codex</pre>
+</div>
+
+<h3>このリポジトリの検証コマンド</h3>
 <div class="card">
   <div class="card-desc">
-    既存機能では、これは実装の修正なのか、設計変更なのかを先に切り分ける。局所修正で済む場合は Codex で直接直してもよい。Claude Code に渡す場合は、変更範囲を強く限定する。
+    <ul>
+      <li><code>git diff --check</code> — 末尾空白や conflict marker の検出</li>
+      <li>セクション配線を変えた場合: <code>python -m http.server 8787 --bind 127.0.0.1</code> でローカル配信</li>
+      <li>HTTP 確認: <code>Invoke-WebRequest -UseBasicParsing http://127.0.0.1:8787/ | Select-Object -ExpandProperty StatusCode</code></li>
+      <li>ブラウザが使えない環境では blocked checks として報告する</li>
+    </ul>
   </div>
-</div>
-<div class="template">
-  <div class="template-header"><span class="filename">existing-feature-handoff.md</span></div>
-  <pre>## Goal
-既存の○○機能で、△△の場合の挙動を修正する。
-
-## Change Type
-Bug fix / behavior adjustment. This is not an architecture rewrite.
-
-## Preserve
-- 既存 API
-- 既存 UI フロー
-- 既存データ構造
-
-## Allowed Changes
-- 条件分岐の修正
-- テストケース追加
-- エラーメッセージ調整
-
-## Not Allowed
-- モジュール分割の変更
-- 状態管理方式の変更
-- DB スキーマ変更
-
-## Verification
-- 対象テスト
-- 関連する回帰テスト</pre>
 </div>

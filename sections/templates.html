@@ -1,12 +1,25 @@
 <div class="section-title">テンプレート集</div>
-<div class="section-desc">公開用の汎用テンプレート例。個人環境に依存する詳細設定は別の private storage で管理する。</div>
+<div class="section-desc">公開用の汎用テンプレート。個人環境に依存する詳細設定は含めない。</div>
+
+<div class="card" style="margin-bottom: 20px;">
+  <div class="card-header">いつ使うか</div>
+  <div class="card-body">
+    <ul>
+      <li><code>plan.md</code> — Codex 側で要求を整理する時。変更種別、設計リスク、Codex か Claude Code かの判断、handoff 化の前提条件をまとめる。</li>
+      <li><code>AGENTS.md</code> (Codex) — 新規プロジェクトに役割分担と handoff ルールを持ち込む時。</li>
+      <li><code>CLAUDE.md</code> (Claude Code) — Claude Code に handoff 駆動の作業ルールを与える時。</li>
+      <li><code>.claudeignore</code> — Claude Code に読ませない範囲を指定する時。</li>
+      <li><code>.claude/settings.json</code> (project / user) — 権限・フックなどを宣言する時。プロジェクト用とユーザー共通で別ファイル。</li>
+    </ul>
+  </div>
+</div>
 
 <h2 style="margin-top:24px; margin-bottom:8px;">Codex 用テンプレート</h2>
-<div class="template-loader" data-src="templates/codex/plan.md" data-title="plan.md テンプレート" data-filename="plan.md"></div>
+<div class="template-loader" data-src="templates/codex/plan.md" data-title="plan.md テンプレート（Codex 側の整理メモ）" data-filename="plan.md"></div>
 <div class="template-loader" data-src="templates/codex/AGENTS.md" data-title="AGENTS.md テンプレート（Codex 設計継続用）" data-filename="AGENTS.md"></div>
 
 <h2 style="margin-top:32px; margin-bottom:8px;">Claude Code 用テンプレート</h2>
-<div class="template-loader" data-src="templates/claude/CLAUDE.md" data-title="CLAUDE.md テンプレート" data-filename="CLAUDE.md"></div>
+<div class="template-loader" data-src="templates/claude/CLAUDE.md" data-title="CLAUDE.md テンプレート（handoff 駆動）" data-filename="CLAUDE.md"></div>
 <div class="template-loader" data-src="templates/claude/claudeignore.md" data-title=".claudeignore テンプレート" data-filename=".claudeignore"></div>
 <div class="template-loader" data-src="templates/claude/settings-project.json" data-title=".claude/settings.json テンプレート（プロジェクト用）" data-filename=".claude/settings.json"></div>
 <div class="template-loader" data-src="templates/claude/settings-user.json" data-title="~/.claude/settings.json テンプレート（ユーザー共通）" data-filename="~/.claude/settings.json"></div>

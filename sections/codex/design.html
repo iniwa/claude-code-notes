@@ -1,7 +1,37 @@
 <div class="section-title">設計思想の蓄積</div>
-<div class="section-desc">途中で設計思想の剥離が起きないよう、判断理由と守るべき制約を記録する。</div>
+<div class="section-desc">毎タスクで <code>AGENTS.md</code> を更新するわけではない。今後も守るべき判断が出たときだけ残す。</div>
 
-<h3>AGENTS.md に残すもの</h3>
+<h3>残す判断 / 残さない判断</h3>
+<div class="card-grid" style="grid-template-columns: 1fr 1fr;">
+  <div class="card">
+    <div class="card-header"><strong>残す</strong></div>
+    <div class="card-body">
+      <ul>
+        <li>新しい責務境界を決めた</li>
+        <li>既存設計の前提を変更した</li>
+        <li>今後も守るべき制約が増えた</li>
+        <li>採用しなかった案に重要な理由がある</li>
+        <li>実装担当が迷いやすい判断が起きた</li>
+        <li>役割分担そのもののルールが変わった</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><strong>残さない</strong></div>
+    <div class="card-body">
+      <ul>
+        <li>単純なバグ修正</li>
+        <li>文言修正・誤字訂正</li>
+        <li>CSS 微調整</li>
+        <li>既存方針に完全に沿った小変更</li>
+        <li>テンプレートに沿った 1 セクション追加</li>
+        <li>1 タスク限りの一時対応</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<h3><code>AGENTS.md</code> に残すもの</h3>
 <div class="card-grid">
   <div class="card"><div class="card-desc">なぜその設計にしたか</div></div>
   <div class="card"><div class="card-desc">何を捨てたか、なぜ捨てたか</div></div>
@@ -10,47 +40,21 @@
   <div class="card"><div class="card-desc">実装後に確認すべき観点</div></div>
 </div>
 
-<h3>更新するべきケース</h3>
+<h3>Decision Log の構造</h3>
 <div class="card">
   <div class="card-desc">
-    <ul>
-      <li>新しい責務境界を決めた</li>
-      <li>既存設計を変更した</li>
-      <li>今後も守るべき制約が増えた</li>
-      <li>採用しなかった案に重要な理由がある</li>
-      <li>実装担当が迷いやすい判断が発生した</li>
-    </ul>
+    本リポジトリの <code>AGENTS.md</code> Decision Log と同じ並びで書く。Context / Decision / Reason / Constraints Introduced / Do Not Change Casually の 5 つで足りる場合は他の項目を増やさない。
   </div>
 </div>
-
-<h3>更新しなくてよいケース</h3>
-<div class="card">
-  <div class="card-desc">
-    <ul>
-      <li>単純なバグ修正</li>
-      <li>文言修正</li>
-      <li>CSS 微調整</li>
-      <li>テスト追加だけ</li>
-      <li>既存方針に完全に沿った小変更</li>
-    </ul>
-  </div>
-</div>
-
-<h3>Decision Log</h3>
 <div class="template">
   <div class="template-header"><span class="filename">AGENTS.md</span></div>
-  <pre>## Decision Log
-
-### YYYY-MM-DD: Decision Title
+  <pre>### YYYY-MM-DD: Decision Title
 
 Context:
 - What problem or requirement caused this decision?
 
 Decision:
 - What did we decide?
-
-Alternatives Considered:
-- What did we reject?
 
 Reason:
 - Why is this the right tradeoff for now?

@@ -1,24 +1,54 @@
 <div class="section-title">設計整合性レビュー</div>
-<div class="section-desc">Codex または Claude Code の実装差分を、AGENTS.md の設計思想と照合する。</div>
+<div class="section-desc">Claude Code の差分を <code>AGENTS.md</code> と handoff に照らして確認する。</div>
+
+<h3>レビュー観点（findings 優先順）</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><strong>handoff 外の変更</strong></div>
+    <div class="card-desc"><code>Files To Edit</code> 以外のファイルが触られていないか。触られている場合、報告に理由が書かれているか。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><strong>不要な UI / 構造パターン追加</strong></div>
+    <div class="card-desc">既存の <code>.card</code>, <code>.card-grid</code>, <code>.template</code>, <code>.workflow</code> 等で書ける内容が、新規 CSS や新クラスで実装されていないか。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><strong>公開不可情報</strong></div>
+    <div class="card-desc">個人ホスト名、認証情報、社内固有のパス、API トークン、私的な運用詳細が混入していないか。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><strong>検証不足</strong></div>
+    <div class="card-desc"><code>git diff --check</code> が走っているか。セクション配線を変えた変更で HTTP 確認が抜けていないか。blocked checks が明示されているか。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><strong><code>AGENTS.md</code> 更新要否</strong></div>
+    <div class="card-desc">今後も守るべき制約・採用根拠・責務境界が新しく出ているか。出ていない場合は追記しない。</div>
+  </div>
+</div>
 
 <h3>レビュー依頼</h3>
 <div class="template">
-  <div class="template-header"><span class="filename">prompt</span></div>
-  <pre>以下の実装差分を、AGENTS.md の設計思想と照らしてレビューしてください。
-特に、途中で設計思想の剥離が起きていないか確認してください。</pre>
+  <div class="template-header"><span class="filename">review-prompt</span></div>
+  <pre>以下は Claude Code の実装報告と差分です。
+AGENTS.md と handoff に照らしてレビューし、findings を箇条書きで返してください。
+
+確認観点（優先順）:
+1. handoff 外の変更（Files To Edit を超えているか）
+2. 不要な UI / 構造パターンの追加
+3. 公開不可情報の混入
+4. 検証不足（git diff --check / HTTP 200 / blocked checks の明示）
+5. AGENTS.md 更新要否
+
+## Handoff
+...
+
+## Claude Code Report
+...
+
+## Diff
+...</pre>
 </div>
 
-<h3>確認観点</h3>
-<div class="card-grid">
-  <div class="card"><div class="card-desc">実装が当初の設計目的を満たしているか</div></div>
-  <div class="card"><div class="card-desc">余計な責務移動がないか</div></div>
-  <div class="card"><div class="card-desc">一時対応が恒久設計に混ざっていないか</div></div>
-  <div class="card"><div class="card-desc">命名や抽象化が既存思想と合っているか</div></div>
-  <div class="card"><div class="card-desc">handoff 外の判断で設計を変えていないか</div></div>
-  <div class="card"><div class="card-desc">AGENTS.md に追記すべき新しい判断があるか</div></div>
-</div>
-
-<h3>実装後に返してほしい報告</h3>
+<h3>Claude Code が返す報告フォーマット</h3>
 <div class="template">
   <div class="template-header"><span class="filename">implementation-report.md</span></div>
   <pre>## Changed Files
@@ -27,14 +57,16 @@
 ## Summary
 - What changed?
 
-## Design Constraints
-- Which constraints were preserved?
-- Were any constraints difficult to preserve?
-
 ## Verification
 - Commands run
 - Results
 
-## Open Questions
-- Anything Codex should review or record?</pre>
+## Blocked Checks
+- 実行できなかった検証と理由
+
+## Files Edited Outside Files To Edit
+- なし、または該当ファイルと理由
+
+## Design Questions For Codex
+- AGENTS.md に残すべきか迷った判断があれば書く</pre>
 </div>
