@@ -1,0 +1,106 @@
+<div class="section-title">Codex config.toml</div>
+<div class="section-desc">Codex CLI と IDE 拡張が共有する設定。ユーザー既定、プロジェクト上書き、プロファイル、MCP、機能フラグを分けて管理する。</div>
+
+<h3>配置と優先順位</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><code>~/.codex/config.toml</code></div>
+    <div class="card-desc">個人の既定値。普段のモデル、承認方針、MCP サーバー、通知などを置く。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><code>.codex/config.toml</code></div>
+    <div class="card-desc">プロジェクト用の上書き。Codex が信頼済みと判断したプロジェクトで読み込まれる。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">--profile</span></div>
+    <div class="card-desc">設定内のプロファイルを選ぶ。レビュー、実装、自動化などを切り替える。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">-c key=value</span></div>
+    <div class="card-desc">一回限りの上書き。永続設定にする前の試行や、特定タスクだけ強める用途に使う。</div>
+  </div>
+</div>
+
+<h3>基本設定例</h3>
+<div class="template">
+  <div class="template-header"><span class="filename">~/.codex/config.toml</span></div>
+  <pre>model = "gpt-5.5"
+model_reasoning_effort = "medium"
+sandbox_mode = "workspace-write"
+approval_policy = "on-request"
+
+[profiles.review]
+model_reasoning_effort = "high"
+sandbox_mode = "read-only"
+approval_policy = "on-request"
+
+[profiles.fast]
+model_reasoning_effort = "low"
+sandbox_mode = "workspace-write"
+approval_policy = "on-request"</pre>
+</div>
+
+<h3>よく触るキー</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><code>model</code> / <code>model_reasoning_effort</code></div>
+    <div class="card-desc">既定モデルと思考量。普段は medium、レビューや設計判断は high、軽い文言修正は low などに分ける。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><code>sandbox_mode</code></div>
+    <div class="card-desc"><code>read-only</code>、<code>workspace-write</code>、<code>danger-full-access</code> を選ぶ。通常の編集は workspace-write で十分。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><code>approval_policy</code></div>
+    <div class="card-desc"><code>untrusted</code>、<code>on-request</code>、<code>never</code> を選ぶ。対話作業は on-request、自動化は実行環境を隔離して never を検討する。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><code>log_dir</code></div>
+    <div class="card-desc">Codex のログ出力先。問題調査や長時間作業の記録を分けたいときに指定する。</div>
+  </div>
+</div>
+
+<h3>MCP サーバー</h3>
+<div class="template">
+  <div class="template-header"><span class="filename">MCP stdio server</span></div>
+  <pre>[mcp_servers.git]
+command = "uvx"
+args = ["mcp-server-git"]
+startup_timeout_sec = 10
+tool_timeout_sec = 60</pre>
+</div>
+
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><code>command</code> / <code>args</code></div>
+    <div class="card-desc">stdio MCP サーバーの起動コマンド。CLI の <code>codex mcp add</code> でも追加できる。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><code>enabled_tools</code> / <code>disabled_tools</code></div>
+    <div class="card-desc">公開するツールを絞る。権限が強い MCP は allow list を優先する。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><code>env</code> / <code>env_vars</code></div>
+    <div class="card-desc">MCP サーバーに渡す環境変数。秘密値をリポジトリに直接書かない。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><code>startup_timeout_sec</code> / <code>tool_timeout_sec</code></div>
+    <div class="card-desc">起動待ちとツール実行待ちの上限。遅い外部ツールだけ個別に延ばす。</div>
+  </div>
+</div>
+
+<h3>機能フラグと TUI</h3>
+<div class="template">
+  <div class="template-header"><span class="filename">features-and-tui</span></div>
+  <pre>[features]
+shell_snapshot = true
+
+[tui.status_line]
+items = ["model", "context", "git_branch", "tokens"]</pre>
+</div>
+
+<div class="card">
+  <div class="card-desc">
+    <code>[features]</code> は任意機能や実験機能を有効化する場所。TUI の表示、キーマップ、ステータスラインは <code>/statusline</code> や <code>/keymap</code> から調整して永続化できる。
+  </div>
+</div>

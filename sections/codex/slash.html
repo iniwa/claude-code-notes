@@ -1,0 +1,73 @@
+<div class="section-title">Codex スラッシュコマンド</div>
+<div class="section-desc">TUI セッション中に使う操作コマンド。文脈を整える、差分を見る、レビューに切り替える、設定を確認するための入口。</div>
+
+<h3>セッション操作</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">/help</span><span class="badge b-star">最初に確認</span></div>
+    <div class="card-desc">現在の Codex で使えるスラッシュコマンドを表示する。バージョン差があり得るため、まずここで確認する。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">/status</span></div>
+    <div class="card-desc">現在のモデル、承認方針、サンドボックス、作業ディレクトリなど、セッション状態を確認する。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">/compact</span><span class="badge b-star">よく使う</span></div>
+    <div class="card-desc">長くなった会話を要約して文脈を軽くする。長時間の設計相談や実装レビューの途中で使う。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">/clear</span></div>
+    <div class="card-desc">表示を消して新しい会話を始める。前の作業文脈を引きずらず、別タスクを始めるときに使う。</div>
+  </div>
+</div>
+
+<h3>作業・レビュー</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">/diff</span><span class="badge b-star">レビュー前</span></div>
+    <div class="card-desc">現在の作業ツリー差分を確認する。Claude Code から戻った差分や、Codex が直接編集した差分の確認に使う。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">/review</span></div>
+    <div class="card-desc">コードレビュー姿勢に切り替える。バグ、回帰、テスト不足、設計逸脱を優先して確認したいときに使う。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">/plan</span></div>
+    <div class="card-desc">実装前に計画を立てる。複数ファイルにまたがる変更や、Claude Code への handoff 前の整理に使う。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">/permissions</span></div>
+    <div class="card-desc">承認やサンドボックスの方針をセッション中に調整する。実装前に読み取り専用から Auto へ切り替える場合に使う。</div>
+  </div>
+</div>
+
+<h3>入力と参照</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">/mention</span></div>
+    <div class="card-desc">ファイル、画像、リソースなどを会話に明示的に添付する。曖昧な「このファイル」ではなく対象を固定する。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">/model</span></div>
+    <div class="card-desc">セッション中にモデルを確認または変更する。重い設計レビューと軽い文言修正で使い分ける。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">/debug-config</span></div>
+    <div class="card-desc">設定レイヤーと有効値を確認する。期待した <code>config.toml</code> が効いていないときに見る。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">/quit</span></div>
+    <div class="card-desc">セッションを終了する。終了前に <code>/diff</code> と必要な検証結果を確認しておく。</div>
+  </div>
+</div>
+
+<h3>このリポジトリでの使い分け</h3>
+<div class="card">
+  <div class="card-desc">
+    <pre>1. 依頼整理: /plan で変更種別、影響範囲、検証を固める
+2. 実装中: /status で権限、/diff で差分を確認する
+3. 長い作業: /compact で文脈を圧縮する
+4. Claude Code 後: /review で handoff と AGENTS.md に照らす
+5. 完了前: /diff と git diff --check の結果を確認する</pre>
+  </div>
+</div>

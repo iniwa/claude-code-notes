@@ -1,0 +1,106 @@
+<div class="section-title">Codex CLI コマンド</div>
+<div class="section-desc">Codex をローカル作業、レビュー、自動化で使うときの基本コマンドと起動オプション。</div>
+
+<h3>起動と実行</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">codex</span><span class="badge b-star">よく使う</span></div>
+    <div class="card-desc">現在のディレクトリを作業ルートとして TUI を起動する。まずはリポジトリ直下で起動し、<code>AGENTS.md</code> を読ませる。
+      <pre>cd D:\Git\my-project
+codex</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">codex exec "..."</span><span class="badge b-auto">自動化</span></div>
+    <div class="card-desc">非対話実行。短い調査、レビュー、CI からの呼び出しに使う。標準入力も渡せる。
+      <pre>codex exec "この差分をレビューして"
+git diff | codex exec "変更点を要約して"</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">codex exec --ephemeral</span><span class="badge b-auto">自動化</span></div>
+    <div class="card-desc">セッション履歴を残さず実行する。ログを残したくない一回限りの確認や、CI の短いチェック向け。
+      <pre>codex exec --ephemeral "README の誤字だけ確認して"</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">codex app</span></div>
+    <div class="card-desc">デスクトップアプリ体験を起動する。CLI/TUI より画面で状態を見たいときに使う。</div>
+  </div>
+</div>
+
+<h3>作業ディレクトリと権限</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">--cd / -C</span></div>
+    <div class="card-desc">起動時の作業ディレクトリを指定する。別ディレクトリからプロジェクトを指定して起動するときに使う。
+      <pre>codex --cd D:\Git\ai-coding-notes</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">--add-dir</span></div>
+    <div class="card-desc">メインワークスペース以外の書き込み許可ディレクトリを追加する。複数指定できる。
+      <pre>codex --add-dir D:\tmp</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">--sandbox / -s</span><span class="badge b-star">重要</span></div>
+    <div class="card-desc">サンドボックス方針を指定する。通常の編集は <code>workspace-write</code>、調査のみなら <code>read-only</code> を使う。
+      <pre>codex --sandbox read-only
+codex --sandbox workspace-write</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">--ask-for-approval / -a</span><span class="badge b-star">重要</span></div>
+    <div class="card-desc">コマンド実行前の承認方針。対話作業では <code>on-request</code>、完全自動化では明示的に <code>never</code> を検討する。
+      <pre>codex -s workspace-write -a on-request</pre>
+    </div>
+  </div>
+</div>
+
+<h3>モデルと設定上書き</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">--model / -m</span></div>
+    <div class="card-desc">このセッションだけモデルを指定する。普段の既定値は <code>config.toml</code> に置き、単発の重い作業だけ CLI で上書きする。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">--profile</span></div>
+    <div class="card-desc"><code>config.toml</code> のプロファイルを選ぶ。レビュー用、実装用、読み取り専用などを分けたいときに使う。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">--config / -c</span></div>
+    <div class="card-desc">設定値を一時上書きする。永続化するほどではない試行に向いている。
+      <pre>codex -c model_reasoning_effort="high"</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">--search</span></div>
+    <div class="card-desc">ライブ検索を使う。最新仕様、価格、リリース状況など、変わりやすい情報を扱うときに明示する。</div>
+  </div>
+</div>
+
+<h3>MCP とデバッグ</h3>
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header"><span class="cmd">codex mcp</span></div>
+    <div class="card-desc">MCP サーバー定義の追加、一覧、確認、削除に使う。設定は <code>config.toml</code> に保存される。
+      <pre>codex mcp list
+codex mcp add git -- uvx mcp-server-git</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">codex mcp-server</span><span class="badge b-auto">連携</span></div>
+    <div class="card-desc">Codex 自体を MCP サーバーとして起動する。別の MCP クライアントから Codex をツール化したいときに使う。</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">codex sandbox windows</span></div>
+    <div class="card-desc">Windows サンドボックス内でコマンドがどう動くか確認する。権限まわりの再現調査に使う。
+      <pre>codex sandbox windows -- powershell -NoProfile -Command "Get-Location"</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="cmd">codex --version</span></div>
+    <div class="card-desc">不具合報告や手順共有の前にバージョンを確認する。CLI の挙動は更新で変わるため、記録に残す。</div>
+  </div>
+</div>

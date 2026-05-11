@@ -43,12 +43,20 @@
       </button>
       <div class="nav-group-body">
         <div class="nav-section">
+          <div class="nav-label">基本</div>
           <a onclick="show('codex-overview')"><span class="dot"></span>基本運用</a>
+          <a onclick="show('codex-setup')"><span class="dot"></span>セットアップ</a>
           <a onclick="show('codex-decision')"><span class="dot"></span>作業判定</a>
           <a onclick="show('codex-design')"><span class="dot"></span>設計記録</a>
           <a onclick="show('codex-handoff')"><span class="dot"></span>handoff</a>
           <a onclick="show('codex-loop')"><span class="dot"></span>実作業ループ</a>
           <a onclick="show('codex-review')"><span class="dot"></span>レビュー</a>
+        </div>
+        <div class="nav-section">
+          <div class="nav-label">CLI・設定</div>
+          <a onclick="show('codex-cli')"><span class="dot"></span>CLI コマンド</a>
+          <a onclick="show('codex-slash')"><span class="dot"></span>スラッシュコマンド</a>
+          <a onclick="show('codex-config')"><span class="dot"></span>config.toml</a>
         </div>
       </div>
     </div>
@@ -117,6 +125,9 @@
     <div id="codex-handoff" class="section"></div>
     <div id="codex-loop" class="section"></div>
     <div id="codex-review" class="section"></div>
+    <div id="codex-cli" class="section"></div>
+    <div id="codex-slash" class="section"></div>
+    <div id="codex-config" class="section"></div>
     <div id="manual-setup" class="section"></div>
     <div id="manual-mcp" class="section"></div>
     <div id="manual-statusbar" class="section"></div>
