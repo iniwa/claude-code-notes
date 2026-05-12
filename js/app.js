@@ -50,6 +50,26 @@ const SECTIONS = {
 
 const loadedSections = new Set();
 const navLinks = document.querySelectorAll('nav a');
+const mobileSectionSelect = document.getElementById('mobile-section');
+
+if (mobileSectionSelect) {
+  navLinks.forEach(link => {
+    const onclick = link.getAttribute('onclick');
+    if (!onclick) return;
+
+    const match = onclick.match(/show\('([^']+)'\)/);
+    if (!match) return;
+
+    const option = document.createElement('option');
+    option.value = match[1];
+    option.textContent = link.textContent.trim();
+    mobileSectionSelect.appendChild(option);
+  });
+
+  mobileSectionSelect.addEventListener('change', () => {
+    show(mobileSectionSelect.value);
+  });
+}
 
 document.querySelectorAll('[data-nav-toggle]').forEach(button => {
   button.addEventListener('click', () => {
@@ -170,6 +190,10 @@ async function show(id) {
       a.classList.add('active');
     }
   });
+
+  if (mobileSectionSelect && mobileSectionSelect.value !== id) {
+    mobileSectionSelect.value = id;
+  }
 }
 
 // Search
