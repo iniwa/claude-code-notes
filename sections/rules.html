@@ -1,20 +1,30 @@
 <div class="section-title">プロジェクトルール</div>
-<div class="section-desc">このリファレンスを更新するときの置き場所、責任範囲、フォルダ構成の基準。</div>
+<div class="section-desc">Codex と Claude Code を併用するプロジェクトで、最初に決めておくと作業が安定するルールとフォルダ構成。</div>
 
-<h3>基本ルール</h3>
+<h3>最初に決めること</h3>
 <div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
   <div class="card">
-    <div class="card-header"><strong>サイトは静的に保つ</strong></div>
+    <div class="card-header"><strong>プロジェクトの形</strong></div>
     <div class="card-body">
       <ul>
-        <li>ビルドステップは追加しない。</li>
-        <li>React / Vue / Vite / npm などは明示依頼がある場合だけ使う。</li>
-        <li>既存の HTML / CSS / JS 構成を優先する。</li>
+        <li>アプリ種別、実行方法、デプロイ先を明文化する。</li>
+        <li>ビルド有無、主要言語、依存管理方法を決める。</li>
+        <li>entry point と主要ディレクトリを一覧化する。</li>
       </ul>
     </div>
   </div>
   <div class="card">
-    <div class="card-header"><strong>公開できる内容だけ置く</strong></div>
+    <div class="card-header"><strong>AI の役割分担</strong></div>
+    <div class="card-body">
+      <ul>
+        <li>Codex は意図整理、設計判断、handoff、レビューを担当する。</li>
+        <li>Claude Code は明確な指示に基づく実装、検証、報告を担当する。</li>
+        <li>曖昧な要求は実装に渡す前に Codex で具体化する。</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><strong>公開・安全ルール</strong></div>
     <div class="card-body">
       <ul>
         <li>API キー、認証情報、個人トークンは置かない。</li>
@@ -23,75 +33,97 @@
       </ul>
     </div>
   </div>
-  <div class="card">
-    <div class="card-header"><strong>役割を混ぜない</strong></div>
-    <div class="card-body">
-      <ul>
-        <li>サイト本文は <code>sections/</code>。</li>
-        <li>公開テンプレートは <code>templates/</code>。</li>
-        <li>作業指示や設計記録は <code>docs/</code>。</li>
-      </ul>
-    </div>
-  </div>
 </div>
 
-<h3>フォルダ構成</h3>
+<h3>推奨フォルダ構成</h3>
 <div class="file-tree">
 <span class="important">.</span><br>
-|-- <span class="important">AGENTS.md</span> <span class="comment">Codex 側の作業合意、役割分担、永続ルール</span><br>
-|-- <span class="important">CLAUDE.md</span> <span class="comment">Claude Code 側の実装ルール、検証、報告形式</span><br>
-|-- <span class="important">index.html</span> <span class="comment">SPA のシェル、ナビゲーション、section placeholder</span><br>
-|-- <span class="dir">css/</span> <span class="comment">共通スタイル</span><br>
-|-- <span class="dir">js/</span> <span class="comment">section 読み込み、検索、template / markdown loader</span><br>
-|-- <span class="dir">sections/</span> <span class="comment">ブラウザに表示する本文</span><br>
-|-- <span class="dir">templates/</span> <span class="comment">公開用の再利用テンプレート</span><br>
-|-- <span class="dir">docs/</span> <span class="comment">運用文書、設計判断、handoff</span><br>
-|-- <span class="dir">tools/</span> <span class="comment">メンテナンス用スクリプトや補助ツール</span><br>
-`-- <span class="important">wrangler.toml</span> <span class="comment">デプロイ設定</span>
+|-- <span class="important">AGENTS.md</span> <span class="comment">Codex 向け。意図、役割分担、設計原則、handoff ルール</span><br>
+|-- <span class="important">CLAUDE.md</span> <span class="comment">Claude Code 向け。実装ルール、検証、報告形式</span><br>
+|-- <span class="dir">src/</span> <span class="comment">アプリケーション本体。プロジェクトに合わせて命名</span><br>
+|-- <span class="dir">tests/</span> <span class="comment">自動テスト。単体、統合、回帰テスト</span><br>
+|-- <span class="dir">docs/</span> <span class="comment">作業判断、handoff、設計記録、運用手順</span><br>
+|   |-- <span class="dir">handoffs/</span> <span class="comment">Codex から Claude Code への実装指示</span><br>
+|   |-- <span class="dir">decisions/</span> <span class="comment">長めの設計判断、背景、却下案</span><br>
+|   `-- <span class="dir">runbooks/</span> <span class="comment">繰り返し使う運用手順。必要になってから作る</span><br>
+|-- <span class="dir">templates/</span> <span class="comment">再利用するプロンプト、設定例、文書雛形</span><br>
+|-- <span class="dir">tools/</span> <span class="comment">補助スクリプト、メンテナンスツール</span><br>
+`-- <span class="important">README.md</span> <span class="comment">人間向けの概要、起動方法、基本コマンド</span>
 </div>
 
-<h3>docs 配下の置き場所</h3>
+<h3>docs 配下の使い分け</h3>
 <div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
   <div class="card">
     <div class="card-header"><strong><code>docs/handoffs/</code></strong></div>
     <div class="card-body">
-      Codex から Claude Code へ実装を渡す scoped handoff を置く。ファイル名は <code>YYYY-MM-DD-&lt;short-task&gt;.md</code>。
+      Codex が Claude Code に実装を渡すための scoped handoff を置く。1 ファイル 1 タスクにし、Goal / Files / Constraints / Verification を必ず含める。
     </div>
   </div>
   <div class="card">
     <div class="card-header"><strong><code>docs/decisions/</code></strong></div>
     <div class="card-body">
-      <code>AGENTS.md</code> に入れるには長すぎる背景、判断理由、却下案を置く。未来の作業判断に使える粒度にする。
+      <code>AGENTS.md</code> に入れるには長すぎる背景、判断理由、却下案を置く。未来の作業判断で再利用できる内容にする。
     </div>
   </div>
   <div class="card">
-    <div class="card-header"><strong>新しい docs サブディレクトリ</strong></div>
+    <div class="card-header"><strong><code>docs/runbooks/</code></strong></div>
     <div class="card-body">
-      既存の <code>handoffs/</code> や <code>decisions/</code> に入らない文書が継続的に増える場合だけ作る。
+      デプロイ、復旧、リリース、定期作業など、手順として繰り返し使う文書を置く。必要になるまで作らない。
     </div>
   </div>
 </div>
 
-<h3>新しい section を追加するとき</h3>
+<h3>AGENTS.md に書くこと</h3>
 <div class="card">
   <div class="card-body">
     <ul>
-      <li><code>sections/&lt;area&gt;/&lt;name&gt;.html</code> または <code>sections/&lt;name&gt;.html</code> を追加する。</li>
-      <li><code>js/app.js</code> の <code>SECTIONS</code> に id とパスを追加する。</li>
-      <li><code>index.html</code> のナビゲーションに <code>show('&lt;id&gt;')</code> を追加する。</li>
-      <li><code>index.html</code> の <code>&lt;main&gt;</code> に <code>&lt;div id="&lt;id&gt;" class="section"&gt;&lt;/div&gt;</code> を追加する。</li>
+      <li>このプロジェクトの目的、技術構成、主要ディレクトリ。</li>
+      <li>Codex と Claude Code の責任範囲。</li>
+      <li>設計原則、禁止事項、触ってはいけないファイル。</li>
+      <li>handoff の作り方、レビュー観点、検証方針。</li>
+      <li>将来のセッションにも効く短い永続ルール。</li>
     </ul>
   </div>
 </div>
 
-<h3>更新判断</h3>
+<h3>CLAUDE.md に書くこと</h3>
 <div class="card">
   <div class="card-body">
     <ul>
-      <li>将来の Codex / Claude Code セッションにも効く短いルールは <code>AGENTS.md</code> に残す。</li>
-      <li>Claude Code が実装時に従う具体的な実行ルールは <code>CLAUDE.md</code> に残す。</li>
-      <li>ブラウザで参照したい説明は <code>sections/</code> に置く。</li>
-      <li>単発の作業指示は <code>docs/handoffs/</code>、長期的な判断理由は <code>docs/decisions/</code> に置く。</li>
+      <li>Claude Code が作業開始時に読むファイル。</li>
+      <li>編集してよい範囲、止まって確認すべき条件。</li>
+      <li>テスト、lint、型チェック、起動確認などの検証コマンド。</li>
+      <li>最後に返す報告形式。changed files / summary / verification / blocked checks を含める。</li>
+      <li>ローカル設定や secret を触らないルール。</li>
+    </ul>
+  </div>
+</div>
+
+<h3>handoff の最小単位</h3>
+<div class="card">
+  <div class="card-body">
+    <ul>
+      <li><strong>Goal</strong>: 何を達成するか。</li>
+      <li><strong>Background</strong>: なぜその変更をするか。</li>
+      <li><strong>Files To Inspect</strong>: 実装前に読むファイル。</li>
+      <li><strong>Files To Edit</strong>: 編集してよいファイル。</li>
+      <li><strong>Constraints</strong>: 守るべき制約。</li>
+      <li><strong>Non Goals</strong>: 今回やらないこと。</li>
+      <li><strong>Verification</strong>: 実行する確認。</li>
+      <li><strong>Expected Report</strong>: Claude Code が返す報告形式。</li>
+    </ul>
+  </div>
+</div>
+
+<h3>作業中の判断ルール</h3>
+<div class="card">
+  <div class="card-body">
+    <ul>
+      <li>要求が曖昧なら、実装せず Codex で目的と制約を固める。</li>
+      <li>編集量が多く、範囲が明確なら Claude Code に handoff する。</li>
+      <li>設計変更や責任境界の変更は、実装前に Codex で判断する。</li>
+      <li>単発の作業ログは残さず、再利用する判断だけ文書化する。</li>
+      <li>実装後は差分が handoff とプロジェクトルールに沿っているかレビューする。</li>
     </ul>
   </div>
 </div>
