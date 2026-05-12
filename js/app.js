@@ -50,26 +50,13 @@ const SECTIONS = {
 
 const loadedSections = new Set();
 const navLinks = document.querySelectorAll('nav a');
-const mobileSectionSelect = document.getElementById('mobile-section');
+const mobileNavButtons = document.querySelectorAll('.mobile-nav [data-section]');
 
-if (mobileSectionSelect) {
-  navLinks.forEach(link => {
-    const onclick = link.getAttribute('onclick');
-    if (!onclick) return;
-
-    const match = onclick.match(/show\('([^']+)'\)/);
-    if (!match) return;
-
-    const option = document.createElement('option');
-    option.value = match[1];
-    option.textContent = link.textContent.trim();
-    mobileSectionSelect.appendChild(option);
+mobileNavButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    show(button.dataset.section);
   });
-
-  mobileSectionSelect.addEventListener('change', () => {
-    show(mobileSectionSelect.value);
-  });
-}
+});
 
 document.querySelectorAll('[data-nav-toggle]').forEach(button => {
   button.addEventListener('click', () => {
@@ -191,9 +178,11 @@ async function show(id) {
     }
   });
 
-  if (mobileSectionSelect && mobileSectionSelect.value !== id) {
-    mobileSectionSelect.value = id;
-  }
+  mobileNavButtons.forEach(button => {
+    const isActive = button.dataset.section === id;
+    button.classList.toggle('active', isActive);
+    button.setAttribute('aria-current', isActive ? 'page' : 'false');
+  });
 }
 
 // Search

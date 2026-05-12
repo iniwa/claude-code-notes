@@ -7,7 +7,7 @@
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20260512-mobile">
+<link rel="stylesheet" href="css/style.css?v=20260512-mobile-groups">
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script defer src="https://dc2urtglyf5ra4zkttctcwshfndmexavytmxbt5x.iniwach.com/script.js" data-website-id="ae8bd531-b14a-4440-af98-0c2cbf2207d4"></script>
 </head>
@@ -28,8 +28,61 @@
 </header>
 
 <div class="mobile-nav">
-  <label for="mobile-section">表示する項目</label>
-  <select id="mobile-section" aria-label="表示する項目を選択"></select>
+  <details class="mobile-nav-group" open>
+    <summary>プロジェクト全体</summary>
+    <div class="mobile-nav-items">
+      <button type="button" data-section="top">Top</button>
+      <button type="button" data-section="workflow">併用ワークフロー</button>
+      <button type="button" data-section="rules">プロジェクトルール</button>
+      <button type="button" data-section="templates">テンプレート集</button>
+    </div>
+  </details>
+  <details class="mobile-nav-group">
+    <summary>Codex</summary>
+    <div class="mobile-nav-items">
+      <button type="button" data-section="codex-overview">基本運用</button>
+      <button type="button" data-section="codex-setup">セットアップ</button>
+      <button type="button" data-section="codex-decision">作業判定</button>
+      <button type="button" data-section="codex-design">設計記録</button>
+      <button type="button" data-section="codex-handoff">handoff</button>
+      <button type="button" data-section="codex-loop">実作業ループ</button>
+      <button type="button" data-section="codex-review">レビュー</button>
+      <button type="button" data-section="codex-cli">CLI コマンド</button>
+      <button type="button" data-section="codex-slash">スラッシュコマンド</button>
+      <button type="button" data-section="codex-config">config.toml</button>
+    </div>
+  </details>
+  <details class="mobile-nav-group">
+    <summary>Claude Code</summary>
+    <div class="mobile-nav-items">
+      <button type="button" data-section="manual-setup">プロジェクトセットアップ</button>
+      <button type="button" data-section="manual-mcp">MCP セットアップ</button>
+      <button type="button" data-section="manual-statusbar">ステータスバー設定</button>
+      <button type="button" data-section="manual-serena">Serena マニュアル</button>
+      <button type="button" data-section="ctx">コンテキスト管理</button>
+      <button type="button" data-section="model">モデル・設定</button>
+      <button type="button" data-section="session">セッション情報</button>
+      <button type="button" data-section="project">プロジェクト・作業</button>
+      <button type="button" data-section="agent">エージェント・権限</button>
+      <button type="button" data-section="cli-auto">自動化モード</button>
+      <button type="button" data-section="cli-model">モデル・動作</button>
+      <button type="button" data-section="cli-prompt">システムプロンプト</button>
+      <button type="button" data-section="keyboard">ショートカット</button>
+      <button type="button" data-section="cfg-basic">基本動作</button>
+      <button type="button" data-section="cfg-perm">権限・セキュリティ</button>
+      <button type="button" data-section="cfg-hooks">フック</button>
+      <button type="button" data-section="cfg-mcp">MCP・拡張</button>
+      <button type="button" data-section="cfg-scope">スコープ構造</button>
+      <button type="button" data-section="memory">メモリシステム</button>
+      <button type="button" data-section="cost">コスト・トークン最適化</button>
+      <button type="button" data-section="ide">IDE 連携</button>
+      <button type="button" data-section="subagent">サブエージェント実践</button>
+      <button type="button" data-section="custom-agent">カスタムエージェント定義</button>
+      <button type="button" data-section="agent-team">エージェントチーム</button>
+      <button type="button" data-section="cicd">CI/CD レシピ集</button>
+      <button type="button" data-section="troubleshoot">トラブルシューティング</button>
+    </div>
+  </details>
 </div>
 
 <div class="layout">
