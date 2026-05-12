@@ -8,6 +8,7 @@ marked.setOptions({
 const SECTIONS = {
   'top':              'sections/top.html',
   'workflow':         'sections/workflow.html',
+  'rules':            'sections/rules.html',
   'templates':        'sections/templates.html',
   'codex-overview':   'sections/codex/overview.html',
   'codex-setup':      'sections/codex/setup.html',

@@ -1,0 +1,97 @@
+<div class="section-title">プロジェクトルール</div>
+<div class="section-desc">このリファレンスを更新するときの置き場所、責任範囲、フォルダ構成の基準。</div>
+
+<h3>基本ルール</h3>
+<div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+  <div class="card">
+    <div class="card-header"><strong>サイトは静的に保つ</strong></div>
+    <div class="card-body">
+      <ul>
+        <li>ビルドステップは追加しない。</li>
+        <li>React / Vue / Vite / npm などは明示依頼がある場合だけ使う。</li>
+        <li>既存の HTML / CSS / JS 構成を優先する。</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><strong>公開できる内容だけ置く</strong></div>
+    <div class="card-body">
+      <ul>
+        <li>API キー、認証情報、個人トークンは置かない。</li>
+        <li>private な運用情報はテンプレート化しない。</li>
+        <li>個人環境の値は placeholder にする。</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><strong>役割を混ぜない</strong></div>
+    <div class="card-body">
+      <ul>
+        <li>サイト本文は <code>sections/</code>。</li>
+        <li>公開テンプレートは <code>templates/</code>。</li>
+        <li>作業指示や設計記録は <code>docs/</code>。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<h3>フォルダ構成</h3>
+<div class="file-tree">
+<span class="important">.</span><br>
+|-- <span class="important">AGENTS.md</span> <span class="comment">Codex 側の作業合意、役割分担、永続ルール</span><br>
+|-- <span class="important">CLAUDE.md</span> <span class="comment">Claude Code 側の実装ルール、検証、報告形式</span><br>
+|-- <span class="important">index.html</span> <span class="comment">SPA のシェル、ナビゲーション、section placeholder</span><br>
+|-- <span class="dir">css/</span> <span class="comment">共通スタイル</span><br>
+|-- <span class="dir">js/</span> <span class="comment">section 読み込み、検索、template / markdown loader</span><br>
+|-- <span class="dir">sections/</span> <span class="comment">ブラウザに表示する本文</span><br>
+|-- <span class="dir">templates/</span> <span class="comment">公開用の再利用テンプレート</span><br>
+|-- <span class="dir">docs/</span> <span class="comment">運用文書、設計判断、handoff</span><br>
+|-- <span class="dir">tools/</span> <span class="comment">メンテナンス用スクリプトや補助ツール</span><br>
+`-- <span class="important">wrangler.toml</span> <span class="comment">デプロイ設定</span>
+</div>
+
+<h3>docs 配下の置き場所</h3>
+<div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+  <div class="card">
+    <div class="card-header"><strong><code>docs/handoffs/</code></strong></div>
+    <div class="card-body">
+      Codex から Claude Code へ実装を渡す scoped handoff を置く。ファイル名は <code>YYYY-MM-DD-&lt;short-task&gt;.md</code>。
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><strong><code>docs/decisions/</code></strong></div>
+    <div class="card-body">
+      <code>AGENTS.md</code> に入れるには長すぎる背景、判断理由、却下案を置く。未来の作業判断に使える粒度にする。
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><strong>新しい docs サブディレクトリ</strong></div>
+    <div class="card-body">
+      既存の <code>handoffs/</code> や <code>decisions/</code> に入らない文書が継続的に増える場合だけ作る。
+    </div>
+  </div>
+</div>
+
+<h3>新しい section を追加するとき</h3>
+<div class="card">
+  <div class="card-body">
+    <ul>
+      <li><code>sections/&lt;area&gt;/&lt;name&gt;.html</code> または <code>sections/&lt;name&gt;.html</code> を追加する。</li>
+      <li><code>js/app.js</code> の <code>SECTIONS</code> に id とパスを追加する。</li>
+      <li><code>index.html</code> のナビゲーションに <code>show('&lt;id&gt;')</code> を追加する。</li>
+      <li><code>index.html</code> の <code>&lt;main&gt;</code> に <code>&lt;div id="&lt;id&gt;" class="section"&gt;&lt;/div&gt;</code> を追加する。</li>
+    </ul>
+  </div>
+</div>
+
+<h3>更新判断</h3>
+<div class="card">
+  <div class="card-body">
+    <ul>
+      <li>将来の Codex / Claude Code セッションにも効く短いルールは <code>AGENTS.md</code> に残す。</li>
+      <li>Claude Code が実装時に従う具体的な実行ルールは <code>CLAUDE.md</code> に残す。</li>
+      <li>ブラウザで参照したい説明は <code>sections/</code> に置く。</li>
+      <li>単発の作業指示は <code>docs/handoffs/</code>、長期的な判断理由は <code>docs/decisions/</code> に置く。</li>
+    </ul>
+  </div>
+</div>
