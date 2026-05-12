@@ -75,6 +75,15 @@ Keep `AGENTS.md` focused on short, durable rules that future Codex and Claude Co
 
 Do not add `Alternatives Considered` as a default Decision Log heading. When rejected options or longer background matter, summarize only the durable rule in `AGENTS.md` and put the detail under `docs/decisions/`.
 
+## Project Documentation
+Use `docs/README.md` as the source of truth for repository structure and `docs/` placement rules.
+
+- Put site content in `sections/` and public reusable templates in `templates/`.
+- Put operational repository documentation under `docs/`.
+- Put Claude Code implementation handoffs under `docs/handoffs/`.
+- Put longer design background and decision records under `docs/decisions/`.
+- Add new `docs/` subdirectories only when the content has a distinct lifecycle that does not fit existing folders.
+
 ## Handoff Workflow
 When the user wants to use the "Codex specifies, Claude Code executes" flow:
 
@@ -177,6 +186,25 @@ After Claude Code returns, review:
 - Does any discovery need to become a new `AGENTS.md` decision?
 
 ## Decision Log
+
+### 2026-05-12: Document repository structure and docs placement
+
+Context:
+- The project needs an explicit reference for repository-wide rules, folder responsibilities, and where to put operational documents.
+
+Decision:
+- `docs/README.md` is the source of truth for the project tree and `docs/` placement rules.
+- `AGENTS.md` keeps only the short durable rule that future Codex and Claude Code sessions should follow.
+
+Reason:
+- This keeps working rules discoverable without turning `AGENTS.md` into a long repository guide.
+
+Constraints Introduced:
+- Do not mix site content, public templates, handoffs, and decision records into the same directory.
+- Prefer existing `docs/handoffs/` and `docs/decisions/` before creating new `docs/` subdirectories.
+
+Do Not Change Casually:
+- Do not move long project structure documentation back into `AGENTS.md` unless it becomes a short execution rule.
 
 ### 2026-05-07: Use Codex as planning owner and Claude Code as scoped executor
 
