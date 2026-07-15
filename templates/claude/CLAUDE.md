@@ -1,16 +1,10 @@
 # CLAUDE.md
 
-## Role
-Claude Code is the scoped implementation executor for this project.
-
-The normal flow:
-1. Codex clarifies the task and writes a handoff under `docs/handoffs/`.
-2. The user gives Claude Code the handoff file path.
-3. Claude Code reads the handoff, `AGENTS.md`, and this `CLAUDE.md`, then implements.
-4. Claude Code reports the result.
-5. Codex reviews the diff against the handoff and `AGENTS.md`.
-
-If the handoff is missing scope, conflicts with `AGENTS.md`, or requires changing a documented design decision, stop and ask for Codex-side clarification before editing.
+## Codex / Claude Code Workflow
+- Treat `AGENTS.md` as design intent and this file as execution rules. Follow the supplied handoff first.
+- Model selection and handoff policy belong in `AGENTS.md`; do not redefine them here.
+- Stop and return questions to Codex when scope, constraints, design, or allowed files are unclear. Do not commit unless explicitly requested.
+- Implement and verify only the current independently verifiable slice. Subagents are optional and limited to clearly parallel mechanical work in the same scope.
 
 ## Start Of Task Routine
 For every implementation task:
@@ -32,11 +26,12 @@ For every implementation task:
 ## Implementation Rules
 - Follow the current handoff first, then this file, then local code style.
 - Stay inside `Files To Edit`. If a file outside the list must change, stop and report it.
+- If the listed files are insufficient to reach the first scoped edit, stop and report the missing discovery or a proposed split instead of broadening the task.
 - Preserve existing class names, file layout, and UI patterns.
 - Prefer editing existing files over introducing new patterns.
 - Do not add dependencies, build tooling, or frameworks unless the handoff says so.
 - Do not add secrets, API keys, or machine-specific tokens.
-- Do not commit automatically.
+- Do not commit or push unless explicitly requested.
 - Do not modify unrelated files for cleanup.
 
 Stop and ask before editing when:
@@ -61,6 +56,7 @@ At the end of a task, report:
 - **Summary** — what changed and why, in 1–3 lines per area
 - **Verification results** — commands run and outcomes
 - **Blocked checks** — checks that could not be run, with reason
+- **Subagent usage** — none, or the bounded mechanical work delegated
 - **Files edited outside Files To Edit** — none, or path + reason
 - **Design questions for Codex** — anything that may belong in `AGENTS.md`
 

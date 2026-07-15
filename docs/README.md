@@ -46,7 +46,9 @@
 |   |-- decisions/
 |   |   `-- 長めの設計判断、背景、却下案、運用上の理由
 |   `-- handoffs/
-|       `-- Codex から Claude Code への scoped implementation handoff
+|       |-- Codex から Claude Code への active / blocked handoff
+|       `-- archive/
+|           `-- 実装・検証・レビュー・必要な follow-up が完了した handoff
 |-- tools/
 |   `-- メンテナンス用スクリプトや補助ツール
 |-- .claude/
@@ -68,7 +70,8 @@ Codex が Claude Code に実装を渡すための scoped handoff を置く。
 - ファイル名は `YYYY-MM-DD-<short-task>.md`。
 - 1 ファイル 1 実装タスクにする。
 - Goal, Background, Files To Inspect, Files To Edit, Constraints, Non Goals, Verification, Expected Report を含める。
-- 実装後に内容が古くなっても、作業履歴として残してよい。
+- `docs/handoffs/` 直下には active または blocked の handoff だけを置く。
+- 実装、検証、Codex のレビュー、必要な runtime 作業と follow-up がすべて完了したら `docs/handoffs/archive/` へ移す。
 
 ### `docs/decisions/`
 

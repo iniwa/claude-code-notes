@@ -7,23 +7,15 @@ This file preserves the working agreement for using Codex to define intent and C
 - Describe the entry point, runtime, languages, and deployment target.
 - List the directories Codex and Claude Code should know about.
 
-## Role Split
-Codex is responsible for:
-- clarifying the user's goal and change type
-- deciding whether the task should remain in Codex or be handed off to Claude Code
-- preserving design intent across edits
-- preparing Claude Code handoffs with clear scope, constraints, and verification
-- reviewing implementation diffs against this file and the handoff
-- updating this file when a reusable design decision or workflow rule is introduced
-
-Claude Code is responsible for:
-- implementing clear, scoped handoffs
-- following `CLAUDE.md`
-- keeping changes inside the allowed files and constraints
-- running the requested verification where possible
-- reporting changed files, verification results, and any design pressure that requires Codex review
-
-Do not treat this as "Codex only designs, Claude Code only implements." Codex may implement small or design-sensitive changes directly. Use Claude Code when the implementation is clear, execution-heavy, repetitive, or benefits from Claude Code-specific tooling.
+## Role Split / Model Policy
+- Use GPT-5.3-Codex-Spark (`gpt-5.3-codex-spark`) proactively, when available, for low-risk, well-scoped, independently verifiable supporting work that requires no material design judgment or source-code implementation.
+- GPT-5.6 Terra (`gpt-5.6-terra`) or Sol (`gpt-5.6-sol`) owns requirements and design. Whenever Terra is used, set its reasoning level to `high`. Prefer Sol for substantial ambiguity, risk, or cross-boundary reasoning.
+- After design is fixed, delegate source-code implementation first to Claude Code Sonnet 5 at effort medium from the repository root: `claude -p --model sonnet --permission-mode auto "<handoff/task prompt>"`.
+- Only when Sonnet 5 is unavailable because of usage limits or service availability, use GPT-5.6 Luna (`gpt-5.6-luna`) with reasoning level `max` for the same implementation slice.
+- Implementation failure, failed verification, or a design question is not model unavailability. Return it to Codex instead of switching models.
+- Apply this policy to every coordinating Codex model and its subagents; do not create coordinator-specific exceptions.
+- Codex may keep requirements, design, read-only investigation, review, synthesis, and small documentation-consistency changes in one context.
+- Claude Code subagents are optional and limited to clearly parallel mechanical work within the approved handoff.
 
 ## Decision Rule
 Keep the task in Codex when:
@@ -47,7 +39,7 @@ Hand off to Claude Code when:
 - Do not introduce new abstractions unless they remove real complexity.
 - Separate temporary workarounds from long-term design.
 - Keep public content generic. Do not add secrets or private operational details.
-- Do not commit changes automatically.
+- Do not commit, push, or deploy unless explicitly requested.
 
 ## Codex Workflow
 1. Classify the request: new feature / existing adjustment / bug fix / docs / workflow rule.
@@ -58,14 +50,13 @@ Hand off to Claude Code when:
 6. Update `AGENTS.md` only when a rule should guide future sessions.
 
 ## Handoff Workflow
-1. Codex reads project context, `AGENTS.md`, `CLAUDE.md`, and relevant files.
-2. Codex writes a handoff file under `docs/handoffs/` using the template below.
-3. Codex reports the handoff file path to the user.
-4. The user gives that file path to Claude Code.
-5. Claude Code reads the handoff file, implements, and returns its report.
-6. Codex reviews the report and/or diff against the handoff and this file.
+1. Codex reads the project context and resolves material design choices.
+2. For substantive implementation, Codex saves one cohesive, independently verifiable slice under `docs/handoffs/YYYY-MM-DD-<short-task>.md`.
+3. Codex delegates the next ready slice first to Sonnet 5. Luna at reasoning level `max` may implement that same slice only under the unavailability condition above.
+4. The implementer edits and verifies only the current slice. Codex reviews the report and diff before preparing another.
+5. Keep only active or blocked handoffs in `docs/handoffs/`; move completed handoffs to `docs/handoffs/archive/`.
 
-Codex should not hand off vague requests. Reduce the work to a concrete implementation task with known files, constraints, non-goals, and verification before handing off.
+Size the slice so the first intended edit is reachable after reading the listed files. Run unresolved discovery separately, and do not rerun an unchanged handoff after it times out before the intended edit.
 
 ## Codex Output Format For Claude Code
 Save the handoff as `docs/handoffs/YYYY-MM-DD-<short-task>.md`. Create the directory if it does not exist. Use exactly this block.
@@ -112,22 +103,4 @@ After Claude Code returns, review:
 - Did it keep the project static and dependency-free (if applicable)?
 - Did verification run, and are blocked checks clearly explained?
 - Does any discovery need to become a new `AGENTS.md` decision?
-
-## Decision Log
-
-### YYYY-MM-DD: Decision Title
-
-Context:
-- What problem or requirement caused this decision?
-
-Decision:
-- What did we decide?
-
-Reason:
-- Why is this the right tradeoff for now?
-
-Constraints Introduced:
-- What should future implementation preserve?
-
-Do Not Change Casually:
-- What would cause design drift if changed without review?
+- After all implementation and follow-up are complete, was the handoff moved to `docs/handoffs/archive/`?
