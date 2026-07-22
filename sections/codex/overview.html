@@ -13,7 +13,7 @@
   </div>
   <div class="card">
     <div class="card-header"><strong>handoff 作成</strong></div>
-    <div class="card-desc"><code>docs/handoffs/YYYY-MM-DD-&lt;task&gt;.md</code> に Goal / Files / Constraints / Non Goals / Verification / Expected Report を書き切る。</div>
+    <div class="card-desc"><code>docs/handoffs/YYYY-MM-DD-&lt;task&gt;.md</code> に、最初の編集へ到達できる 1 つの独立検証可能な slice を書く。</div>
   </div>
   <div class="card">
     <div class="card-header"><strong>Claude Code 報告のレビュー</strong></div>
@@ -21,7 +21,7 @@
   </div>
   <div class="card">
     <div class="card-header"><strong>durable rule 化の判断</strong></div>
-    <div class="card-desc">今後も守るべき判断が出たときだけ <code>AGENTS.md</code> の Decision Log に追記する。単発の修正は記録しない。</div>
+    <div class="card-desc">今後も守るべき短いルールだけを <code>AGENTS.md</code> に残し、背景や却下案は <code>docs/decisions/</code> に置く。</div>
   </div>
 </div>
 
@@ -30,10 +30,10 @@
   <div class="card-desc">
     <pre>Codex: 依頼を分類する
 Codex: 設計リスクを判定する
-Codex: そのまま実装するか handoff に落とすか決める
-Codex または Claude Code: 実装・検証する
+Codex: 小さな文書整合性修正として閉じるか、実装 handoff に落とすか決める
+Sonnet（利用不能時のみ Luna max）: 現在の slice を実装・検証する
 Codex: 差分を AGENTS.md と handoff に照らしてレビューする
-Codex: 必要な判断だけ AGENTS.md に残す</pre>
+Codex: 必要な判断だけ残し、完了 handoff を archive する</pre>
   </div>
 </div>
 

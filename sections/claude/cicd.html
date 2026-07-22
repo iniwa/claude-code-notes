@@ -114,5 +114,5 @@ git diff --staged | claude -p \
 <div class="tip">
   <strong>コスト管理：</strong><code>--max-turns</code> を必ず設定し、無限ループを防止する。PR レビューなら 3-5 ターン、コード修正を伴うタスクなら 10-20 ターンが目安。<br><br>
   <strong>セキュリティ：</strong><code>--dangerously-skip-permissions</code> はコンテナ内でのみ使う。<code>--allowedTools</code> でツールを最小限に絞る。<br><br>
-  <strong>モデル選択：</strong>CI ではコスト重視で <code>--model sonnet</code> を推奨。複雑な分析が必要な場合のみ Opus を使う。
+  <strong>モデル選択：</strong>CI でもプロジェクトの <code>AGENTS.md</code> を優先する。設計済みのコード実装は <code>--model sonnet</code> を使い、失敗だけを理由に別モデルへ切り替えない。
 </div>

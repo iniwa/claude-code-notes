@@ -3,7 +3,7 @@
 <div class="card-grid">
   <div class="card">
     <div class="card-header"><span class="cmd">/model</span><span class="badge b-star">よく使う</span></div>
-    <div class="card-desc">使用モデルを切り替え。Opus / Sonnet / Haiku を選択。重いタスクはOpus、コスト節約時はHaiku。<br>セッション起動時に <code>--model</code> フラグで固定することも可能。</div>
+    <div class="card-desc">使用モデルを切り替える。プロジェクトの <code>AGENTS.md</code> を優先し、設計済みコードのhandoffはまず Sonnet を使う。実装失敗・検証失敗・設計質問を理由に別モデルへ切り替えない。<br>セッション起動時に <code>--model sonnet</code> で固定できる。</div>
   </div>
   <div class="card">
     <div class="card-header"><span class="cmd">/fast</span><span class="badge b-star">よく使う</span></div>
@@ -11,7 +11,7 @@
   </div>
   <div class="card">
     <div class="card-header"><span class="cmd">/effort [low|medium|high]</span></div>
-    <div class="card-desc">モデルの思考努力レベルを設定。<code>/effort auto</code> でリセット。複雑な推論には high、単純タスクは low でコスト削減。</div>
+    <div class="card-desc">モデルの思考努力レベルを設定。<code>/effort auto</code> でリセット。委託実装では <code>AGENTS.md</code> の指定を優先し、Sonnet は effort medium を基本にする。</div>
   </div>
   <div class="card">
     <div class="card-header"><span class="cmd">/config</span></div>

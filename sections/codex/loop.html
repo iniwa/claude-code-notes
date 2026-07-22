@@ -10,7 +10,7 @@
   -> Claude Code: 実装・検証・報告
        (artifact: changed files + report)
   -> Codex: 差分レビュー
-  -> Codex: 必要なら AGENTS.md に判断を追記</pre>
+  -> Codex: 必要な判断を記録し、完了 handoff を archive</pre>
   </div>
 </div>
 
@@ -29,7 +29,7 @@
     <div class="wf-left"><div class="wf-num improved">2</div></div>
     <div class="wf-body">
       <div class="wf-title">Codex が handoff を作る</div>
-      <div class="wf-current">Goal / Background / Files / Constraints / Non Goals / Verification / Expected Report を埋め切ってからファイルに保存する。</div>
+      <div class="wf-current">Goal / Background / Files / Constraints / Non Goals / Data Sources / Acceptance Criteria / Verification / Expected Report を埋め切ってからファイルに保存する。</div>
     </div>
   </div>
   <div class="wf-step">
@@ -45,14 +45,14 @@
     <div class="wf-left"><div class="wf-num improved">4</div></div>
     <div class="wf-body">
       <div class="wf-title">Claude Code が報告する</div>
-      <div class="wf-current">変更ファイル、サマリ、検証結果、blocked checks、Codex に戻すべき設計質問を返す。</div>
+      <div class="wf-current">変更ファイル、サマリ、検証結果、blocked checks、subagent 使用状況、Codex に戻すべき設計質問を返す。中断した場合は使える部分成果・部分編集、完了した検証、残作業、再開条件を返す。</div>
     </div>
   </div>
   <div class="wf-step">
     <div class="wf-left"><div class="wf-num improved">5</div></div>
     <div class="wf-body">
-      <div class="wf-title">Codex がレビューして必要なら記録する</div>
-      <div class="wf-current">差分が handoff と設計意図に合うか確認し、今後も守るべき判断だけを <code>AGENTS.md</code> に追記する。</div>
+      <div class="wf-title">Codex がレビューし、記録と archive を行う</div>
+      <div class="wf-current">差分が handoff と設計意図に合うか確認し、今後も守るべき短い判断だけを記録する。すべて完了した handoff は <code>docs/handoffs/archive/</code> へ移す。</div>
     </div>
   </div>
 </div>
@@ -82,6 +82,9 @@
 
 ## Blocked Checks
 - ブラウザでの目視確認はこの環境ではできなかった。
+
+## Subagent Usage
+- なし
 
 ## Files Edited Outside Files To Edit
 - なし

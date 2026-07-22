@@ -64,32 +64,34 @@ Thumbs.db
   <div class="template-header"><span class="filename">CLAUDE.md（最小構成）</span></div>
   <pre># CLAUDE.md
 
-> 詳細（日本語）: CLAUDE_ja.md
+## Purpose
+- AGENTS.md owns design intent, model selection, handoff policy, and Codex review.
+- This file owns Claude Code execution, verification, and reporting rules.
 
-## Communication
-- User writes in Japanese; respond in English unless instructed otherwise.
+## Start Of Task
+- Read AGENTS.md, CLAUDE.md, the supplied handoff, and listed files before editing.
+- Treat that handoff or equivalent inline scope as the approved task scope; it may narrow durable rules but may not weaken them.
+- Capture git status --short before editing and compare the final status and diff with that baseline.
+- Implement only the current independently verifiable slice.
+- Subagents are optional and limited to clearly parallel mechanical work within the same files, scope, and constraints.
+- If scope or design is unclear, stop and return it to Codex.
 
-## Environment
-| Item | Detail |
-|------|--------|
-| OS   | Windows 11 |
-| GPU  | RTX 5060 Ti — 16GB VRAM (CUDA sm_89) |
-| RAM  | 64GB |
+## Safety
+- Preserve unrelated changes.
+- Do not inspect secrets, credentials, or personal data unless strictly necessary for the approved task.
+- Do not edit secrets, credentials, local settings, production data, runtime state, or generated artifacts unless the approved task explicitly requires the change.
+- Never reproduce secrets, credentials, personal data, or private infrastructure values in prompts, handoffs, reports, or external tools.
+- Do not change deployment or external exposure outside the approved scope.
 
-## Development Policy
-- Purpose: [このプロジェクトの目的を記入]
-- Language: Python (default for ML tasks)
-- Env: `uv` or `venv`; avoid conda unless required
+- Do not commit or push unless explicitly requested.
 
-## Tooling
-- Use Serena MCP tools for code navigation and editing
-
-## Code Style
-- Minimal, readable code over abstraction-heavy patterns
-- No CI/CD or packaging unless explicitly requested</pre>
+## Verification And Report
+- Run the smallest relevant verification that demonstrates the acceptance criteria are met.
+- If interrupted, report usable partial results or partial edits, verification completed, remaining scope or work, and the resume condition.
+- Report changed files, summary, verification, blocked checks, subagent usage, and design questions.</pre>
 </div>
 <div class="tip" style="margin-top:10px;">
-  <code>AGENTS.md</code> は Codex の設計継続用、<code>CLAUDE.md</code> は Claude Code の実装実行用として分ける。<code>CLAUDE_ja.md</code> は人間が読む日本語の詳細版として任意で置く。
+  <code>AGENTS.md</code> は設計・モデル・handoff方針、<code>CLAUDE.md</code> は編集・検証・報告規則に分ける。別の <code>*_ja.md</code> は作らず、プロジェクト固有の事実と必要な短いルールだけを残す。
 </div>
 
 <h3>3. .claudeignore の配置</h3>
@@ -121,7 +123,6 @@ Thumbs.db
   <div class="card"><div class="card-desc"><code>.gitignore</code> 作成（<code>.claude/</code>, <code>.serena/</code> を含む）</div></div>
   <div class="card"><div class="card-desc"><code>AGENTS.md</code> をプロジェクトルートに配置（Codex 設計継続用）</div></div>
   <div class="card"><div class="card-desc"><code>CLAUDE.md</code> をプロジェクトルートに配置（Claude Code 実装用）</div></div>
-  <div class="card"><div class="card-desc"><code>CLAUDE_ja.md</code> を同ディレクトリに配置（任意だが推奨）</div></div>
   <div class="card"><div class="card-desc"><code>.claudeignore</code> を配置（ML プロジェクトはモデルファイルの除外を確認）</div></div>
   <div class="card"><div class="card-desc">MCP サーバーの登録・動作を確認</div></div>
   <div class="card"><div class="card-desc">Serena のプロジェクトインデックスを作成（CLI で自然言語指示）</div></div>
@@ -136,7 +137,6 @@ Thumbs.db
   ├── .claudeignore<br>
   ├── <span class="important">AGENTS.md</span> &nbsp;<span class="comment"># Codex で設計思想を継続する</span><br>
   ├── <span class="important">CLAUDE.md</span><br>
-  ├── <span class="important">CLAUDE_ja.md</span> &nbsp;<span class="comment"># 任意（人間向け詳細版）</span><br>
   ├── README.md<br>
   ├── pyproject.toml &nbsp;<span class="comment"># または requirements.txt</span><br>
   ├── main.py<br>

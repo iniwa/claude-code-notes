@@ -8,8 +8,12 @@
       <li>本リポジトリの <code>AGENTS.md</code> と完全に同じブロック構造で書く。</li>
       <li>冒頭に「<code>AGENTS.md</code>、<code>CLAUDE.md</code>、この handoff を読むこと」「範囲外が必要なら止まって確認すること」の 2 行を入れる。</li>
       <li><code>Files To Edit</code> を絞る。書きすぎると Claude Code が範囲を広げる。</li>
+      <li>1 handoff は 1 つの独立検証可能な変更にする。最初の編集までに広い調査が必要なら read-only 調査を先に分ける。</li>
+      <li>タイムアウト前に編集へ到達できなかった handoff は、そのまま再実行せず、振る舞い・ファイル・検証を狭める。</li>
+      <li><code>Data Sources</code> に、参照すべき既存ファイルや事実を具体的に書く。</li>
+      <li><code>Acceptance Criteria</code> に、完了と判断できる条件を具体的に書く。</li>
       <li><code>Verification</code> はこのリポジトリで実行できるコマンドだけを書く。</li>
-      <li><code>Expected Report</code> を毎回入れる。報告フォーマットを固定する効果がある。</li>
+      <li><code>Expected Report</code> を毎回入れる。中断時に返す報告（使える部分成果・完了した検証・残作業・再開条件）も含める。</li>
     </ul>
   </div>
 </div>
@@ -38,6 +42,12 @@ If implementation would violate constraints or require files outside this handof
 ## Non Goals
 - ...
 
+## Data Sources
+- ...
+
+## Acceptance Criteria
+- ...
+
 ## Verification
 - ...
 
@@ -46,6 +56,8 @@ If implementation would violate constraints or require files outside this handof
 - Summary
 - Verification results
 - Blocked checks
+- Subagent usage
+- Interrupted work: usable partial results or partial edits, verification completed, remaining work, and the resume condition
 - Design questions for Codex</pre>
 </div>
 
@@ -73,6 +85,12 @@ sections/codex/decision.html の判定マトリクスに「ドキュメント更
 - 他のセクションは変更しない。
 - 新しい CSS を追加しない。
 
+## Data Sources
+- sections/codex/decision.html の既存テーブル構造（列構成、行の語調）
+
+## Acceptance Criteria
+- 判定マトリクスに「ドキュメント更新」行が追加され、既存行と同じ列構成・語調になっている。
+
 ## Verification
 - git diff --check
 
@@ -81,6 +99,8 @@ sections/codex/decision.html の判定マトリクスに「ドキュメント更
 - Summary
 - Verification results
 - Blocked checks
+- Subagent usage
+- Interrupted work: usable partial results or partial edits, verification completed, remaining work, and the resume condition
 - Design questions for Codex</pre>
 </div>
 
@@ -114,6 +134,12 @@ Claude Code 用の「権限スコープ」リファレンスセクションを�
 - 既存セクションの文言は触らない。
 - CSS を追加しない。
 
+## Data Sources
+- 既存の sections/claude/cfg-scope.html の構成と ~/.claude/settings.json / .claude/settings.json の優先度に関する既存記述
+
+## Acceptance Criteria
+- 新セクションが nav・SECTIONS・index.html プレースホルダの 3 点に配線され、ローカル配信で表示できる。
+
 ## Verification
 - git diff --check
 - python -m http.server 8787 --bind 127.0.0.1
@@ -124,6 +150,8 @@ Claude Code 用の「権限スコープ」リファレンスセクションを�
 - Summary
 - Verification results
 - Blocked checks
+- Subagent usage
+- Interrupted work: usable partial results or partial edits, verification completed, remaining work, and the resume condition
 - Design questions for Codex</pre>
 </div>
 
@@ -155,6 +183,12 @@ templates/claude/CLAUDE.md を本リポジトリの handoff 運用に合わせ�
 - 他のテンプレートは変更しない。
 - 新しいテンプレートは追加しない。
 
+## Data Sources
+- AGENTS.md と CLAUDE.md に書かれている現在の handoff・報告フォーマット
+
+## Acceptance Criteria
+- templates/claude/CLAUDE.md が三点読み込みと報告フォーマットを反映し、テンプレート集ページで表示が崩れていない。
+
 ## Verification
 - git diff --check
 - テンプレート集ページで .template-loader 経由の表示が崩れていないことを確認
@@ -164,10 +198,17 @@ templates/claude/CLAUDE.md を本リポジトリの handoff 運用に合わせ�
 - Summary
 - Verification results
 - Blocked checks
+- Subagent usage
+- Interrupted work: usable partial results or partial edits, verification completed, remaining work, and the resume condition
 - Design questions for Codex</pre>
 </div>
 
 <h3>このリポジトリの検証コマンド</h3>
+<div class="card" style="margin-bottom: 20px;">
+  <div class="card-desc">
+    <code>docs/handoffs/</code> 直下には active または blocked の handoff だけを置く。実装、検証、Codex のレビュー、必要な runtime 作業と follow-up がすべて完了したら <code>docs/handoffs/archive/</code> へ移す。
+  </div>
+</div>
 <div class="card">
   <div class="card-desc">
     <ul>

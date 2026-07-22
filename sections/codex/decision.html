@@ -17,19 +17,19 @@
         <tr>
           <td>文言修正</td>
           <td>そのまま編集</td>
-          <td>多数の文言を機械的に直す場合のみ</td>
+          <td>明確な反復編集を独立検証可能な slice にできる場合</td>
           <td>設計判断は伴わない。<code>AGENTS.md</code> 追記不要。</td>
         </tr>
         <tr>
           <td>新規セクション追加</td>
-          <td>1 セクションで構造が新しい場合</td>
-          <td>テンプレに沿って数セクション足す場合</td>
+          <td>構造と配線の設計を確定する</td>
+          <td>設計済みのセクションと配線を実装する</td>
           <td>nav・<code>SECTIONS</code>・<code>index.html</code> プレースホルダの 3 点更新を必ず指示。</td>
         </tr>
         <tr>
           <td>複数ファイルの機械的編集</td>
-          <td>2〜3 ファイルなら直接</td>
-          <td>同じパターンを 4 ファイル以上に適用するなら handoff</td>
+          <td>設計、read-only 調査、小さな文書整合性修正</td>
+          <td>ファイル数ではなく、1 つの独立検証可能な実装 slice として handoff</td>
           <td>編集パターンと適用範囲を Constraints に明記する。</td>
         </tr>
         <tr>
@@ -40,14 +40,14 @@
         </tr>
         <tr>
           <td>バグ修正</td>
-          <td>原因特定と局所修正が同時に進む場合</td>
-          <td>原因が特定済みで修正範囲が広い場合</td>
+          <td>原因特定を read-only slice として行う</td>
+          <td>原因と設計が確定した局所修正を実装する</td>
           <td>handoff には Non Goals に「リファクタしない」を入れる。</td>
         </tr>
         <tr>
           <td>テンプレート更新</td>
-          <td><code>templates/</code> 1〜2 ファイルの調整</td>
-          <td>テンプレと参照セクション両方を更新する場合</td>
+          <td>方針決定と小さな文書整合性修正</td>
+          <td>方針確定後のテンプレートと参照ページを同じ slice で更新する場合</td>
           <td>公開可否を Codex で必ずレビューする。</td>
         </tr>
       </tbody>
@@ -62,13 +62,12 @@
 - 要求が曖昧
 - 設計意図がまだ決まっていない
 - 責務境界が動く可能性がある
-- 変更範囲が小さく、レビューしながら閉じられる
+- read-only 調査、レビュー、または小さな文書整合性修正
 
 Claude Code に渡す:
-- Goal / Files / Constraints / Verification が明確
-- 実装や機械的編集が中心
-- ファイル数が多い
-- 同じパターンを反復適用する</pre>
+- Goal / Files / Constraints / Non Goals / Data Sources / Acceptance Criteria / Verification が明確
+- 設計済みのコード実装または機械的編集が中心
+- 1 つの独立検証可能な slice に収まる</pre>
   </div>
 </div>
 
@@ -86,6 +85,6 @@ Claude Code に渡す:
 <div class="card">
   <div class="card-desc">
     実装者が迷わず編集できるところまで Codex で詰めてから渡す。<br>
-    Goal、Background、Files To Inspect、Files To Edit、Constraints、Non Goals、Verification、Expected Report がそろっていない handoff は渡さない。
+    Goal、Background、Files To Inspect、Files To Edit、Constraints、Non Goals、Data Sources、Acceptance Criteria、Verification、Expected Report がそろっていない handoff は渡さない。Expected Report には、中断時の使える部分成果・完了した検証・残作業・再開条件も含める。
   </div>
 </div>

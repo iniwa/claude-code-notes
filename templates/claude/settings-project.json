@@ -3,9 +3,7 @@
     "allow": [
       "Bash(git log *)",
       "Bash(git diff *)",
-      "Bash(git status)",
-      "Bash(git add *)",
-      "Bash(git commit:*)"
+      "Bash(git status)"
     ],
     "deny": [
       "Bash(rm -rf *)",

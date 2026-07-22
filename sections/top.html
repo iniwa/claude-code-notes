@@ -43,7 +43,8 @@
   <div class="card-body">
     <ul>
       <li><strong>曖昧なら Codex</strong>。要求整理と設計判断は Codex で閉じる。</li>
-      <li><strong>明確で編集量が多いなら Claude Code</strong>。Goal / Files / Constraints / Verification がそろってから渡す。</li>
+      <li><strong>設計済みのコード実装はまず Sonnet</strong>。Goal / Files / Constraints / Verification をそろえ、1 つの独立検証可能な slice として渡す。</li>
+      <li><strong>低リスクの補助作業は Spark</strong>。設計判断やコード実装を含まない範囲で積極的に使う。</li>
       <li><strong>実装後は Codex で設計整合性レビュー</strong>。差分を <code>AGENTS.md</code> と照合する。</li>
     </ul>
   </div>

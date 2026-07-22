@@ -17,8 +17,9 @@
     <div class="card-header"><strong>AI の役割分担</strong></div>
     <div class="card-body">
       <ul>
-        <li>Codex は意図整理、設計判断、handoff、レビューを担当する。</li>
-        <li>Claude Code は明確な指示に基づく実装、検証、報告を担当する。</li>
+        <li>Terra または Sol は要求と設計を担当し、Terra は reasoning level <code>high</code> で使う。</li>
+        <li>設計済みのコード実装はまず Sonnet に渡し、usage limit または service availability により利用不能な場合だけ Luna を reasoning level <code>max</code> で使う。</li>
+        <li>Spark は設計判断やコード実装を含まない、低リスクで独立検証可能な補助作業に積極的に使う。</li>
         <li>曖昧な要求は実装に渡す前に Codex で具体化する。</li>
       </ul>
     </div>
@@ -43,7 +44,7 @@
 |-- <span class="dir">src/</span> <span class="comment">アプリケーション本体。プロジェクトに合わせて命名</span><br>
 |-- <span class="dir">tests/</span> <span class="comment">自動テスト。単体、統合、回帰テスト</span><br>
 |-- <span class="dir">docs/</span> <span class="comment">作業判断、handoff、設計記録、運用手順</span><br>
-|   |-- <span class="dir">handoffs/</span> <span class="comment">Codex から Claude Code への実装指示</span><br>
+|   |-- <span class="dir">handoffs/</span> <span class="comment">active / blocked の実装指示。完了後は archive/ へ移す</span><br>
 |   |-- <span class="dir">decisions/</span> <span class="comment">長めの設計判断、背景、却下案</span><br>
 |   `-- <span class="dir">runbooks/</span> <span class="comment">繰り返し使う運用手順。必要になってから作る</span><br>
 |-- <span class="dir">templates/</span> <span class="comment">再利用するプロンプト、設定例、文書雛形</span><br>
@@ -56,7 +57,7 @@
   <div class="card">
     <div class="card-header"><strong><code>docs/handoffs/</code></strong></div>
     <div class="card-body">
-      Codex が Claude Code に実装を渡すための scoped handoff を置く。1 ファイル 1 タスクにし、Goal / Files / Constraints / Verification を必ず含める。
+      Codex が実装を渡すための active / blocked handoff を置く。1 ファイル 1 つの独立検証可能な slice にし、Goal / Files / Constraints / Data Sources / Acceptance Criteria / Verification を必ず含める。実装、検証、レビュー、必要な follow-up が完了したら <code>archive/</code> へ移す。
     </div>
   </div>
   <div class="card">
@@ -109,8 +110,11 @@
       <li><strong>Files To Edit</strong>: 編集してよいファイル。</li>
       <li><strong>Constraints</strong>: 守るべき制約。</li>
       <li><strong>Non Goals</strong>: 今回やらないこと。</li>
+      <li><strong>Data Sources</strong>: 参照すべき具体的な既存ファイルや事実。</li>
+      <li><strong>Acceptance Criteria</strong>: 完了と判断できる具体的な条件。</li>
       <li><strong>Verification</strong>: 実行する確認。</li>
-      <li><strong>Expected Report</strong>: Claude Code が返す報告形式。</li>
+      <li><strong>Expected Report</strong>: Claude Code が返す報告形式。中断時は使える部分成果・完了した検証・残作業・再開条件を含める。</li>
+      <li>最初の編集に到達する前に広い調査が必要なら、調査を別の read-only slice に分ける。</li>
     </ul>
   </div>
 </div>
@@ -120,7 +124,7 @@
   <div class="card-body">
     <ul>
       <li>要求が曖昧なら、実装せず Codex で目的と制約を固める。</li>
-      <li>編集量が多く、範囲が明確なら Claude Code に handoff する。</li>
+      <li>設計済みのコード実装は、ファイル数ではなく独立検証可能な振る舞い単位で Sonnet に handoff する。</li>
       <li>設計変更や責任境界の変更は、実装前に Codex で判断する。</li>
       <li>単発の作業ログは残さず、再利用する判断だけ文書化する。</li>
       <li>実装後は差分が handoff とプロジェクトルールに沿っているかレビューする。</li>

@@ -1,18 +1,19 @@
 # CLAUDE.md
 
 ## Codex / Claude Code Workflow
-- Treat `AGENTS.md` as design intent and this file as execution rules. Follow the supplied handoff first.
+- Treat `AGENTS.md` as durable design intent and this file as execution rules. The active handoff or equivalent inline task is the approved scope; it may narrow durable rules but may not weaken them.
 - Model selection and handoff policy belong in `AGENTS.md`; do not redefine them here.
 - Stop and return questions to Codex when scope, constraints, design, or allowed files are unclear. Do not commit unless explicitly requested.
-- Implement and verify only the current independently verifiable slice. Subagents are optional and limited to clearly parallel mechanical work in the same scope.
+- Implement and verify only the current independently verifiable slice. Subagents are optional and limited to clearly parallel mechanical work within the same files, scope, and constraints.
 
 ## Start Of Task Routine
 For every implementation task:
-1. Read the user's current handoff file under `docs/handoffs/`.
-2. Read `AGENTS.md` and this `CLAUDE.md`.
+1. Read `AGENTS.md` and this `CLAUDE.md`.
+2. Read the active handoff under `docs/handoffs/`, or the equivalent inline task scope permitted by `AGENTS.md`.
 3. Identify the allowed files (`Files To Edit`) and non-goals before editing.
 4. Inspect the relevant existing files before introducing new patterns.
-5. If the requested edit requires files outside the handoff, explain why before editing them.
+5. Capture `git status --short` when Git is available.
+6. If the requested edit requires files outside the approved scope, stop and return the issue to Codex.
 
 ## Project Overview
 <!-- Brief description of what this project does -->
@@ -24,7 +25,7 @@ For every implementation task:
 - Deployment target:
 
 ## Implementation Rules
-- Follow the current handoff first, then this file, then local code style.
+- Follow runtime, tool, organization, and safety policy; explicit user policy changes; durable project rules; and then the approved task scope. Report unresolved conflicts instead of guessing.
 - Stay inside `Files To Edit`. If a file outside the list must change, stop and report it.
 - If the listed files are insufficient to reach the first scoped edit, stop and report the missing discovery or a proposed split instead of broadening the task.
 - Preserve existing class names, file layout, and UI patterns.
@@ -33,6 +34,7 @@ For every implementation task:
 - Do not add secrets, API keys, or machine-specific tokens.
 - Do not commit or push unless explicitly requested.
 - Do not modify unrelated files for cleanup.
+- After editing, compare the final status and diff with the baseline. Do not reset, clean, stage, or rewrite pre-existing changes.
 
 Stop and ask before editing when:
 - the handoff is missing goal, files, constraints, or verification
@@ -42,7 +44,7 @@ Stop and ask before editing when:
 - secrets, credential-like files, or local permission state would be touched
 
 ## Verification
-Run the smallest useful verification for the change. Examples:
+Run the minimum sufficient verification for the acceptance criteria, starting with the most focused relevant check. Examples:
 - format / lint / type checks
 - relevant unit or integration tests
 - build or local server check if structural files changed
@@ -56,16 +58,19 @@ At the end of a task, report:
 - **Summary** — what changed and why, in 1–3 lines per area
 - **Verification results** — commands run and outcomes
 - **Blocked checks** — checks that could not be run, with reason
+- **Partial edits** — edits left in the worktree, if any
 - **Subagent usage** — none, or the bounded mechanical work delegated
 - **Files edited outside Files To Edit** — none, or path + reason
 - **Design questions for Codex** — anything that may belong in `AGENTS.md`
 
-Keep the report concise and factual.
+If the acceptance criteria are not met, mark the task interrupted and report completed work, remaining work, and the resume condition. Keep the report concise and factual.
 
 ## Knowledge Persistence
 Durable project workflow decisions belong in `AGENTS.md`. Do not silently encode a new workflow rule only in code. If a discovery should guide future sessions, surface it in the report so Codex can decide whether to record it.
 
-## Do Not Touch
-- secrets, `.env`, credential files
-- local Claude permission state (e.g. `.claude/settings.local.json`) unless explicitly asked
+## Protected Scope
+- Do not inspect secrets, credentials, or personal data unless their contents are strictly necessary for the approved task.
+- Do not edit secrets, credentials, `.env`, local settings, production data, runtime state, or generated heavy artifacts unless the approved task explicitly requires the change.
+- Never reproduce secrets, credentials, personal data, or private infrastructure values in prompts, handoffs, reports, or external tools.
+- Do not edit local Claude permission state (e.g. `.claude/settings.local.json`) unless explicitly asked.
 <!-- Add other protected files as needed -->

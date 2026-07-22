@@ -4,7 +4,7 @@
 <div class="card" style="margin-bottom: 20px;">
   <div class="card-header">基本姿勢</div>
   <div class="card-body">
-    <p>役割は固定しない。<strong>曖昧さが高いほど Codex、実装が明確で量があるほど Claude Code</strong>。両者の間に <code>docs/handoffs/YYYY-MM-DD-&lt;task&gt;.md</code> を置き、そこを介してやり取りする。</p>
+    <p><strong>要求と設計は Terra / Sol、設計済みのコード実装はまず Sonnet</strong>。Spark は低リスクの補助作業に使い、Luna <code>max</code> は Sonnet が usage limit または service availability で利用不能な場合だけ同じ slice を引き継ぐ。実装は <code>docs/handoffs/YYYY-MM-DD-&lt;task&gt;.md</code> を介して小さく順番に進める。</p>
   </div>
 </div>
 
@@ -41,7 +41,7 @@ Codex で続行するか Claude Code に handoff するかを分類してくだ�
     <div class="wf-body">
       <div class="wf-title">Claude Code に渡せる粒度まで絞る</div>
       <div class="wf-current">
-        Goal、Files To Inspect、Files To Edit、Constraints、Non Goals、Verification、Expected Report がそろうまで Codex で詰める。揃わなければ渡さない。
+        Goal、Files To Inspect、Files To Edit、Constraints、Non Goals、Data Sources、Acceptance Criteria、Verification、Expected Report がそろうまで Codex で詰める。最初の編集までに広い調査が必要なら、調査を別の read-only slice にする。
       </div>
     </div>
   </div>
@@ -66,8 +66,8 @@ Codex で続行するか Claude Code に handoff するかを分類してくだ�
     <div class="wf-body">
       <div class="wf-title">Claude Code が実装・検証・報告する</div>
       <div class="wf-current">
-        Claude Code は <code>AGENTS.md</code>、<code>CLAUDE.md</code>、handoff を読み、<code>Files To Edit</code> の中だけで作業する。<br>
-        範囲外が必要になったら止まって質問する。
+        Sonnet は <code>AGENTS.md</code>、<code>CLAUDE.md</code>、handoff を読み、<code>Files To Edit</code> の中だけで現在の slice を実装・検証する。<br>
+        範囲外が必要になったら止まって質問する。中断した場合は使える部分成果・部分編集、完了した検証、残作業、再開条件を報告する。
       </div>
     </div>
   </div>
@@ -88,10 +88,10 @@ AGENTS.md と handoff に照らしてレビューしてください。</pre>
   <div class="wf-step">
     <div class="wf-left"><div class="wf-num improved">7</div></div>
     <div class="wf-body">
-      <div class="wf-title">必要な判断だけ <code>AGENTS.md</code> に残す</div>
+      <div class="wf-title">必要な判断を残し、完了 handoff を archive する</div>
       <div class="wf-current">
-        今後も守るべき制約・責務境界・採用根拠が出たときだけ追記する。<br>
-        単純な文言修正、CSS 微調整、既存方針に沿った小変更では追記しない。
+        今後も守るべき短い制約だけを <code>AGENTS.md</code> に残し、長い背景は <code>docs/decisions/</code> に置く。<br>
+        実装、検証、レビュー、必要な follow-up が完了した handoff は <code>docs/handoffs/archive/</code> へ移す。
       </div>
     </div>
   </div>

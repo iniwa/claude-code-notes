@@ -3,16 +3,13 @@
 <div class="card-grid">
   <div class="card">
     <div class="card-header"><span class="cmd">--model &lt;model&gt;</span><span class="badge b-star">よく使う</span></div>
-    <div class="card-desc">起動時にモデルを指定。エイリアスまたは完全なモデル文字列が使える。
-      <pre>claude --model opus
-claude --model sonnet
-claude --model claude-opus-4-6
-claude --model claude-sonnet-4-6</pre>
+    <div class="card-desc">起動時にモデルを指定。モデル名の陳腐化を避けるため、通常はプロジェクト方針に沿ったエイリアスを使う。
+      <pre>claude -p --model sonnet --effort medium --permission-mode auto "&lt;handoff/task prompt&gt;"</pre>
     </div>
   </div>
   <div class="card">
-    <div class="card-header"><span class="cmd">--permission-mode acceptEdits</span></div>
-    <div class="card-desc">ファイル編集を自動承認。確認プロンプトを省略。CI環境や自動化タスクで使用する。<code>bypassPermissions</code> は全スキップ（危険）。</div>
+    <div class="card-header"><span class="cmd">--permission-mode auto</span></div>
+    <div class="card-desc">委託実装で使用する権限モード。タスク範囲や、commit・push・deploy・外部操作などの個別承認要件を広げない。</div>
   </div>
   <div class="card">
     <div class="card-header"><span class="cmd">--verbose / --debug</span></div>
