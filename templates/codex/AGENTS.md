@@ -1,7 +1,7 @@
 # AGENTS.md
 
 ## Purpose
-This file preserves the working agreement for using Codex to define intent and Claude Code to execute scoped implementation tasks.
+This file preserves the working agreement for using Codex to define intent and delegate scoped implementation tasks.
 
 ## Instruction Precedence
 When instructions conflict, apply them in this order:
@@ -17,15 +17,15 @@ The active handoff or equivalent inline prompt is the approved task scope. Verif
 - List the directories Codex and Claude Code should know about.
 
 ## Role Split / Model Policy
-- Use GPT-5.3-Codex-Spark (`gpt-5.3-codex-spark`) proactively, when available, for low-risk, well-scoped, independently verifiable supporting work that requires no material design judgment or source-code implementation.
-- GPT-5.6 Terra (`gpt-5.6-terra`) or Sol (`gpt-5.6-sol`) owns requirements and design. Whenever Terra is used, set its reasoning level to `high`. Prefer Sol for substantial ambiguity, risk, or cross-boundary reasoning.
-- Run every Claude Code task with `--permission-mode auto`.
-- After design is fixed, delegate source-code implementation first to Claude Code Sonnet at effort medium from the repository root: `claude -p --model sonnet --effort medium --permission-mode auto "<handoff/task prompt>"`.
-- Only when Sonnet is unavailable because of usage limits or service availability, use GPT-5.6 Luna (`gpt-5.6-luna`) with reasoning level `max` for the same implementation slice.
-- Implementation failure, failed verification, or a design question is not model unavailability. Return it to Codex instead of switching models.
-- Apply this policy to every coordinating Codex model and its subagents; do not create coordinator-specific exceptions.
-- Codex may keep requirements, design, read-only investigation, review, synthesis, and small documentation-consistency changes in one context.
-- Claude Code subagents are optional and limited to clearly parallel mechanical work inside the current task scope. They inherit its constraints.
+- Before implementation, classify the initial route from acceptance evidence as `small-primary`, `bounded`, `adaptive`, or `non-implementation` (analysis, design, review, or operations). This does not force delegation; reclassify only after a material scope change or contract reset.
+- Reintegrate through the stable diff and verification evidence; do not repeat delegated discovery merely to re-establish context.
+- Identify a genuinely independent phase with its own acceptance and verification as a fresh Codex task or chat boundary.
+- The user selects the primary model at runtime; do not require a named model or execution product.
+- Keep requirements, design, and small documentation corrections in the primary context. Use one `bounded_implementer` for settled cohesive work when transfer helps, or `adaptive_implementer` directly when acceptance depends on unresolved platform, native lifecycle, or cross-layer behavior.
+- Use `bounded_explorer` agents only for independent read-only discovery. Use a `bounded_reviewer` only for concrete material risk after the writer's stable self-review gate; if implementation changes, treat earlier review as diagnostic and refresh once when risk warrants it.
+- Keep one active writer. After a second correction or two blocked/partial returns, reset the primary contract. If custom roles are unobservable, continue in the primary context or use an observable equivalent.
+- Claude Code is not an approved route unless the user explicitly changes project policy.
+- Prefer the smallest correct change and reuse existing or platform-native capabilities before adding dependencies or abstractions.
 
 ## Decision Rule
 Keep the task in Codex when:
@@ -35,11 +35,11 @@ Keep the task in Codex when:
 - the change is small enough to implement and verify in the same context
 - the main value is review, synthesis, or documentation consistency
 
-Hand off to Claude Code when:
+Delegate when:
 - the goal, files, constraints, and verification are clear
 - the task is mostly editing work
 - multiple files need mechanical updates
-- Claude Code's CLI workflow, hooks, or subagents are useful
+- native Codex delegation is useful
 - Codex has already reduced the task to execution instructions
 
 ## Design Principles
@@ -60,14 +60,14 @@ Hand off to Claude Code when:
 1. Classify the request: new feature / existing adjustment / bug fix / docs / workflow rule.
 2. Decide whether the change includes durable design intent.
 3. If design-heavy, write or update the relevant decision in this file before implementation.
-4. If execution-heavy, prepare a Claude Code handoff.
+4. If execution-heavy, prepare a scoped native Codex handoff.
 5. After implementation, review the diff for scope, consistency, and design drift.
 6. Update `AGENTS.md` only when a rule should guide future sessions.
 
 ## Handoff Workflow
 1. Codex reads the project context and resolves material design choices.
 2. For substantive implementation, Codex saves one cohesive, independently verifiable slice under `docs/handoffs/YYYY-MM-DD-<short-task>.md` after its goal, files, constraints, non-goals, data sources, acceptance criteria, and verification are clear.
-3. Codex delegates the next ready slice first to Sonnet. Luna at reasoning level `max` may implement that same slice only under the unavailability condition above.
+3. Codex delegates the next ready slice to the selected native Codex role.
 4. The implementer edits and verifies only the current slice. Codex reviews the report and diff before preparing another.
 5. Keep only active or blocked handoffs in `docs/handoffs/`; move completed handoffs to `docs/handoffs/archive/`.
 
