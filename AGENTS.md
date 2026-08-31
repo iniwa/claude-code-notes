@@ -29,15 +29,15 @@ The active handoff or equivalent inline prompt is the approved task scope. Verif
 
 ## Model and Role Policy
 
-- Use GPT-5.3-Codex-Spark (`gpt-5.3-codex-spark`) proactively, when available, for low-risk, well-scoped, independently verifiable supporting work that requires no material design judgment or source-code implementation.
-- GPT-5.6 Terra (`gpt-5.6-terra`) or Sol (`gpt-5.6-sol`) owns requirements and design. Whenever Terra is used, set its reasoning level to `high`. Prefer Sol for substantial ambiguity, risk, or cross-boundary reasoning.
-- Run every Claude Code task with `--permission-mode auto`.
-- After design is fixed, delegate source-code implementation first to Claude Code Sonnet at effort medium from the repository root: `claude -p --model sonnet --effort medium --permission-mode auto "<handoff/task prompt>"`.
-- Only when Sonnet is unavailable because of usage limits or service availability, use GPT-5.6 Luna (`gpt-5.6-luna`) with reasoning level `max` for the same implementation slice.
-- Implementation failure, failed verification, or a design question is not model unavailability; return it to Codex.
-- Apply this policy to every coordinating Codex model and its subagents. Do not create coordinator-specific exceptions.
-- Codex may keep requirements, design, read-only investigation, review, synthesis, and small documentation-consistency changes in one context.
-- Claude Code subagents are optional and limited to clearly parallel mechanical work inside the current task scope. They inherit its constraints.
+- Before implementation, classify the initial route from acceptance evidence as `small-primary` for small or transfer-negative work, `bounded` for settled multi-step work with one verifiable writer, `adaptive` when unresolved native/platform/runtime or cross-subsystem behavior is material, or `non-implementation` for analysis, design, review, or operations. This does not force delegation; reclassify only after a material scope change or contract reset.
+- Reintegrate through the stable diff and verification evidence; do not repeat delegated discovery merely to re-establish context.
+- Identify a genuinely independent phase with its own acceptance and verification as a fresh Codex task or chat boundary.
+- Use GPT-5.6 Sol as the preferred main worker; the user's actual runtime model and reasoning choice remains authoritative. Sol owns intent, design, approval boundaries, integration, and user communication and can directly finish small or transfer-negative work. Use configured Luna roles (`bounded_explorer`/`bounded_implementer`) for bounded work and Terra roles (`adaptive_implementer`/`bounded_reviewer`) for adaptive implementation or risk-justified review; do not force delegation or pin the main reasoning level in project instructions.
+- Keep requirements, design, and small documentation corrections in the primary context. Ordinary delegation uses native Codex agents: one `bounded_implementer` for settled cohesive work when transfer helps, or `adaptive_implementer` directly when acceptance depends on unresolved platform, native lifecycle, or cross-layer behavior.
+- Use `bounded_explorer` agents only for genuinely independent read-only discovery. Use a `bounded_reviewer` only for a concrete material correctness, security, compatibility, or verification risk, and only after the writer's stable self-review gate. If implementation changes after review starts, treat that review as diagnostic and run one fresh final review only when risk warrants it.
+- Keep one active writer for overlapping files. After a second correction round, or two blocked/partial returns, reset the primary contract (acceptance, boundaries, authority, and environment) before continuing. If custom roles are not observable, keep the work in the primary context or use an observable equivalent.
+- Claude Code is not an approved execution route unless the user explicitly changes project policy.
+- Prefer the smallest correct change and reuse existing or platform-native capabilities before adding dependencies or abstractions.
 
 ## Durable Project Rules
 
@@ -53,7 +53,7 @@ The active handoff or equivalent inline prompt is the approved task scope. Verif
 - Never reproduce secrets, credentials, personal data, or private infrastructure values in prompts, handoffs, reports, public content, or external tools.
 - Preserve unrelated user and other-agent changes. Treat unexpected diffs as having unknown authorship and keep them outside the current task.
 - Do not add dependencies or change build tooling, packaging, CI/CD, deployment, or external exposure outside the approved task scope.
-- Do not commit, push, or deploy unless explicitly requested.
+- Do not commit or push unless explicitly requested. Public deployment remains outside this documentation-only scope.
 
 ## Handoff Workflow
 
@@ -82,3 +82,12 @@ During review, confirm that the diff stayed in scope, preserved the static archi
 - Follow `docs/README.md` for documentation placement and the active/archive handoff lifecycle.
 - Put reusable procedures in an appropriate `docs/` location.
 - Do not rewrite historical documentation merely to match a newer shared policy.
+
+Definition of done: task-owned documentation is consistent, links and Markdown fences validate, protected project facts remain intact, and focused checks pass or are explicitly reported blocked.
+
+## Personal-Use Iteration
+
+- Treat routine changes as personal-use iteration by default unless a verified project requirement or protected public-content, rights, human-approval, or data gate is stronger. Start with the smallest useful documentation change and, when useful, a brief reference, format, or sample check. This documentation-only project does not gain runtime deployment permission or public publication authority from this rule; preserve its existing gates.
+- This allowance covers bounded reversible work only. Preserve gates for credentials, authentication, permissions, external exposure, live data, infrastructure or cost, publication or release, and other project-specific protected behavior. Do not require speculative edge-case matrices, defensive hardening, or a full suite merely to permit ordinary iteration.
+- If a target, check, or required approval is unavailable, distinguish source readiness from verified operation. Only important REQUIRED deferred checks belong in the existing issue or ledger, with their verification, approval, and resume conditions; optional or unnecessary checks do not create issues. Reconcile any operational checklist with the exact approval scope and conditions without weakening permanent prohibitions. For documentation-only changes, use the smallest relevant reference, fence, format, or sample check; do not invent an application runtime.
+- If a project-required safety or approval review must precede application, return the stable source or diff with applicable pre-application checks first; runtime application and smoke are not run, passed, or complete until that gate clears. Ordinary work does not acquire review solely because optional checks were omitted.
