@@ -1,6 +1,6 @@
 # Project Rules And Structure
 
-このディレクトリは、サイト本文ではなく、リポジトリ運用・設計判断・Codex から Claude Code への作業指示を置く場所です。
+このディレクトリは、サイト本文ではなく、リポジトリ運用・設計判断・Codex の作業指示を置く場所です。
 
 公開リポジトリ内の文書なので、`docs/` 配下にも秘密情報、API キー、個人トークン、未公開の運用情報は置きません。
 
@@ -8,10 +8,10 @@
 
 - このプロジェクトは静的 HTML SPA として維持する。ビルドツール、フレームワーク、パッケージマネージャは明示依頼がない限り追加しない。
 - サイトに表示する本文は `sections/`、公開テンプレートは `templates/`、運用・設計・作業指示は `docs/` に置く。
-- Codex と Claude Code の役割分担、将来セッションにも効く短いルールは `AGENTS.md` に置く。
-- Claude Code が実装時に従う実行ルールは `CLAUDE.md` に置く。
+- 役割分担、将来セッションにも効く短いルールは `AGENTS.md` に置く。
+- `CLAUDE.md` は互換境界であり、実装・検証ルールは `AGENTS.md` を参照する。
 - 長い背景、判断理由、却下案などは `AGENTS.md` に膨らませず、`docs/decisions/` に置く。
-- Codex から Claude Code への実装指示は `docs/handoffs/` に置く。
+- Codex の実装指示は `docs/handoffs/` に置く。
 - `.claude/settings.local.json` はローカル権限状態なので、ユーザーが明示しない限り編集しない。
 - コミットはユーザーが明示依頼した場合だけ行う。
 

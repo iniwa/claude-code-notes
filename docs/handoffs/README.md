@@ -1,6 +1,6 @@
 # Handoffs
 
-Codex writes Claude Code implementation handoffs in this directory.
+Codex writes scoped implementation handoffs in this directory.
 
 Use the filename format:
 
